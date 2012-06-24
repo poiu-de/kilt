@@ -28,16 +28,16 @@
     </build>
     <packaging>pom</packaging>
     <modules>
-        <module>maven-i18nbinder-plugin</module>
-        <module>i18nbinder-ant</module>
         <module>i18nbinder-core</module>
+        <module>maven-i18nbinder-plugin</module>
         <module>maven-i18nbinder-plugin-test</module>
+        <module>i18nbinder-ant</module>
     </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.omnaest.i18nbinder</groupId>
-                <artifactId>i18nBinder-core</artifactId>
+                <artifactId>i18nbinder-core</artifactId>
                 <version>0.1.15-SNAPSHOT</version>
             </dependency>
         </dependencies>

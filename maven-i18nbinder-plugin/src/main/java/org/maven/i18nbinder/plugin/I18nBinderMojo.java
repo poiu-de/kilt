@@ -86,7 +86,7 @@ public class I18nBinderMojo extends AbstractMojo
   /**
    * @parameter
    */
-  private boolean             logResolvedPropertyFileNames             = true;
+  private boolean             logResolvedPropertyFileNames             = false;
   
   /**
    * @parameter

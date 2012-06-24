@@ -34,7 +34,7 @@
     <dependencies>
         <dependency>
             <groupId>org.omnaest.i18nbinder</groupId>
-            <artifactId>i18nBinder-core</artifactId>
+            <artifactId>i18nbinder-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.ant</groupId>
