@@ -1,0 +1,29 @@
+#######################################################################################################################
+                                             I18n Binder HELP
+#######################################################################################################################
+
+General description:
+    The i18n binder Task allows to convert 
+    a whole i18n directory into a csv file 
+    and back to a i18n directory structure.
+    
+The task provides several attributes:
+
+  exportType                     = [*"xls"|"csv"|"i18n"] indicates the direction of data flow. 
+                                                         CSV creates a new csv file. 
+                                                         I18n merges the csv file into the i18n directory; 
+                                                         optional 
+  i18nDir                        = [String] path to the i18n directory root; mandatory
+  filename                       = [String] path to export file. Default is "i18n.xxx" and "xxx" is "csv" or "xls"; optional;
+  csvColumnsDelimiter            = [String] default is "#"; optional
+  scanFolderRecursively          = [*true|false] optional
+  localeLimiterList              = String, like "de_DE;de;en_US", 
+                                   default "null", which means all locales which are found are migrated; 
+                                   optional;
+  doCreateNewPropertyFiles       = [true|*false] should the merge process create non existing property files? optional
+  doSaveEmptyPropertyAttributes  = [true|*false] should key-value pairs with a emty value being saved? optional
+  help                           = [true|*false] shows this help optional
+  
+                                                                                                      (* means default)
+  
+ END HELP

@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.omnaest.i18nbinder</groupId>
+    <artifactId>i18nBinder-parent</artifactId>
+    <version>0.1.15</version>
+    <name>I18nBinder parent module </name>
+    <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
+    <url>http://code.google.com/p/i18n-binder/</url>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.8.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.8</version>
+        </dependency>
+        <dependency>
+            <groupId>org.omnaest.utils</groupId>
+            <artifactId>utils-apl-derived-core</artifactId>
+            <version>0.1.15</version>
+        </dependency>
+    </dependencies>
+    <packaging>pom</packaging>
+    <modules>
+        <module>maven-i18nbinder-plugin</module>
+        <module>i18nBinder</module>
+        <module>i18nBinder-core</module>
+    </modules>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.omnaest.i18nbinder</groupId>
+                <artifactId>i18nBinder-core</artifactId>
+                <version>0.1.15</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
