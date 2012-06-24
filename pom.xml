@@ -13,6 +13,13 @@
     <name>i18nBinder-parent module</name>
     <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
     <url>http://code.google.com/p/i18n-binder/</url>
+    <developers>
+        <developer>
+            <id>omnaest</id>
+            <name>Danny Kunz</name>
+            <email>awonderland6@googlemail.com</email>
+        </developer>
+    </developers>
     <build>
         <plugins>
             <plugin>
@@ -47,4 +54,7 @@
         <connection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</connection>
         <developerConnection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</developerConnection>
     </scm>
+    <issueManagement>
+        <url>http://code.google.com/p/i18n-binder/issues/list</url>
+    </issueManagement>
 </project>
