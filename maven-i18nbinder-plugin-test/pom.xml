@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.omnaest.i18nbinder</groupId>
         <artifactId>i18nbinder-parent</artifactId>
-        <version>0.1.15</version>
+        <version>0.1.16-SNAPSHOT</version>
     </parent>
     <artifactId>maven-i18nbinder-plugin-test</artifactId>
     <build>
