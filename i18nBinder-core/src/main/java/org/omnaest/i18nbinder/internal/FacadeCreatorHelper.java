@@ -66,6 +66,7 @@ public class FacadeCreatorHelper
    * @param groupingPatternGroupingGroupIndexList
    * @param i18nFacadeName
    * @param externalizeTypes
+   * @param propertyfileEncoding
    * @return
    */
   public static Map<String, String> createI18nInterfaceFacadeFromPropertyFiles( Set<File> propertyFileSet,
@@ -76,7 +77,8 @@ public class FacadeCreatorHelper
                                                                                 String baseFolderIgnoredPath,
                                                                                 String packageName,
                                                                                 String i18nFacadeName,
-                                                                                boolean externalizeTypes )
+                                                                                boolean externalizeTypes,
+                                                                                String propertyfileEncoding )
   {
     //
     final Map<String, String> retmap = new LinkedHashMap<String, String>();
@@ -119,6 +121,7 @@ public class FacadeCreatorHelper
           
           //
           FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter = new FileGroupToPropertiesAdapter( fileGroup );
+          fileGroupToPropertiesAdapter.setFileEncoding( propertyfileEncoding );
           
           //
           fileGroupToPropertiesAdapterList.add( fileGroupToPropertiesAdapter );
@@ -250,7 +253,7 @@ public class FacadeCreatorHelper
         //
         final Map<String, StringBuilder> externalizedClassToContentMap = externalizeTypes ? new LinkedHashMap<String, StringBuilder>()
                                                                                          : null;
-        retmap.put( i18nFacadeName,
+        retmap.put( packageName + "." + i18nFacadeName,
                     buildFacadeSource( TokenMonoHierarchy, packageName, i18nFacadeName, externalizedClassToContentMap ) );
         if ( externalizeTypes )
         {
@@ -484,7 +487,7 @@ public class FacadeCreatorHelper
       stringBuilder.append( " * @see #translator(Locale)\n" );
     }
     stringBuilder.append( " */ \n" );
-    stringBuilder.append( "@Generated(value = \"org.omnaest.i18nbinder.I18nBinder\", date = \""
+    stringBuilder.append( "@Generated(value = \"http://code.google.com/p/i18n-binder/\", date = \""
                           + DateFormatUtils.ISO_DATETIME_TIME_ZONE_FORMAT.format( Calendar.getInstance() ) + "\")\n" );
     
     //class

@@ -57,24 +57,25 @@ public class FacadeCreatorHelperTest
     final String packageBaseFolder = "org\\omnaest\\i18nbinder\\internal";
     
     //
-    String fileNameLocaleGroupPattern = null;
-    List<Integer> groupingPatternGroupingGroupIndexList = null;
-    String baseNameInTargetPlattform = "i18n";
-    String baseFolderIgnoredPath = new File( "" ).getAbsolutePath() + "\\target\\test-classes\\" + packageBaseFolder + "\\";
-    String packageName = "org.omnaest.i18nbinder.internal.facade";
-    String javaFacadeFileName = "I18nFacade";
-    boolean externalizeTypes = true;
+    final String fileNameLocaleGroupPattern = null;
+    final List<Integer> groupingPatternGroupingGroupIndexList = null;
+    final String baseNameInTargetPlattform = "i18n";
+    final String baseFolderIgnoredPath = new File( "" ).getAbsolutePath() + "\\target\\test-classes\\" + packageBaseFolder + "\\";
+    final String packageName = "org.omnaest.i18nbinder.internal.facade";
+    final String javaFacadeFileName = "I18nFacade";
+    final boolean externalizeTypes = true;
+    final String propertyFileEncoding = "utf-8";
     
-    //
-    final Map<String, String> facadeFromPropertyFiles = FacadeCreatorHelper.createI18nInterfaceFacadeFromPropertyFiles( this.propertyFileSet,
-                                                                                                                        new LocaleFilter(),
-                                                                                                                        fileNameLocaleGroupPattern,
-                                                                                                                        groupingPatternGroupingGroupIndexList,
-                                                                                                                        baseNameInTargetPlattform,
-                                                                                                                        baseFolderIgnoredPath,
-                                                                                                                        packageName,
-                                                                                                                        javaFacadeFileName,
-                                                                                                                        externalizeTypes );
+    Map<String, String> facadeFromPropertyFiles = FacadeCreatorHelper.createI18nInterfaceFacadeFromPropertyFiles( this.propertyFileSet,
+                                                                                                                  new LocaleFilter(),
+                                                                                                                  fileNameLocaleGroupPattern,
+                                                                                                                  groupingPatternGroupingGroupIndexList,
+                                                                                                                  baseNameInTargetPlattform,
+                                                                                                                  baseFolderIgnoredPath,
+                                                                                                                  packageName,
+                                                                                                                  javaFacadeFileName,
+                                                                                                                  externalizeTypes,
+                                                                                                                  propertyFileEncoding );
     
     //    
     for ( String fileName : facadeFromPropertyFiles.keySet() )

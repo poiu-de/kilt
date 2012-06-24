@@ -4,11 +4,11 @@
     <parent>
         <groupId>org.omnaest.i18nbinder</groupId>
         <artifactId>i18nBinder-parent</artifactId>
-        <version>0.1.15</version>
+        <version>0.1.15-SNAPSHOT</version>
     </parent>
     <artifactId>i18nBinder</artifactId>
     <url>http://code.google.com/p/i18n-binder/</url>
-    <name>I18nBinder</name>
+    <name>i18nBinder-ant module</name>
     <build>
         <plugins>
             <plugin>
@@ -36,5 +36,13 @@
             <groupId>org.omnaest.i18nbinder</groupId>
             <artifactId>i18nBinder-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.8.1</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
 </project>

@@ -45,6 +45,7 @@ public class FileGroupToPropertiesAdapter
   /* ********************************************** Variables ********************************************** */
   protected FileGroup        fileGroup                  = null;
   private PropertyFileCache  propertyFileCache          = new PropertyFileCache();
+  private String             fileEncoding               = "utf-8";
   
   /* ********************************************** Classes/Interfaces ********************************************** */
   /**
@@ -119,9 +120,10 @@ public class FileGroupToPropertiesAdapter
    * Resolves a {@link PropertyFile} for the given group token using the {@link FileGroup}.
    * 
    * @param groupToken
+   * @param fileEncoding
    * @return
    */
-  protected PropertyFile resolvePropertyFile( String groupToken )
+  protected PropertyFile resolvePropertyFile( String groupToken, String fileEncoding )
   {
     //
     PropertyFile retval = null;
@@ -138,6 +140,7 @@ public class FileGroupToPropertiesAdapter
       {
         //
         retval = new PropertyFile( file );
+        retval.setFileEncoding( fileEncoding );
       }
     }
     
@@ -155,7 +158,7 @@ public class FileGroupToPropertiesAdapter
   protected PropertyFile resolveAndLoadPropertyFile( String groupToken )
   {
     //
-    PropertyFile propertyFile = this.resolvePropertyFile( groupToken );
+    PropertyFile propertyFile = this.resolvePropertyFile( groupToken, this.fileEncoding );
     
     //
     if ( propertyFile != null )
@@ -307,5 +310,10 @@ public class FileGroupToPropertiesAdapter
     
     //
     return retset;
+  }
+  
+  public void setFileEncoding( String fileEncoding )
+  {
+    this.fileEncoding = fileEncoding;
   }
 }

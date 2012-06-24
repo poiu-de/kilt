@@ -40,27 +40,29 @@ import org.omnaest.i18nbinder.internal.XLSFile;
 public class I18nBinder extends Task
 {
   /* ********************************************** Variables ********************************************** */
-  protected List<FileSet> fileSetList                              = new ArrayList<FileSet>();
+  private List<FileSet> fileSetList                              = new ArrayList<FileSet>();
   
-  protected boolean       createXLSFile                            = false;
-  protected String        xlsFileName                              = null;
+  private boolean       createXLSFile                            = false;
+  private String        xlsFileName                              = null;
   
-  protected String        fileEncoding                             = null;
+  private String        javaFileEncoding                         = "utf-8";                                                      ;
   
-  protected Boolean       logInfo                                  = false;
+  private Boolean       logInfo                                  = false;
   
-  protected LocaleFilter  localeFilter                             = new LocaleFilter();
-  protected boolean       deletePropertiesWithBlankValue           = true;
+  private LocaleFilter  localeFilter                             = new LocaleFilter();
+  private boolean       deletePropertiesWithBlankValue           = true;
   
-  private String          fileNameLocaleGroupPattern               = null;
-  private List<Integer>   fileNameLocaleGroupPatternGroupIndexList = null;
+  private String        fileNameLocaleGroupPattern               = null;
+  private List<Integer> fileNameLocaleGroupPatternGroupIndexList = null;
   
-  protected boolean       createJavaFacade                         = false;
-  protected String        javaFacadeFileName                       = FacadeCreatorHelper.DEFAULT_JAVA_FACADE_FILENAME_I18N_FACADE;
-  protected String        baseNameInTargetPlattform                = "";
-  protected String        baseFolderIgnoredPath                    = "";
-  protected String        packageName                              = "";
-  protected boolean       externalizeTypes;
+  private boolean       createJavaFacade                         = false;
+  private String        javaFacadeFileName                       = FacadeCreatorHelper.DEFAULT_JAVA_FACADE_FILENAME_I18N_FACADE;
+  private String        baseNameInTargetPlattform                = "";
+  private String        baseFolderIgnoredPath                    = "";
+  private String        packageName                              = "";
+  private boolean       externalizeTypes;
+  
+  private String        propertyFileEncoding                     = "utf-8";
   
   /* ********************************************** Methods ********************************************** */
   @Override
@@ -122,7 +124,7 @@ public class I18nBinder extends Task
       File file = new File( this.xlsFileName );
       if ( file.exists() )
       {
-        ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.fileEncoding, this.localeFilter,
+        ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.propertyFileEncoding, this.localeFilter,
                                                            this.deletePropertiesWithBlankValue );
       }
       
@@ -191,12 +193,13 @@ public class I18nBinder extends Task
                                                                                                                           this.baseFolderIgnoredPath,
                                                                                                                           this.packageName,
                                                                                                                           i18nFacadeName,
-                                                                                                                          this.externalizeTypes );
+                                                                                                                          this.externalizeTypes,
+                                                                                                                          this.propertyFileEncoding );
       for ( String fileName : facadeFromPropertyFiles.keySet() )
       {
         //
         final String fileContent = facadeFromPropertyFiles.get( fileName );
-        final boolean isRootFacadeType = StringUtils.equals( i18nFacadeName, fileName );
+        final boolean isRootFacadeType = StringUtils.equals( this.packageName + "." + i18nFacadeName, fileName );
         
         //
         if ( !isRootFacadeType && fileName.contains( "." ) )
@@ -206,7 +209,7 @@ public class I18nBinder extends Task
         
         //        
         final File file = isRootFacadeType ? new File( this.javaFacadeFileName ) : new File( fileName + ".java" );
-        FileUtils.writeStringToFile( file, fileContent, "utf-8" );
+        FileUtils.writeStringToFile( file, fileContent, this.javaFileEncoding );
       }
     }
     catch ( Exception e )
@@ -323,15 +326,11 @@ public class I18nBinder extends Task
     this.xlsFileName = xlsFileName;
   }
   
-  public String getFileEncoding()
-  {
-    return this.fileEncoding;
-  }
-  
   public void setFileEncoding( String fileEncoding )
   {
     this.log( "fileEncoding=" + fileEncoding );
-    this.fileEncoding = fileEncoding;
+    this.propertyFileEncoding = fileEncoding;
+    this.javaFileEncoding = fileEncoding;
   }
   
   public Boolean getLogInfo()
@@ -449,6 +448,18 @@ public class I18nBinder extends Task
   {
     this.log( "externalizeTypes=" + externalizeTypes );
     this.externalizeTypes = externalizeTypes;
+  }
+  
+  public void setPropertyFileEncoding( String propertyFileEncoding )
+  {
+    this.log( "propertyFileEncoding=" + propertyFileEncoding );
+    this.propertyFileEncoding = propertyFileEncoding;
+  }
+  
+  public void setJavaFileEncoding( String javaFileEncoding )
+  {
+    this.log( "javaFileEncoding=" + javaFileEncoding );
+    this.javaFileEncoding = javaFileEncoding;
   }
   
 }

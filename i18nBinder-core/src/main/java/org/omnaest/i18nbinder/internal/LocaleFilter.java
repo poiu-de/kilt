@@ -17,6 +17,8 @@ package org.omnaest.i18nbinder.internal;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * Locale filter which allows to easily filter locales. As default all locales are accepted.
  * 
@@ -31,9 +33,11 @@ public class LocaleFilter
   protected Pattern           pattern                              = Pattern.compile( LOCALE_FILTER_PATTERN_STRING_DEFAULT );
   
   /* ********************************************** Methods ********************************************** */
-
+  
   public boolean isLocaleAccepted( String locale )
   {
+    locale = StringUtils.removeStart( locale, "_" );
+    locale = StringUtils.removeEnd( locale, "_" );
     return this.pattern.matcher( locale ).matches();
   }
   
