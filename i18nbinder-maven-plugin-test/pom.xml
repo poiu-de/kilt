@@ -5,7 +5,7 @@
         <artifactId>i18nbinder-parent</artifactId>
         <version>0.1.16-SNAPSHOT</version>
     </parent>
-    <artifactId>maven-i18nbinder-plugin-test</artifactId>
+    <artifactId>i18nbinder-maven-plugin-test</artifactId>
     <build>
         <plugins>
             <plugin>

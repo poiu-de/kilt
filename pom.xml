@@ -35,8 +35,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>i18nbinder-core</module>
-        <module>maven-i18nbinder-plugin</module>
-        <module>maven-i18nbinder-plugin-test</module>
+        <module>i18nbinder-maven-plugin</module>
+        <module>i18nbinder-maven-plugin-test</module>
         <module>i18nbinder-ant</module>
     </modules>
     <dependencyManagement>
