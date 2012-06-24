@@ -8,7 +8,7 @@
     </parent>
     <groupId>org.omnaest.i18nbinder</groupId>
     <artifactId>i18nbinder-parent</artifactId>
-    <version>0.1.15</version>
+    <version>0.1.16-SNAPSHOT</version>
     <name>i18nBinder-parent module</name>
     <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
     <url>http://code.google.com/p/i18n-binder/</url>
@@ -44,14 +44,14 @@
             <dependency>
                 <groupId>org.omnaest.i18nbinder</groupId>
                 <artifactId>i18nbinder-core</artifactId>
-                <version>0.1.15</version>
+                <version>0.1.16-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <scm>
-        <url>https://i18n-binder.googlecode.com/svn/tags/i18nbinder-parent-0.1.15</url>
-        <connection>scm:svn:https://i18n-binder.googlecode.com/svn/tags/i18nbinder-parent-0.1.15</connection>
-        <developerConnection>scm:svn:https://i18n-binder.googlecode.com/svn/tags/i18nbinder-parent-0.1.15</developerConnection>
+        <url>https://i18n-binder.googlecode.com/svn/trunk</url>
+        <connection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</connection>
+        <developerConnection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</developerConnection>
     </scm>
     <issueManagement>
         <url>http://code.google.com/p/i18n-binder/issues/list</url>
