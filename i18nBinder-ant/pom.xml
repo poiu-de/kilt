@@ -6,7 +6,7 @@
         <artifactId>i18nBinder-parent</artifactId>
         <version>0.1.15-SNAPSHOT</version>
     </parent>
-    <artifactId>i18nBinder</artifactId>
+    <artifactId>i18nBinder-ant</artifactId>
     <url>http://code.google.com/p/i18n-binder/</url>
     <name>i18nBinder-ant module</name>
     <build>

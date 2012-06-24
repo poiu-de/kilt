@@ -29,7 +29,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>maven-i18nbinder-plugin</module>
-        <module>i18nBinder</module>
+        <module>i18nBinder-ant</module>
         <module>i18nBinder-core</module>
         <module>maven-i18nbinder-plugin-test</module>
     </modules>

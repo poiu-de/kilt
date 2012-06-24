@@ -14,7 +14,7 @@ import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.sub1.Shared;
  * Resource base: <b>i18n.sub1</b>
  * @see Shared
  */ 
-@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-06-24T15:21:48+02:00")
+@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-06-24T15:36:43+02:00")
 public class Sub1 {
   /** @see Shared */
   public final Shared Shared;
