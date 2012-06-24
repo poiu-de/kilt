@@ -42,4 +42,9 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <scm>
+        <url>https://i18n-binder.googlecode.com/svn/trunk</url>
+        <connection>https://i18n-binder.googlecode.com/svn/trunk</connection>
+        <developerConnection>https://i18n-binder.googlecode.com/svn/trunk</developerConnection>
+    </scm>
 </project>
