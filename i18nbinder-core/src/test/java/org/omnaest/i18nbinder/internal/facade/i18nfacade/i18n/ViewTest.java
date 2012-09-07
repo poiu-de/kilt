@@ -43,7 +43,7 @@ import org.omnaest.i18nbinder.internal.facade.I18nFacade.Translator;
  * @see #translator()
  * @see #translator(Locale)
  */ 
-@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:00:06+02:00")
+@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:48:42+02:00")
 public class ViewTest {
   public final static String baseName = "i18n.viewTest";
   private final Locale locale;

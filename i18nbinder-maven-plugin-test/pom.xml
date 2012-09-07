@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.omnaest.i18nbinder</groupId>
@@ -19,6 +20,8 @@
                     <propertiesRootDirectory>src/main/resources/i18n</propertiesRootDirectory>
                     <i18nFacadeName>I18nFacade</i18nFacadeName>
                     <localeFilterRegex>de_DE|en_US</localeFilterRegex>
+                    <propertyFileEncoding>utf-8</propertyFileEncoding>
+                    <xlsOutputDirectory>${project.build.directory}/..</xlsOutputDirectory>
                 </configuration>
                 <executions>
                     <execution>
@@ -37,30 +40,31 @@
         <pluginManagement>
             <plugins>
 
-            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven 
+                    build itself. -->
                 <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <version>1.0.0</version>
-                <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>org.omnaest.i18nbinder</groupId>
-                                    <artifactId>i18nbinder-maven-plugin</artifactId>
-                                    <versionRange>[0.1.15-SNAPSHOT,)</versionRange>
-                                    <goals>
-                                        <goal>i18nbinder</goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore />
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
-                </configuration>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.omnaest.i18nbinder</groupId>
+                                        <artifactId>i18nbinder-maven-plugin</artifactId>
+                                        <versionRange>[0.1.15-SNAPSHOT,)</versionRange>
+                                        <goals>
+                                            <goal>i18nbinder</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -16,7 +16,7 @@ import org.omnaest.i18nbinder.internal.facade.i18nfacade.I18n;
  * The facade methods will silently ignore all {@link MissingResourceException}s by default. To alter this behavior see {@link #I18nFacade(Locale, boolean)}<br><br>
  * @see I18n
  */ 
-@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:00:06+02:00")
+@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:48:42+02:00")
 public class I18nFacade {
   /** @see I18n */
   public final I18n I18n;
