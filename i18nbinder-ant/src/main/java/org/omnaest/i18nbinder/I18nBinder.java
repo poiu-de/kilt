@@ -148,7 +148,7 @@ public class I18nBinder extends Task
       Set<File> propertyFileSet = this.resolveFilesFromFileSetList( this.fileSetList );
       
       //
-      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.localeFilter,
+      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding, this.localeFilter,
                                                                        this.fileNameLocaleGroupPattern,
                                                                        this.fileNameLocaleGroupPatternGroupIndexList );
       

@@ -38,6 +38,8 @@ public class ModifierHelperTest
   private final static String[] PROPERTY_FILENAMES = { "adminTest_de_DE.properties", "adminTest_en_US.properties",
       "viewTest_de_DE.properties", "viewTest_en_US.properties", "localelessTest.properties" };
   
+  private static final String   fileEncoding       = "utf-8";
+  
   /* ********************************************** Variables ********************************************** */
   private Set<File>             propertyFileSet    = new HashSet<File>();
   private File                  xlsFile            = null;
@@ -79,7 +81,8 @@ public class ModifierHelperTest
   public void testModifierHelperLoadAndStore()
   {
     //
-    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, new LocaleFilter(), null, null );
+    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
+                                                                     null, null );
     
     //
     xlsFile.setFile( this.xlsFile );
@@ -141,7 +144,8 @@ public class ModifierHelperTest
   public void testModifierHelperAddKey()
   {
     //
-    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, new LocaleFilter(), null, null );
+    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
+                                                                     null, null );
     
     //
     List<TableRow> tableRowList = xlsFile.getTableRowList();

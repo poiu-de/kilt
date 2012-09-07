@@ -29,7 +29,7 @@
 
 	<!-- TARGETS -->
 	<target name="createXLSFile" description="This task creates a XLS file from a given fileset of property files.">
-		<i18nBinder xlsfilename="${xlsFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createXLSFile="true">
+		<i18nBinder xlsfilename="${xlsFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createXLSFile="true" fileEncoding="${fileEncoding}">
 			<fileset dir="${i18nDirectory}">
 				<include name="**/*.properties" />
 			</fileset>

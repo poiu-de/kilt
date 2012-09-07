@@ -239,12 +239,14 @@ public class ModifierHelper
    * Creates a new {@link XLSFile} based on a set of files.
    * 
    * @param propertyFileSet
+   * @param fileEncoding
    * @param localeFilter
    * @param fileNameLocaleGroupPattern
    * @param groupingPatternGroupingGroupIndexList
    * @return
    */
   public static XLSFile createXLSFileFromPropertyFiles( Set<File> propertyFileSet,
+                                                        String fileEncoding,
                                                         LocaleFilter localeFilter,
                                                         String fileNameLocaleGroupPattern,
                                                         List<Integer> groupingPatternGroupingGroupIndexList )
@@ -290,6 +292,7 @@ public class ModifierHelper
           
           //
           FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter = new FileGroupToPropertiesAdapter( fileGroup );
+          fileGroupToPropertiesAdapter.setFileEncoding(fileEncoding);
           
           //
           fileGroupToPropertiesAdapterList.add( fileGroupToPropertiesAdapter );
