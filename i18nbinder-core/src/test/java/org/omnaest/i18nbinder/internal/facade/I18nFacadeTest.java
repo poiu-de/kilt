@@ -32,6 +32,7 @@ import org.omnaest.utils.structure.map.MapBuilder;
 
 public class I18nFacadeTest
 {
+  
   @Test
   public void testInstantiation()
   {
