@@ -20,7 +20,7 @@
 
 	<taskdef name="i18nBinder" classname="org.omnaest.i18nbinder.I18nBinder">
 		<classpath>
-			<pathelement location="lib/i18nbinder-ant-0.1.15-jar-with-dependencies.jar" />
+			<pathelement location="lib/i18nbinder-ant-0.1.16-jar-with-dependencies.jar" />
 		</classpath>
 	</taskdef>
 
