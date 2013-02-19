@@ -39,13 +39,14 @@ import org.omnaest.utils.propertyfile.content.element.Property;
 public class FileGroupToPropertiesAdapter
 {
   /* ********************************************** Constants ********************************************** */
-  public static final String LINE_SEPARATOR             = System.getProperty( "line.separator" );
-  public static final String MULTILINE_VALUES_SEPARATOR = "\\" + LINE_SEPARATOR;
+  public static final String LINE_SEPARATOR              = System.getProperty( "line.separator" );
+  public static final String MULTILINE_VALUES_SEPARATOR  = "\\" + LINE_SEPARATOR;
   
   /* ********************************************** Variables ********************************************** */
-  protected FileGroup        fileGroup                  = null;
-  private PropertyFileCache  propertyFileCache          = new PropertyFileCache();
-  private String             fileEncoding               = "utf-8";
+  protected FileGroup        fileGroup                   = null;
+  private PropertyFileCache  propertyFileCache           = new PropertyFileCache();
+  private String             fileEncoding                = "utf-8";
+  private boolean            useJavaStyleUnicodeEscaping = false;
   
   /* ********************************************** Classes/Interfaces ********************************************** */
   /**
@@ -121,9 +122,10 @@ public class FileGroupToPropertiesAdapter
    * 
    * @param groupToken
    * @param fileEncoding
+   * @param useJavaStyleUnicodeEscaping
    * @return
    */
-  protected PropertyFile resolvePropertyFile( String groupToken, String fileEncoding )
+  protected PropertyFile resolvePropertyFile( String groupToken, String fileEncoding, boolean useJavaStyleUnicodeEscaping )
   {
     //
     PropertyFile retval = null;
@@ -141,6 +143,7 @@ public class FileGroupToPropertiesAdapter
         //
         retval = new PropertyFile( file );
         retval.setFileEncoding( fileEncoding );
+        retval.setUseJavaStyleUnicodeEscaping( useJavaStyleUnicodeEscaping );
       }
     }
     
@@ -158,7 +161,7 @@ public class FileGroupToPropertiesAdapter
   protected PropertyFile resolveAndLoadPropertyFile( String groupToken )
   {
     //
-    PropertyFile propertyFile = this.resolvePropertyFile( groupToken, this.fileEncoding );
+    PropertyFile propertyFile = this.resolvePropertyFile( groupToken, this.fileEncoding, this.useJavaStyleUnicodeEscaping );
     
     //
     if ( propertyFile != null )
@@ -315,5 +318,11 @@ public class FileGroupToPropertiesAdapter
   public void setFileEncoding( String fileEncoding )
   {
     this.fileEncoding = fileEncoding;
+  }
+  
+  public FileGroupToPropertiesAdapter setUseJavaStyleUnicodeEscaping( boolean useJavaStyleUnicodeEscaping )
+  {
+    this.useJavaStyleUnicodeEscaping = useJavaStyleUnicodeEscaping;
+    return this;
   }
 }

@@ -69,16 +69,18 @@ public class ModifierHelper
    * This method writes the values resolved by the xls file back to the property files. Non existing property files are created,
    * existing ones modified.
    * 
-   * @param xlsFile
+   * @param file
    * @param fileEncoding
    *          : encoding of the file like UTF-8. If null is passed the default file encoding is used.
    * @param localeFilter
    * @param deletePropertiesWithBlankValue
+   * @param useJavaStyleUnicodeEscaping
    */
   public static void writeXLSFileContentToPropertyFiles( File file,
                                                          String fileEncoding,
                                                          LocaleFilter localeFilter,
-                                                         boolean deletePropertiesWithBlankValue )
+                                                         boolean deletePropertiesWithBlankValue,
+                                                         boolean useJavaStyleUnicodeEscaping )
   {
     //
     if ( XLSFile.isXLSFile( file ) )
@@ -174,6 +176,7 @@ public class ModifierHelper
         {
           propertyFile.setFileEncoding( fileEncoding );
         }
+        propertyFile.setUseJavaStyleUnicodeEscaping( useJavaStyleUnicodeEscaping );
         propertyFile.load();
         PropertyMap propertyMap = propertyFile.getPropertyFileContent().getPropertyMap();
         
@@ -243,13 +246,16 @@ public class ModifierHelper
    * @param localeFilter
    * @param fileNameLocaleGroupPattern
    * @param groupingPatternGroupingGroupIndexList
+   * @param useJavaStyleUnicodeEscaping
+   *          TODO
    * @return
    */
   public static XLSFile createXLSFileFromPropertyFiles( Set<File> propertyFileSet,
                                                         String fileEncoding,
                                                         LocaleFilter localeFilter,
                                                         String fileNameLocaleGroupPattern,
-                                                        List<Integer> groupingPatternGroupingGroupIndexList )
+                                                        List<Integer> groupingPatternGroupingGroupIndexList,
+                                                        boolean useJavaStyleUnicodeEscaping )
   {
     //
     XLSFile retval = null;
@@ -292,7 +298,8 @@ public class ModifierHelper
           
           //
           FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter = new FileGroupToPropertiesAdapter( fileGroup );
-          fileGroupToPropertiesAdapter.setFileEncoding(fileEncoding);
+          fileGroupToPropertiesAdapter.setFileEncoding( fileEncoding );
+          fileGroupToPropertiesAdapter.setUseJavaStyleUnicodeEscaping( useJavaStyleUnicodeEscaping );
           
           //
           fileGroupToPropertiesAdapterList.add( fileGroupToPropertiesAdapter );

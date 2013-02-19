@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.omnaest.utils</groupId>
             <artifactId>utils-apl-derived-core</artifactId>
-            <version>0.1.15</version>
+            <version>0.2.11</version>
         </dependency>
     </dependencies>
 </project>

@@ -81,8 +81,9 @@ public class ModifierHelperTest
   public void testModifierHelperLoadAndStore()
   {
     //
+    boolean useJavaStyleUnicodeEscaping = true;
     XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
-                                                                     null, null );
+                                                                     null, null, useJavaStyleUnicodeEscaping );
     
     //
     xlsFile.setFile( this.xlsFile );
@@ -92,7 +93,8 @@ public class ModifierHelperTest
     ModifierHelperTest.assertContent( xlsFile );
     
     //
-    ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true );
+    ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true,
+                                                       useJavaStyleUnicodeEscaping );
     
     //
     xlsFile.load();
@@ -144,8 +146,9 @@ public class ModifierHelperTest
   public void testModifierHelperAddKey()
   {
     //
+    boolean useJavaStyleUnicodeEscaping = true;
     XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
-                                                                     null, null );
+                                                                     null, null, useJavaStyleUnicodeEscaping );
     
     //
     List<TableRow> tableRowList = xlsFile.getTableRowList();
@@ -166,7 +169,8 @@ public class ModifierHelperTest
     xlsFile.store();
     
     //
-    ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true );
+    ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true,
+                                                       useJavaStyleUnicodeEscaping );
     
     //
     String locale = tableRowList.get( 0 ).get( 2 );

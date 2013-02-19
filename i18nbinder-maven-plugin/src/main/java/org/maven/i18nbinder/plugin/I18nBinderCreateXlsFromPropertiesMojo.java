@@ -77,6 +77,11 @@ public class I18nBinderCreateXlsFromPropertiesMojo extends AbstractMojo
   /**
    * @parameter
    */
+  private boolean       useJavaStyleUnicodeEscaping              = false;
+  
+  /**
+   * @parameter
+   */
   private String        xlsFileName                              = "i18n.xls";
   
   /**
@@ -105,7 +110,8 @@ public class I18nBinderCreateXlsFromPropertiesMojo extends AbstractMojo
         //
         XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding,
                                                                          localeFilter, this.fileNameLocaleGroupPattern,
-                                                                         this.fileNameLocaleGroupPatternGroupIndexList );
+                                                                         this.fileNameLocaleGroupPatternGroupIndexList,
+                                                                         this.useJavaStyleUnicodeEscaping );
         
         //
         File file = new File( this.xlsOutputDirectory, this.xlsFileName );
@@ -140,6 +146,7 @@ public class I18nBinderCreateXlsFromPropertiesMojo extends AbstractMojo
     this.getLog().info( "xlsOutputDirectory=" + this.xlsOutputDirectory );
     this.getLog().info( "xlsFileName=" + this.xlsFileName );
     this.getLog().info( "propertiesRootDirectory=" + this.propertiesRootDirectory );
+    this.getLog().info( "useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping );
   }
   
   private Set<File> resolveFilesFromDirectoryRoot( File propertiesRootDirectory )

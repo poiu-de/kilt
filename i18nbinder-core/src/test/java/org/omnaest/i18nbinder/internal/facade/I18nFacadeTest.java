@@ -29,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 import org.omnaest.i18nbinder.internal.facade.I18nFacade.ResourceBasedTranslator;
 import org.omnaest.utils.structure.map.MapBuilder;
+import org.omnaest.utils.structure.map.MapUtils;
 
 public class I18nFacadeTest
 {
@@ -135,12 +136,13 @@ public class I18nFacadeTest
       @Override
       public String translate( String baseName, String key, Locale locale )
       {
-        return new MapBuilder<String, String>().linkedHashMap()
-                                               .put( "a", "value a" )
-                                               .put( "b", "value b" )
-                                               .put( "c", "value c" )
-                                               .build()
-                                               .get( key );
+        return MapUtils.builder()
+                       .put( "a", "value a" )
+                       .put( "b", "value b" )
+                       .put( "c", "value c" )
+                       .buildAs()
+                       .linkedHashMap()
+                       .get( key );
       }
       
       @Override

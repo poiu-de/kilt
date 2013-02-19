@@ -38,7 +38,8 @@ public class I18nClientUserTest
       I18nFacade i18nFacade = new I18nFacade( new Locale( "en", "US" ) );
       assertEquals( "value1", i18nFacade.I18n.AdminTest.getMyPropertyKey1() );
       assertEquals( "value2", i18nFacade.I18n.AdminTest.getMyPropertyKey2() );
-      assertEquals( "value a and b", i18nFacade.I18n._673numericalTest.getMyPropertyKey1( "a", "b" ) );      
+      assertEquals( "value a and b", i18nFacade.I18n._673numericalTest.getMyPropertyKey1( "a", "b" ) );
     }
   }
+  
 }

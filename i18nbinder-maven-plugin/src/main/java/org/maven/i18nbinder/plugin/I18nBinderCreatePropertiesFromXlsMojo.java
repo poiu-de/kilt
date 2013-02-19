@@ -60,6 +60,11 @@ public class I18nBinderCreatePropertiesFromXlsMojo extends AbstractMojo
    */
   private boolean deletePropertiesWithBlankValue = true;
   
+  /**
+   * @parameter
+   */
+  private boolean useJavaStyleUnicodeEscaping    = false;
+  
   /* *************************************************** Methods **************************************************** */
   
   @Override
@@ -83,7 +88,8 @@ public class I18nBinderCreatePropertiesFromXlsMojo extends AbstractMojo
         if ( file.exists() )
         {
           ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.propertyFileEncoding, localeFilter,
-                                                             this.deletePropertiesWithBlankValue );
+                                                             this.deletePropertiesWithBlankValue,
+                                                             this.useJavaStyleUnicodeEscaping );
         }
       }
       
@@ -106,6 +112,7 @@ public class I18nBinderCreatePropertiesFromXlsMojo extends AbstractMojo
     this.getLog().info( "localeFilterRegex=" + this.localeFilterRegex );
     this.getLog().info( "xlsOutputDirectory=" + this.xlsOutputDirectory );
     this.getLog().info( "xlsFileName=" + this.xlsFileName );
+    this.getLog().info( "useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping );
     
   }
   

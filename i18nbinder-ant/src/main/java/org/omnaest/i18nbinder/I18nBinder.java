@@ -64,6 +64,8 @@ public class I18nBinder extends Task
   
   private String        propertyFileEncoding                     = "utf-8";
   
+  private boolean       useJavaStyleUnicodeEscaping              = false;
+  
   /* ********************************************** Methods ********************************************** */
   @Override
   public void execute() throws BuildException
@@ -125,7 +127,7 @@ public class I18nBinder extends Task
       if ( file.exists() )
       {
         ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.propertyFileEncoding, this.localeFilter,
-                                                           this.deletePropertiesWithBlankValue );
+                                                           this.deletePropertiesWithBlankValue, this.useJavaStyleUnicodeEscaping );
       }
       
       //
@@ -148,9 +150,10 @@ public class I18nBinder extends Task
       Set<File> propertyFileSet = this.resolveFilesFromFileSetList( this.fileSetList );
       
       //
-      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding, this.localeFilter,
-                                                                       this.fileNameLocaleGroupPattern,
-                                                                       this.fileNameLocaleGroupPatternGroupIndexList );
+      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding,
+                                                                       this.localeFilter, this.fileNameLocaleGroupPattern,
+                                                                       this.fileNameLocaleGroupPatternGroupIndexList,
+                                                                       this.useJavaStyleUnicodeEscaping );
       
       //
       File file = new File( this.xlsFileName );
@@ -460,6 +463,11 @@ public class I18nBinder extends Task
   {
     this.log( "javaFileEncoding=" + javaFileEncoding );
     this.javaFileEncoding = javaFileEncoding;
+  }
+  
+  public void setUseJavaStyleUnicodeEscaping( boolean useJavaStyleUnicodeEscaping )
+  {
+    this.useJavaStyleUnicodeEscaping = useJavaStyleUnicodeEscaping;
   }
   
 }
