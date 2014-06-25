@@ -714,7 +714,7 @@ public class FacadeCreatorHelper
             stringBuilder.append( "    String retval = get" + propertyName + "( locale );\n" );
             stringBuilder.append( "    for ( int ii = 0; ii < tokens.length; ii++ )\n" );
             stringBuilder.append( "    {\n" );
-            stringBuilder.append( "      String token = tokens[ii].toString();\n" );
+            stringBuilder.append( "      String token = tokens[ii] != null ? tokens[ii].toString() : null;\n" );
             stringBuilder.append( "      if ( token != null )\n" );
             stringBuilder.append( "      {\n" );
             stringBuilder.append( "        retval = retval.replaceAll( \"\\\\{\" + ii + \"\\\\}\", token );\n" );
