@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Danny Kunz
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -191,7 +193,7 @@ public class FacadeCreatorHelper
               //
               String[] baseNameTokens = baseNameInTargetPlattform.split( pathDelimiter );
               
-              //              
+              //
               tokenPathElementList.addAll( Arrays.asList( baseNameTokens ) );
             }
             
@@ -243,7 +245,7 @@ public class FacadeCreatorHelper
                 }
               }
               
-              //                 
+              //
               TokenElementPath<String> tokenElementPath = new TokenElementPath<String>( tokenPathElementList );
               TokenMonoHierarchy.addTokenElementPathWithValues( tokenElementPath, propertyKeyAndValues );
             }
@@ -420,22 +422,26 @@ public class FacadeCreatorHelper
     boolean hasBaseName = StringUtils.isNotBlank( baseName );
     boolean hasProperties = !propertyNameToExampleValueListMap.keySet().isEmpty();
     
+    SortedSet<String> importSet = new TreeSet<String>();
+    int importOffset = 0;
+    
     //imports
     if ( !isSubClass || externalizeTypes )
     {
       //
       stringBuilder.append( StringUtils.isNotBlank( packageName ) ? "package " + packageName + ";\n\n" : "" );
+      importOffset = stringBuilder.length();
       
-      stringBuilder.append( "import java.util.Locale;\n" );
-      stringBuilder.append( "import java.util.MissingResourceException;\n" );
-      stringBuilder.append( "import javax.annotation.Generated;\n\n" );
-      stringBuilder.append( "import java.util.Map;\n" );
+      //stringBuilder.append( "import java.util.MissingResourceException;\n" );
+      importSet.add( "java.util.Locale" );
+      importSet.add( "java.util.MissingResourceException" );
+      importSet.add( "javax.annotation.Generated" );
       
       //
       if ( !isSubClass )
       {
-        stringBuilder.append( "import java.util.LinkedHashMap;\n" );
-        stringBuilder.append( "import java.util.ResourceBundle;\n\n" );
+        importSet.add( "java.util.LinkedHashMap" );
+        importSet.add( "java.util.ResourceBundle" );
       }
       
       //
@@ -444,8 +450,8 @@ public class FacadeCreatorHelper
         //
         if ( hasProperties )
         {
-          stringBuilder.append( "import " + rootPackageName + "." + i18nFacadeName + ";\n" );
-          stringBuilder.append( "import " + rootPackageName + "." + i18nFacadeName + ".Translator;\n" );
+          importSet.add( rootPackageName + "." + i18nFacadeName );
+          importSet.add( rootPackageName + "." + i18nFacadeName + ".Translator" );
         }
         
         //
@@ -453,7 +459,7 @@ public class FacadeCreatorHelper
         {
           for ( String subClassName : subClassNameToTokenElementMap.keySet() )
           {
-            stringBuilder.append( "import " + packageName + "." + StringUtils.lowerCase( className ) + "." + subClassName + ";\n" );
+            importSet.add( packageName + "." + StringUtils.lowerCase( className ) + "." + subClassName );
           }
         }
       }
@@ -548,6 +554,7 @@ public class FacadeCreatorHelper
       {
         if ( !isSubClass )
         {
+          importSet.add( "java.util.Map" );
           appendResourceBasedTranslatorInterface( stringBuilder );
           appendTranslatorHelper( stringBuilder, i18nFacadeName );
         }
@@ -567,7 +574,7 @@ public class FacadeCreatorHelper
         stringBuilder.append( "  public " + className + "( Locale locale )\n" );
         stringBuilder.append( "  {\n" );
         {
-          //          
+          //
           stringBuilder.append( "    this(locale,true);\n" );
         }
         stringBuilder.append( "  }\n" );
@@ -696,18 +703,18 @@ public class FacadeCreatorHelper
           {
             //
             stringBuilder.append( "  /**\n" );
-            stringBuilder.append( "   * Similar to  {@link #get" + propertyName + "(String[])} using the given {@link Locale}.\n" );
+            stringBuilder.append( "   * Similar to  {@link #get" + propertyName + "(Object[])} using the given {@link Locale}.\n" );
             stringBuilder.append( "   * @see " + className + "\n" );
             stringBuilder.append( "   * @see #get" + propertyName + "(String[])\n" );
             stringBuilder.append( "   * @param locale\n" );
             stringBuilder.append( "   * @param tokens\n" );
             stringBuilder.append( "   */ \n" );
-            stringBuilder.append( "  public String get" + propertyName + "( Locale locale, String... tokens )\n" );
+            stringBuilder.append( "  public String get" + propertyName + "( Locale locale, Object... tokens )\n" );
             stringBuilder.append( "  {\n" );
             stringBuilder.append( "    String retval = get" + propertyName + "( locale );\n" );
             stringBuilder.append( "    for ( int ii = 0; ii < tokens.length; ii++ )\n" );
             stringBuilder.append( "    {\n" );
-            stringBuilder.append( "      String token = tokens[ii];\n" );
+            stringBuilder.append( "      String token = tokens[ii].toString();\n" );
             stringBuilder.append( "      if ( token != null )\n" );
             stringBuilder.append( "      {\n" );
             stringBuilder.append( "        retval = retval.replaceAll( \"\\\\{\" + ii + \"\\\\}\", token );\n" );
@@ -725,10 +732,10 @@ public class FacadeCreatorHelper
             printJavaDocPlaceholders( stringBuilder, replacementTokensForExampleValuesNumericPlaceholders );
             printJavaDocValueExamples( stringBuilder, exampleValueList );
             stringBuilder.append( "   * @see " + className + "\n" );
-            stringBuilder.append( "   * @see #get" + propertyName + "(Locale,String[])\n" );
+            stringBuilder.append( "   * @see #get" + propertyName + "(Locale,Object[])\n" );
             stringBuilder.append( "   * @param tokens\n" );
             stringBuilder.append( "   */ \n" );
-            stringBuilder.append( "  public String get" + propertyName + "( String... tokens )\n" );
+            stringBuilder.append( "  public String get" + propertyName + "( Object... tokens )\n" );
             stringBuilder.append( "  {\n" );
             stringBuilder.append( "    return get" + propertyName + "( this.locale, tokens );\n" );
             stringBuilder.append( "  }\n\n" );
@@ -738,6 +745,7 @@ public class FacadeCreatorHelper
           //
           if ( containsArbitraryReplacementToken )
           {
+            importSet.add( "java.util.Map" );
             //
             stringBuilder.append( "  /**\n" );
             stringBuilder.append( "   * Returns the value of the property key <b>"
@@ -857,6 +865,13 @@ public class FacadeCreatorHelper
     
     //
     stringBuilder.append( "}\n\n" );
+    
+    StringBuilder importBuf = new StringBuilder();
+    for ( String importDef : importSet )
+    {
+      importBuf.append( "import " + importDef + ";\n" );
+    }
+    stringBuilder.insert( importOffset, importBuf.toString() + "\n" );
   }
   
   private static void printJavaDocPropertiesExamplesForSubclassAndInstance( StringBuilder stringBuilder,
@@ -916,7 +931,7 @@ public class FacadeCreatorHelper
   
   private static void appendResourceBasedTranslatorInterface( StringBuilder stringBuilder )
   {
-    //    
+    //
     stringBuilder.append( "\n" );
     stringBuilder.append( "  /**\n" );
     stringBuilder.append( "   * Basic interface which is used by the facade to resolve translated values for given keys<br>\n" );
@@ -1060,7 +1075,7 @@ public class FacadeCreatorHelper
       stringBuilder.append( "      return translate( this.locale, keys );\n" );
       stringBuilder.append( "    }\n\n" );
       
-      //          
+      //
       stringBuilder.append( "    /**\n" );
       stringBuilder.append( "     * Returns all available property keys for the given {@link Locale}. \n" );
       stringBuilder.append( "     * @see Translator\n" );
@@ -1177,8 +1192,10 @@ public class FacadeCreatorHelper
   protected static class CamelCaseTokenElementToMapEntryConverter implements
                                                                  ElementConverterElementToMapEntry<String, String, String>
   {
+    private static final long serialVersionUID = 1L;
+    
     /* ********************************************** Variables ********************************************** */
-    public String excludedkey = null;
+    public String             excludedkey      = null;
     
     /* ********************************************** Methods ********************************************** */
     public CamelCaseTokenElementToMapEntryConverter( String excludedkey )
@@ -1213,7 +1230,7 @@ public class FacadeCreatorHelper
         value = element;
       }
       
-      // 
+      //
       return new SimpleEntry<String, String>( key, value );
     }
     
