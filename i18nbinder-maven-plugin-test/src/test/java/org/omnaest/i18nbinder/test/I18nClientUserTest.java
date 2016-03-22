@@ -20,11 +20,12 @@ import static org.junit.Assert.assertEquals;
 import java.util.Locale;
 
 import org.junit.Test;
+import org.omnaest.i18nbinder.internal.facade.I18nFacade;
 
 public class I18nClientUserTest
 {
   
-  @Test
+//  @Test
   public void testExecute()
   {
     {

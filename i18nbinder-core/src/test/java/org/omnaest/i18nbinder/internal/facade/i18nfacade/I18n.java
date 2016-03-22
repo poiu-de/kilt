@@ -3,14 +3,13 @@ package org.omnaest.i18nbinder.internal.facade.i18nfacade;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import javax.annotation.Generated;
-
-import java.util.Map;
-import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n._673numericalTest;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.AdminTest;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.LocalelessTest;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.Sub1;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.Sub2;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.ViewTest;
+import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n._673numericalTest;
+
 /**
  * This is an automatically with i18nBinder generated facade class.<br><br>
  * To modify please adapt the underlying property files.<br><br>
@@ -24,7 +23,7 @@ import org.omnaest.i18nbinder.internal.facade.i18nfacade.i18n.ViewTest;
  * @see Sub2
  * @see ViewTest
  */ 
-@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:48:42+02:00")
+@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2016-03-22T12:08:39+01:00")
 public class I18n {
   /** @see _673numericalTest */
   public final _673numericalTest _673numericalTest;

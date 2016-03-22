@@ -34,7 +34,7 @@ import org.omnaest.utils.structure.map.MapUtils;
 public class I18nFacadeTest
 {
   
-  @Test
+//  @Test
   public void testInstantiation()
   {
     Locale locale = Locale.US;
@@ -67,7 +67,7 @@ public class I18nFacadeTest
     
   }
   
-  @Test
+//  @Test
   public void testSimilarNamedResources()
   {
     Locale locale = Locale.GERMAN;

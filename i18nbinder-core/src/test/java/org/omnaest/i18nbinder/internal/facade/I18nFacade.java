@@ -1,14 +1,13 @@
 package org.omnaest.i18nbinder.internal.facade;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
-import javax.annotation.Generated;
-
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
-
+import javax.annotation.Generated;
 import org.omnaest.i18nbinder.internal.facade.i18nfacade.I18n;
+
 /**
  * This is an automatically with i18nBinder generated facade class.<br><br>
  * To modify please adapt the underlying property files.<br><br>
@@ -16,7 +15,7 @@ import org.omnaest.i18nbinder.internal.facade.i18nfacade.I18n;
  * The facade methods will silently ignore all {@link MissingResourceException}s by default. To alter this behavior see {@link #I18nFacade(Locale, boolean)}<br><br>
  * @see I18n
  */ 
-@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2012-09-07T20:48:42+02:00")
+@Generated(value = "http://code.google.com/p/i18n-binder/", date = "2016-03-22T12:08:39+01:00")
 public class I18nFacade {
   /** @see I18n */
   public final I18n I18n;
