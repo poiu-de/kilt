@@ -108,7 +108,16 @@ public class XLSFile implements Serializable
         //
         for ( Cell iCell : iRow )
         {
-          newTableRow.add( iCell.getStringCellValue() );
+
+		  //
+		  if ( iCell.getCellType() == Cell.CELL_TYPE_NUMERIC )
+		  {
+            newTableRow.add( String.valueOf(iCell.getNumericCellValue()) );
+		  }
+		  else
+		  {
+            newTableRow.add( iCell.getStringCellValue() );
+		  }
         }
         
         //
