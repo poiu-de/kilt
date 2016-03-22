@@ -54,13 +54,13 @@ public class FacadeCreatorHelperTest
   public void testCreateI18nInterfaceFacadeFromPropertyFiles() throws IOException
   {
     //
-    final String packageBaseFolder = "org\\omnaest\\i18nbinder\\internal";
+    final String packageBaseFolder = "org" + File.separator + "omnaest" + File.separator + "i18nbinder" + File.separator + "internal";
     
     //
     final String fileNameLocaleGroupPattern = null;
     final List<Integer> groupingPatternGroupingGroupIndexList = null;
     final String baseNameInTargetPlattform = "i18n";
-    final String baseFolderIgnoredPath = new File( "" ).getAbsolutePath() + "\\target\\test-classes\\" + packageBaseFolder + "\\";
+    final String baseFolderIgnoredPath = new File( "" ).getAbsolutePath() + File.separator + "target" + File.separator + "test-classes" + File.separator + "" + packageBaseFolder + File.separator;
     final String packageName = "org.omnaest.i18nbinder.internal.facade";
     final String javaFacadeFileName = "I18nFacade";
     final boolean externalizeTypes = true;
@@ -81,7 +81,7 @@ public class FacadeCreatorHelperTest
     for ( String fileName : facadeFromPropertyFiles.keySet() )
     {
       //
-      final String basePath = new File( "" ).getAbsolutePath() + "\\src\\test\\java\\" + packageBaseFolder + "\\facade\\";
+      final String basePath = new File( "" ).getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + packageBaseFolder + File.separator + "facade" + File.separator;
       final String fileContent = facadeFromPropertyFiles.get( fileName );
       
       //
