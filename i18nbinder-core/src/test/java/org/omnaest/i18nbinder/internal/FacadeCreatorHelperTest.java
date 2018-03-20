@@ -84,8 +84,8 @@ public class FacadeCreatorHelperTest
       //
       final Path tmpPath= Files.createTempDirectory("i18nbuilder-core-FacadeCreatorHelperTest");
       tmpPath.toFile().deleteOnExit();
-      final String basePath = tmpPath.toFile().getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + packageBaseFolder + File.separator + "facade" + File.separator;
-      //final String basePath = new File( "" ).getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + packageBaseFolder + File.separator + "facade" + File.separator;
+//      final String basePath = tmpPath.toFile().getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + packageBaseFolder + File.separator + "facade" + File.separator;
+      final String basePath = new File( "" ).getAbsolutePath() + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + packageBaseFolder + File.separator + "facade" + File.separator;
       final String fileContent = facadeFromPropertyFiles.get( fileName );
 
       //
