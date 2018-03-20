@@ -97,6 +97,9 @@ public class XLSFile implements Serializable
       InputStream inputStream = new BufferedInputStream( new FileInputStream( this.file ) );
       Workbook wb = this.newWorkbookFrom( inputStream );
       Sheet sheet = wb.getSheet( MAINSHEETPAGENAME );
+      if (sheet == null) {
+        sheet = wb.getSheetAt(0);
+      }
       
       //
       this.clear();
