@@ -4,11 +4,10 @@
     <parent>
         <groupId>org.omnaest.i18nbinder</groupId>
         <artifactId>i18nbinder-parent</artifactId>
-        <version>0.1.18-SNAPSHOT</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>i18nbinder-maven-plugin</artifactId>
-
     <packaging>maven-plugin</packaging>
 
     <name>i18nbinder-maven-plugin Maven Mojo</name>
@@ -17,7 +16,13 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
-            <version>3.0.3</version>
+            <version>3.5.4</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.maven.plugin-tools</groupId>
+          <artifactId>maven-plugin-annotations</artifactId>
+          <version>3.5.2</version>
+          <scope>provided</scope> <!-- annotations are only needed to build the plugin -->
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -35,15 +40,32 @@
             <version>3.0-alpha-2</version>
         </dependency>
     </dependencies>
+
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <goalPrefix>i18nbinder</goalPrefix>
-                </configuration>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.5.2</version>
+          <configuration>
+            <goalPrefix>i18nbinder</goalPrefix>
+            <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+          </configuration>
+          <executions>
+            <execution>
+              <id>mojo-descriptor</id>
+              <phase>process-classes</phase>
+              <goals>
+                <goal>descriptor</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>help-goal</id>
+              <goals>
+                <goal>helpmojo</goal>
+              </goals>
+            </execution>
+          </executions>
             </plugin>
         </plugins>
     </build>
