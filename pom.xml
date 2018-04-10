@@ -14,6 +14,14 @@
     <name>i18nBinder-parent module</name>
     <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
     <url>http://code.google.com/p/i18n-binder/</url>
+
+		<licenses>
+			<license>
+				<name>Apache License, Version 2.0</name>
+				<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			</license>
+		</licenses>
+
     <developers>
         <developer>
             <id>omnaest</id>
