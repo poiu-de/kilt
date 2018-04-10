@@ -11,9 +11,10 @@
     <groupId>org.omnaest.i18nbinder</groupId>
     <artifactId>i18nbinder-parent</artifactId>
     <version>0.2.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
     <name>i18nBinder-parent module</name>
     <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
-    <url>http://code.google.com/p/i18n-binder/</url>
+    <url>https://github.com/hupfdule/i18n-binder</url>
 
 		<licenses>
 			<license>
@@ -22,6 +23,18 @@
 			</license>
 		</licenses>
 
+    <scm>
+      <url>https://github.com/hupfdule/i18n-binder</url>
+      <connection>csm:git:git://github.com/hupfdule/i18n-binder.git</connection>
+      <developerConnection>csm:git:git@github.com://github.com/hupfdule/i18n-binder.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+      <url>https://github.com/hupfdule/i18n-binder/issues</url>
+      <system>GitHub Issues</system>
+    </issueManagement>
+
+
     <developers>
         <developer>
             <id>omnaest</id>
@@ -29,6 +42,24 @@
             <email>awonderland6@googlemail.com</email>
         </developer>
     </developers>
+
+    <modules>
+        <module>i18nbinder-core</module>
+        <module>i18nbinder-maven-plugin</module>
+        <module>i18nbinder-ant</module>
+        <module>i18nbinder-runtime</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.omnaest.i18nbinder</groupId>
+                <artifactId>i18nbinder-core</artifactId>
+                <version>0.2.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -40,30 +71,20 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>3.1.0</version>
+							<configuration>
+								<archive>
+									<manifest>
+										<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+										<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+									</manifest>
+								</archive>
+							</configuration>
+						</plugin>
         </plugins>
     </build>
-    <packaging>pom</packaging>
-    <modules>
-        <module>i18nbinder-core</module>
-        <module>i18nbinder-maven-plugin</module>
-        <module>i18nbinder-ant</module>
-        <module>i18nbinder-runtime</module>
-    </modules>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.omnaest.i18nbinder</groupId>
-                <artifactId>i18nbinder-core</artifactId>
-                <version>0.2.0-SNAPSHOT</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    <scm>
-        <url>https://i18n-binder.googlecode.com/svn/trunk</url>
-        <connection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</connection>
-        <developerConnection>scm:svn:https://i18n-binder.googlecode.com/svn/trunk</developerConnection>
-    </scm>
-    <issueManagement>
-        <url>http://code.google.com/p/i18n-binder/issues/list</url>
-    </issueManagement>
 </project>

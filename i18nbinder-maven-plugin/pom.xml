@@ -11,7 +11,6 @@
     <packaging>maven-plugin</packaging>
 
     <name>i18nbinder-maven-plugin Maven Mojo</name>
-    <url>http://code.google.com/p/i18n-binder/</url>
 
     <licenses>
       <license>

@@ -8,7 +8,6 @@
 
   <artifactId>i18nbinder-runtime</artifactId>
   <name>i18nbinder-runtime module</name>
-  <url>http://code.google.com/p/i18n-binder/</url>
 
   <licenses>
     <license>

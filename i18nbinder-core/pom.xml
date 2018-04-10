@@ -7,7 +7,6 @@
     </parent>
     <artifactId>i18nbinder-core</artifactId>
     <name>i18nbinder-core module</name>
-    <url>http://code.google.com/p/i18n-binder/</url>
 
     <licenses>
       <license>

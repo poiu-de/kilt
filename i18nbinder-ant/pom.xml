@@ -8,7 +8,6 @@
 
   <artifactId>i18nbinder-ant</artifactId>
   <name>i18nbinder-ant module</name>
-  <url>http://code.google.com/p/i18n-binder/</url>
 
   <licenses>
     <license>
