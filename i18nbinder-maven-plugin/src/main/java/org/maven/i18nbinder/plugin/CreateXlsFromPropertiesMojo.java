@@ -16,6 +16,7 @@
 package org.maven.i18nbinder.plugin;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -99,6 +100,7 @@ public class CreateXlsFromPropertiesMojo extends AbstractMojo
                                                                          this.useJavaStyleUnicodeEscaping );
 
         //
+        Files.createDirectories(this.xlsOutputDirectory.toPath());
         File file = new File( this.xlsOutputDirectory, this.xlsFileName );
         xlsFile.setFile( file );
         xlsFile.store();
