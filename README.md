@@ -20,5 +20,7 @@ In the second step the properies changed within the XLS file are merged back int
  * Validation of existence of property keys over all locales
  * Generation of a Java source code facade
 
+## License
 
+This project is licensed unter the terms of the Apache license 2.0.
 
