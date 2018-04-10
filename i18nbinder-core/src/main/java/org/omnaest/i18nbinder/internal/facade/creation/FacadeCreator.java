@@ -21,10 +21,19 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.logging.Level;
 import javax.annotation.Generated;
+import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -166,5 +175,79 @@ public class FacadeCreator {
    */
   public String toPackageName(final String s) {
     return s.replaceAll("\\/", ".");
+  }
+
+
+  /**
+   * Copies the facade accessor classes to the specified target source directory.
+   * The accessor class will be renamed to the value given in <code>accessorClassName</code>.
+   * Be sure to give a valid java class name here.
+   * <p>
+   * The <code>targetSourcePath</code> is the path in which the package structure given in
+   * <code>packageName</code> will be placed in.
+   * <p>
+   * This methods creates all necessary directories prior to writing the files.
+   *
+   * @param accessorClassName the class name to use for the facade accessor class
+   * @param packageName the package into which to place the copied classes
+   * @param targetSourcePath the path to the sources directory for the copied classes
+   *                          (base of the package structure)
+   */
+  public void copyFacadeAccessorTemplates(final String accessorClassName, final String packageName, final Path targetSourcePath) {
+    Objects.requireNonWhitespace(accessorClassName);
+    Objects.requireNonWhitespace(packageName);
+    java.util.Objects.requireNonNull(targetSourcePath);
+
+    // first create the necessary directory structure
+    final String packageDirStructure= packageName.replaceAll("\\.", "/");
+    final Path targetDir= targetSourcePath.resolve(packageDirStructure);
+    try {
+      Files.createDirectories(targetDir);
+    } catch (IOException ex) {
+      throw new RuntimeException("Error creating target directory "+targetDir.toAbsolutePath().toString(), ex);
+    }
+
+    // then copy the I18nBundleKey class
+    try(
+      final InputStream in= this.getClass().getResourceAsStream("/facade/I18nBundleKey.java.template");
+      final BufferedReader reader= new BufferedReader(new InputStreamReader(in));
+      final PrintWriter writer= new PrintWriter(targetDir.resolve("I18nBundleKey.java").toFile());
+      ) {
+      String line;
+      while ((line= reader.readLine()) != null) {
+        // replace the package name
+        if (line.trim().equals("package org.omnaest.i18nbinder.internal.facade;")) {
+          line= line.replace("org.omnaest.i18nbinder.internal.facade", packageName);
+        }
+
+        writer.println(line);
+      }
+    } catch (IOException ex) {
+      throw new RuntimeException("Error copying I18nBundleKey template to "+targetDir.toAbsolutePath().toString(), ex);
+    }
+
+    // then copy the I18n accessor class
+    try(
+      final InputStream in= this.getClass().getResourceAsStream("/facade/I18n.java.template");
+      final BufferedReader reader= new BufferedReader(new InputStreamReader(in));
+      final PrintWriter writer= new PrintWriter(targetDir.resolve(accessorClassName+".java").toFile());
+      ) {
+      String line;
+      while ((line= reader.readLine()) != null) {
+        // replace the package name
+        if (line.trim().equals("package org.omnaest.i18nbinder.internal.facade;")) {
+          line= line.replace("org.omnaest.i18nbinder.internal.facade", packageName);
+        }
+
+        // replace the class name
+        line= line.replace("${ACCESSOR_CLASS_NAME}", accessorClassName);
+
+        //TODO: Hier könnte man noch die Enum Facade Bundles referenzieren
+
+        writer.println(line);
+      }
+    } catch (IOException ex) {
+      throw new RuntimeException("Error copying facade accessor template to "+targetDir.toAbsolutePath().toString(), ex);
+    }
   }
 }

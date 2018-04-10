@@ -15,6 +15,7 @@
  */
 package org.maven.i18nbinder.plugin;
 
+import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
@@ -158,6 +159,21 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
   private String propertyFileEncoding;
 
 
+  /**
+   * Whether to copy the facade accessor class and the base interface I18nBundleKey to the
+   * generation target dir.
+   * This is only useful if it is necessary to avoid a runtime dependency on i18nbinder-runtime.
+   */
+  @Parameter(defaultValue= "false")
+  private boolean copyFacadeAccessorClasses;
+
+  /**
+   * The name of the facade accessor class when copying the facade accessor classes.
+   * This is only meaningful in combination with {@link #copyFacadeAccessorClasses}.
+   */
+  @Parameter(defaultValue= "I18n")
+  private String facadeAccessorClassName;
+
   /////////////////////////////////////////////////////////////////////////////
   //
   // Constructors
@@ -182,6 +198,7 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
 //        final String i18nFacadeName = StringUtils.defaultString(this.i18nFacadeName,
 //                                                                FacadeCreatorHelper.DEFAULT_JAVA_FACADE_FILENAME_I18N_FACADE);
 
+        // generate the the enum facade(s)
         final FacadeBundleContentHelper fbcHelper = new FacadeBundleContentHelper(propertiesRootDirectory);
         final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
 
@@ -196,6 +213,11 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
           javaFile.writeTo(outputDirectory);
           // TODO: To allow for custom charsets, we need to call javaFile.toString.getBytes(Charset), but this involves
           //       creating the directoy structure and identifying the correct file name.
+        }
+
+        // copy the facade accessor classes if requested
+        if (copyFacadeAccessorClasses) {
+          facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, generatedPackage, outputDirectory.toPath());
         }
 
         this.project.addCompileSourceRoot(this.outputDirectory.getCanonicalPath());
@@ -228,6 +250,11 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
 
 
   private Set<File> resolveFilesFromDirectoryRoot(File propertiesRootDirectory) {
+    if (!propertiesRootDirectory.exists()) {
+      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No enum facades will be generated.");
+      return ImmutableSet.of();
+    }
+
     final Set<File> retset = new LinkedHashSet<>();
 
     final String[] includes = {"**/*.properties"};
@@ -246,6 +273,10 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
         this.getLog().info("Resolved: " + fileName);
       }
       retset.add(new File(propertiesRootDirectory, fileName));
+    }
+
+    if (retset.isEmpty()) {
+      this.getLog().warn("No resource bundles found. No enum facades will be generated");
     }
 
     return retset;

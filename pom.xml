@@ -39,6 +39,7 @@
         <module>i18nbinder-core</module>
         <module>i18nbinder-maven-plugin</module>
         <module>i18nbinder-ant</module>
+        <module>i18nbinder-runtime</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.omnaest.i18nbinder</groupId>
+    <artifactId>i18nbinder-parent</artifactId>
+    <version>0.2.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>i18nbinder-runtime</artifactId>
+  <name>i18nbinder-runtime module</name>
+  <url>http://code.google.com/p/i18n-binder/</url>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.omnaest.i18nbinder</groupId>
+        <artifactId>i18nbinder-maven-plugin</artifactId>
+        <version>0.2.0-SNAPSHOT</version>
+        <configuration>
+          <generatedPackage>org.omnaest.i18nbinder.facade</generatedPackage>
+          <copyFacadeAccessorClasses>true</copyFacadeAccessorClasses>
+        </configuration>
+        <executions>
+          <execution>
+            <id>i18n-facade-generation</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generateI18nFacade</goal>
+            </goals>
+            <inherited>false</inherited>
+            <configuration>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
