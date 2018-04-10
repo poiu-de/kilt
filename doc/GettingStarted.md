@@ -6,7 +6,7 @@ Getting Started
  * Java SE 1.6+
  * Apache Ant 1.8.1+ or Apache Maven 3.0.3+
  
-# Download
+## Download
 
 Download a release package from the releases tab and extract it.
 
