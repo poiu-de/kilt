@@ -35,7 +35,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
-import org.omnaest.i18nbinder.internal.Logger;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 import org.omnaest.i18nbinder.internal.XLSFile;
 import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
@@ -51,8 +50,6 @@ public class I18nBinder extends Task
   private String        xlsFileName                              = null;
 
   private String        javaFileEncoding                         = "utf-8";                                                      ;
-
-  private Boolean       logInfo                                  = false;
 
   private LocaleFilter  localeFilter                             = new LocaleFilter();
   private boolean       deletePropertiesWithBlankValue           = true;
@@ -98,18 +95,6 @@ public class I18nBinder extends Task
 
   public void run()
   {
-    //
-    if ( this.logInfo )
-    {
-      ModifierHelper.logger = new Logger()
-      {
-        @Override
-        public void info( String message )
-        {
-          I18nBinder.this.log( message, Project.MSG_INFO );
-        }
-      };
-    }
 
     //
     if ( this.fileSetList.size() > 0 )
@@ -334,17 +319,6 @@ public class I18nBinder extends Task
     this.log( "fileEncoding=" + fileEncoding );
     this.propertyFileEncoding = fileEncoding;
     this.javaFileEncoding = fileEncoding;
-  }
-
-  public Boolean getLogInfo()
-  {
-    return this.logInfo;
-  }
-
-  public void setLogInfo( Boolean logInfo )
-  {
-    this.log( "logInfo=" + logInfo );
-    this.logInfo = logInfo;
   }
 
   public String getLocaleFilterRegex()
