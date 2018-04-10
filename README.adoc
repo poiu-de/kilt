@@ -1,4 +1,6 @@
-# i18n-binder
+i18n-binder
+===========
+
 Create an XLS sheet from Java localization resource bundles and vice versa.
 
 The i18n Binder provides an Apache Ant task and an Apache Maven Plugin which allows you to
@@ -10,7 +12,8 @@ In the first step the locales are separated from the absolute file path by a dec
 
 In the second step the properies changed within the XLS file are merged back into the original files. This is done with minimal impact on the property files which means comments and blank line are maintained as they are.
 
-## Features
+Features
+--------
 
  * Supports file encoding like UTF-8
  * Allows minimal invasive changes (comments, blank line are maintained)
@@ -20,7 +23,8 @@ In the second step the properies changed within the XLS file are merged back int
  * Validation of existence of property keys over all locales
  * Generation of a Java source code facade
 
-## License
+License
+-------
 
-This project is licensed under the terms of the Apache license 2.0.
+This project is licensed unter the terms of the Apache license 2.0.
 
