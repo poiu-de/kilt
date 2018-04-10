@@ -18,6 +18,7 @@ package org.omnaest.i18nbinder;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -64,12 +64,26 @@ public class I18nBinder extends Task
   private String        javaFacadeFileName                       = "I18n";
   private String        baseNameInTargetPlattform                = "";
   private String        baseFolderIgnoredPath                    = "";
-  private String        packageName                              = "";
+  private String        packageName                              = "org.omnaest.i18nbinder.facade";
+  private Path          facadeGenerationDir                      = Paths.get("generated-sources");
   private boolean       externalizeTypes;
 
   private String        propertyFileEncoding                     = "utf-8";
 
   private boolean       useJavaStyleUnicodeEscaping              = false;
+
+  /**
+   * Whether to copy the facade accessor class and the base interface I18nBundleKey to the
+   * generation target dir.
+   * This is only useful if it is necessary to avoid a runtime dependency on i18nbinder-runtime.
+   */
+  private boolean copyFacadeAccessorClasses;
+
+  /**
+   * The name of the facade accessor class when copying the facade accessor classes.
+   * This is only meaningful in combination with {@link #copyFacadeAccessorClasses}.
+   */
+  private String facadeAccessorClassName;
 
   /* ********************************************** Methods ********************************************** */
   @Override
@@ -197,8 +211,14 @@ public class I18nBinder extends Task
           // TODO: To allow for custom charsets, we need to call javaFile.toString.getBytes(Charset), but this involves
           //       creating the directoy structure and identifying the correct file name.
         }
+
+        // copy the facade accessor classes if requested
+        if (copyFacadeAccessorClasses) {
+          facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, packageName, facadeGenerationDir);
+        }
       } catch (Exception e) {
         this.log("Could not write Java facade to file", e, Project.MSG_ERR);
+        e.printStackTrace();
       }
 
       this.log("...done");
@@ -423,6 +443,7 @@ public class I18nBinder extends Task
 
   public void setPackageName( String packageName )
   {
+    org.omnaest.i18nbinder.internal.facade.creation.Objects.requireNonWhitespace(packageName, "packageName may not be empty");
     this.log( "packageName=" + packageName );
     this.packageName = packageName;
   }
@@ -450,4 +471,18 @@ public class I18nBinder extends Task
     this.useJavaStyleUnicodeEscaping = useJavaStyleUnicodeEscaping;
   }
 
+  public void setCopyFacadeAccessorClasses(final boolean copyFacadeAccessorClasses) {
+    this.log("copyFacadeAccessorClasses=" + copyFacadeAccessorClasses);
+    this.copyFacadeAccessorClasses= copyFacadeAccessorClasses;
+  }
+
+  public void setFacadeAccessorClassName(final String facadeAccessorClassName) {
+    this.log("facadeAccessorClassName=" + facadeAccessorClassName);
+    this.facadeAccessorClassName= facadeAccessorClassName;
+  }
+
+  public void setFacadeGenerationDir(final String facadeGenerationDir) {
+    this.log("facadeGenerationDir=" + facadeGenerationDir);
+    this.facadeGenerationDir= Paths.get(facadeGenerationDir);
+  }
 }

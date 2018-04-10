@@ -20,7 +20,9 @@
 
 	<taskdef name="i18nBinder" classname="org.omnaest.i18nbinder.I18nBinder">
 		<classpath>
-			<pathelement location="lib/i18nbinder-ant-0.2.0-SNAPSHOT-jar-with-dependencies.jar" />
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
 		</classpath>
 	</taskdef>
 
@@ -38,7 +40,7 @@
 
 	<target name="createJavaFacade" description="This task creates a Java source code facade file from a given fileset of property files.">
 		<property name="baseFolderIgnoredPath" location="${i18nDirectory}" />
-		<i18nBinder javaFacadeFileName="${javaFacadeFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createJavaFacade="true" baseNameInTargetPlattform="${baseNameInTargetPlattform}" baseFolderIgnoredPath="${baseFolderIgnoredPath}" packageName="${packageName}" externalizeTypes="${externalizeTypes}">
+    <i18nBinder javaFacadeFileName="${javaFacadeFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createJavaFacade="true" baseNameInTargetPlattform="${baseNameInTargetPlattform}" baseFolderIgnoredPath="${baseFolderIgnoredPath}" packageName="${packageName}" externalizeTypes="${externalizeTypes}" copyFacadeAccessorClasses="${copyFacadeAccessorClasses}" facadeAccessorClassName="${facadeAccessorClassName}" facadeGenerationDir="${facadeGenerationDir}">
 			<fileset dir="${i18nDirectory}">
 				<include name="**/*.properties" />
 			</fileset>
