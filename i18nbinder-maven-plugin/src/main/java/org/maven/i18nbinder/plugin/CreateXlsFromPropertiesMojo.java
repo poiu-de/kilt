@@ -65,8 +65,8 @@ public class CreateXlsFromPropertiesMojo extends AbstractMojo
   @Parameter(defaultValue = "false")
   private boolean       logResolvedPropertyFileNames             = false;
 
-  @Parameter(defaultValue = "false")
-  private boolean       useJavaStyleUnicodeEscaping              = false;
+//  @Parameter(defaultValue = "true")
+  private boolean       useJavaStyleUnicodeEscaping              = true;
 
   @Parameter(defaultValue = "i18n.xls")
   private String        xlsFileName                              = "i18n.xls";
@@ -132,6 +132,7 @@ public class CreateXlsFromPropertiesMojo extends AbstractMojo
     this.getLog().info( "xlsFileName=" + this.xlsFileName );
     this.getLog().info( "propertiesRootDirectory=" + this.propertiesRootDirectory );
     this.getLog().info( "useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping );
+    this.getLog().info( "propertyFileEncoding=" + this.propertyFileEncoding );
   }
 
   private Set<File> resolveFilesFromDirectoryRoot( File propertiesRootDirectory )
