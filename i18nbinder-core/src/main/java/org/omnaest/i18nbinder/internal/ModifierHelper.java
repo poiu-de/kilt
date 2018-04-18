@@ -15,9 +15,13 @@
  ******************************************************************************/
 package org.omnaest.i18nbinder.internal;
 
+import com.google.common.collect.ImmutableList;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -25,6 +29,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +40,10 @@ import org.omnaest.i18nbinder.grouping.FileGroup;
 import org.omnaest.i18nbinder.grouping.FileGroupToPropertiesAdapter;
 import org.omnaest.i18nbinder.grouping.FileGrouper;
 import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
+import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
+import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.internal.xls.Row;
+import org.omnaest.i18nbinder.internal.xls.Sheet;
 import org.omnaest.utils.propertyfile.PropertyFile;
 import org.omnaest.utils.propertyfile.content.PropertyMap;
 import org.omnaest.utils.propertyfile.content.element.Property;
@@ -234,175 +244,38 @@ public class ModifierHelper
     }
   }
 
-  /**
-   * Creates a new {@link XLSFile} based on a set of files.
-   *
-   * @param propertyFileSet
-   * @param fileEncoding
-   * @param localeFilter
-   * @param fileNameLocaleGroupPattern
-   * @param groupingPatternGroupingGroupIndexList
-   * @param useJavaStyleUnicodeEscaping
-   *          TODO
-   * @return
-   */
-  public static XLSFile createXLSFileFromPropertyFiles( Set<File> propertyFileSet,
-                                                        String fileEncoding,
-                                                        LocaleFilter localeFilter,
-                                                        String fileNameLocaleGroupPattern,
-                                                        List<Integer> groupingPatternGroupingGroupIndexList,
-                                                        boolean useJavaStyleUnicodeEscaping )
-  {
-    //
-    XLSFile retval = null;
 
-    //
-    if ( propertyFileSet != null )
-    {
-      //
-      Map<String, FileGroup> fileGroupIdentifierToFileGroupMap;
-      {
-        FileGrouper fileGrouper = new FileGrouper();
-        try
-        {
-          if ( fileNameLocaleGroupPattern != null )
-          {
-            fileGrouper.setGroupingPatternString( fileNameLocaleGroupPattern );
-          }
-          if ( groupingPatternGroupingGroupIndexList != null )
-          {
-            fileGrouper.setGroupingPatternGroupingGroupIndexList( groupingPatternGroupingGroupIndexList );
-          }
-        }
-        catch ( Exception e )
-        {
-          ModifierHelper.LOGGER.info( e.getMessage() );
-        }
-        fileGrouper.setGroupingPatternReplacementToken( GROUPING_PATTERN_REPLACEMENT_PATTERN_STRING );
-        fileGrouper.addAllFiles( propertyFileSet );
-        fileGroupIdentifierToFileGroupMap = fileGrouper.determineFileGroupIdentifierToFileGroupMap();
-      }
+  public static XLSFile createXLSFileFromPropertyFiles(final Path propertiesRootDirectory,
+                                                       Set<File> resourceBundleFiles,
+                                                       String fileEncoding,
+                                                       LocaleFilter localeFilter,
+                                                       String fileNameLocaleGroupPattern,
+                                                       List<Integer> groupingPatternGroupingGroupIndexList,
+                                                       boolean useJavaStyleUnicodeEscaping) {
 
-      //
-      List<FileGroupToPropertiesAdapter> fileGroupToPropertiesAdapterList = new ArrayList<FileGroupToPropertiesAdapter>();
-      {
-        //
-        for ( String fileGroupIdentifier : fileGroupIdentifierToFileGroupMap.keySet() )
-        {
-          //
-          FileGroup fileGroup = fileGroupIdentifierToFileGroupMap.get( fileGroupIdentifier );
+    final FacadeBundleContentHelper fbcHelper= new FacadeBundleContentHelper(propertiesRootDirectory);
+    final Map<String, Map<FacadeBundleContent.Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 
-          //
-          FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter = new FileGroupToPropertiesAdapter( fileGroup );
-          fileGroupToPropertiesAdapter.setFileEncoding( fileEncoding );
-          fileGroupToPropertiesAdapter.setUseJavaStyleUnicodeEscaping( useJavaStyleUnicodeEscaping );
+    final Sheet i18nSheet= new Sheet("Resource Bundle", "Translation Key");
 
-          //
-          fileGroupToPropertiesAdapterList.add( fileGroupToPropertiesAdapter );
-        }
+    for (final Map.Entry<String, Map<FacadeBundleContent.Language, File>> entry : bundleNameToFilesMap.entrySet()) {
+      final String bundleName= entry.getKey();
+      final Map<FacadeBundleContent.Language, File> bundleTranslations= entry.getValue();
 
-        //
-        Collections.sort( fileGroupToPropertiesAdapterList, new Comparator<FileGroupToPropertiesAdapter>()
-        {
-          @Override
-          public int compare( FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter1,
-                              FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter2 )
-          {
-            //
-            String fileGroupIdentifier1 = fileGroupToPropertiesAdapter1.getFileGroup().getFileGroupIdentifier();
-            String fileGroupIdentifier2 = fileGroupToPropertiesAdapter2.getFileGroup().getFileGroupIdentifier();
+      final FacadeBundleContent resourceBundleContent= FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+      for (final Map.Entry<String, Collection<FacadeBundleContent.Translation>> e : resourceBundleContent.getContent().asMap().entrySet()) {
+        final String propertyKey= e.getKey();
+        final Collection<FacadeBundleContent.Translation> translations= e.getValue();
 
-            //
-            return fileGroupIdentifier1.compareTo( fileGroupIdentifier2 );
-          }
-        } );
-      }
-
-      //determine all locales but fix the order
-      List<String> localeList = new ArrayList<String>();
-      {
-        //
-        Set<String> localeSet = new HashSet<String>();
-        for ( FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter : fileGroupToPropertiesAdapterList )
-        {
-          localeSet.addAll( fileGroupToPropertiesAdapter.determineGroupTokenList() );
-        }
-        localeList.addAll( localeSet );
-
-        //
-        for ( String locale : localeSet )
-        {
-          if ( !localeFilter.isLocaleAccepted( locale ) )
-          {
-            localeList.remove( locale );
-          }
-        }
-
-        //
-        Collections.sort( localeList );
-      }
-
-      //
-      XLSFile xlsFile = new XLSFile();
-      {
-        //
-        List<TableRow> tableRowList = xlsFile.getTableRowList();
-
-        //titles
-        {
-          //
-          TableRow tableRow = new TableRow();
-          tableRow.add( "File" );
-          tableRow.add( "Property key" );
-          tableRow.addAll( localeList );
-
-          //
-          tableRowList.add( tableRow );
-        }
-
-        //
-        for ( FileGroupToPropertiesAdapter fileGroupToPropertiesAdapter : fileGroupToPropertiesAdapterList )
-        {
-          //
-          String fileGroupIdentifier = fileGroupToPropertiesAdapter.getFileGroup().getFileGroupIdentifier();
-
-          //
-          ModifierHelper.LOGGER.info( "Processing: " + fileGroupIdentifier );
-
-          //
-          List<String> propertyKeyList = new ArrayList<String>( fileGroupToPropertiesAdapter.determinePropertyKeySet() );
-          Collections.sort( propertyKeyList );
-          for ( String propertyKey : propertyKeyList )
-          {
-            //
-            TableRow tableRow = new TableRow();
-            tableRow.add( fileGroupIdentifier );
-            tableRow.add( propertyKey );
-
-            //
-            for ( String locale : localeList )
-            {
-              //
-              String value = fileGroupToPropertiesAdapter.resolvePropertyValue( propertyKey, locale );
-
-              //
-              value = StringUtils.defaultString( value );
-
-              //
-              tableRow.add( value );
-            }
-
-            //
-            tableRowList.add( tableRow );
-          }
-        }
-
-        //
-        retval = xlsFile;
+        i18nSheet.addContentRow(new Row(bundleName, propertyKey, translations));
       }
     }
 
-    //
-    return retval;
+    final XLSFile xlsFile= new XLSFile();
+    for (String[] row : i18nSheet.getRows()) {
+      xlsFile.addRow(row);
+    }
+
+    return xlsFile;
   }
 }

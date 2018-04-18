@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Danny Kunz
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.omnaest.i18nbinder.internal;
 
+import com.google.common.base.Joiner;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -26,6 +27,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -40,7 +43,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  * Simple representation of an XLS file of Microsoft Excel.
- * 
+ *
  * @author Omnaest
  */
 public class XLSFile implements Serializable
@@ -50,34 +53,52 @@ public class XLSFile implements Serializable
   private static final String MAINSHEETPAGENAME = "all";
   private static final String FILESUFFIX_XLS    = ".xls";
   private static final String FILESUFFIX_XLSX   = ".xlsx";
-  
+
   /* ********************************************** Variables ********************************************** */
   private List<TableRow>      tableRowList      = new ArrayList<TableRow>();
-  
+
   protected File              file              = null;
-  
+
   /* ********************************************** Classes/Interfaces ********************************************** */
-  
+
   /**
    * Representation of a row.
    */
   public static class TableRow extends ArrayList<String>
   {
     private static final long serialVersionUID = 4599939864378182879L;
+
+
+    public TableRow(int initialCapacity) {
+      super(initialCapacity);
+    }
+
+
+    public TableRow() {
+    }
+
+
+    public TableRow(Collection<? extends String> c) {
+      super(c);
+    }
+
+    public TableRow(String[] content) {
+      super(Arrays.asList(content));
+    }
   }
-  
+
   /* ********************************************** Methods ********************************************** */
-  
+
   /**
    * Creates a unlinked instance. The underlying file has to be set before invoking {@link XLSFile#load()} or
    * {@link XLSFile#store()} methods.
-   * 
+   *
    * @see XLSFile#setFile(File)
    */
   public XLSFile()
   {
   }
-  
+
   /**
    * @param file
    */
@@ -85,7 +106,7 @@ public class XLSFile implements Serializable
   {
     this.setFile( file );
   }
-  
+
   /**
    * Loads the data from the disk into this object.
    */
@@ -100,14 +121,14 @@ public class XLSFile implements Serializable
       if (sheet == null) {
         sheet = wb.getSheetAt(0);
       }
-      
+
       //
       this.clear();
       for ( Row iRow : sheet )
       {
         //
         TableRow newTableRow = new TableRow();
-        
+
         //
         for ( Cell iCell : iRow )
         {
@@ -122,11 +143,11 @@ public class XLSFile implements Serializable
             newTableRow.add( iCell.getStringCellValue() );
 		  }
         }
-        
+
         //
         this.tableRowList.add( newTableRow );
       }
-      
+
       //
     }
     catch ( FileNotFoundException e )
@@ -137,19 +158,19 @@ public class XLSFile implements Serializable
     {
       e.printStackTrace();
     }
-    
+
   }
-  
+
   private boolean useXLSXFileFormat()
   {
     return this.file != null && this.file.getName().toLowerCase().endsWith( FILESUFFIX_XLSX );
   }
-  
+
   private Workbook newWorkbookFrom( InputStream inputStream ) throws IOException
   {
     //
     Workbook retval = null;
-    
+
     //
     if ( this.useXLSXFileFormat() )
     {
@@ -159,16 +180,16 @@ public class XLSFile implements Serializable
     {
       retval = new HSSFWorkbook( new POIFSFileSystem( inputStream ) );
     }
-    
+
     //
     return retval;
   }
-  
+
   private Workbook newWorkbookToWrite()
   {
     //
     Workbook retval = null;
-    
+
     //
     if ( this.useXLSXFileFormat() )
     {
@@ -178,11 +199,11 @@ public class XLSFile implements Serializable
     {
       retval = new HSSFWorkbook();
     }
-    
+
     //
     return retval;
   }
-  
+
   /**
    * Stores the data from the object onto disk.
    */
@@ -191,13 +212,13 @@ public class XLSFile implements Serializable
     Workbook wb = this.newWorkbookToWrite();
     CreationHelper createHelper = wb.getCreationHelper();
     Sheet sheet = wb.createSheet( "all" );
-    
+
     int lineNumber = 0;
     for ( TableRow iLine : this.tableRowList )
     {
       //
       Row row = sheet.createRow( lineNumber++ );
-      
+
       //
       int cellIndex = 0;
       for ( String iCellText : iLine )
@@ -206,7 +227,7 @@ public class XLSFile implements Serializable
         cell.setCellValue( createHelper.createRichTextString( iCellText ) );
       }
     }
-    
+
     try
     {
       final FileOutputStream fileOutputStream = new FileOutputStream( this.file );
@@ -223,14 +244,14 @@ public class XLSFile implements Serializable
     {
       e.printStackTrace();
     }
-    
+
   }
-  
+
   public static boolean isXLSFile( File file )
   {
     //
     boolean retval = false;
-    
+
     //
     retval = ( file != null )
              && file.exists()
@@ -238,29 +259,32 @@ public class XLSFile implements Serializable
              && ( file.getAbsolutePath().toLowerCase().endsWith( FILESUFFIX_XLS ) || file.getAbsolutePath()
                                                                                          .toLowerCase()
                                                                                          .endsWith( FILESUFFIX_XLSX ) );
-    
+
     //
     return retval;
   }
-  
+
   public List<TableRow> getTableRowList()
   {
     return this.tableRowList;
   }
-  
+
   public File getFile()
   {
     return this.file;
   }
-  
+
   public void setFile( File file )
   {
     this.file = file;
   }
-  
+
   public void clear()
   {
     this.tableRowList.clear();
   }
-  
+
+  public void addRow(final String[] rowContent) {
+    this.tableRowList.add(new TableRow(rowContent));
+  }
 }

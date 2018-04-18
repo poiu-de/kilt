@@ -15,6 +15,7 @@
  */
 package org.omnaest.i18nbinder.internal.facade.creation;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -30,6 +31,9 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import javax.annotation.concurrent.Immutable;
+import org.omnaest.utils.propertyfile.PropertyFile;
+import org.omnaest.utils.propertyfile.content.PropertyMap;
+import org.omnaest.utils.propertyfile.content.element.Property;
 
 
 /**
@@ -137,7 +141,7 @@ public class FacadeBundleContent {
   /**
    * Encapsulates a single translated value for a specific language.
    */
-  public static class Translation {
+  public static class Translation implements Comparable<Translation> {
     /** The language of this translation. */
     private final Language lang;
     /** The actual translated string. */
@@ -177,6 +181,15 @@ public class FacadeBundleContent {
     @Override
     public String toString() {
       return "Translation{" + "lang=" + lang + ", value=" + value + '}';
+    }
+
+
+    @Override
+    public int compareTo(Translation o) {
+      return ComparisonChain.start()
+        .compare(this.getLang(), o.getLang(), Ordering.natural().nullsFirst())
+        .compare(this.getValue(), o.getValue(), Ordering.natural().nullsFirst())
+        .result();
     }
   }
 
@@ -269,19 +282,16 @@ public class FacadeBundleContent {
       final Language lang = entry.getKey();
       final File file = entry.getValue();
 
-      //FIXME: Wäre schön, wenn wir hier die Reihenfolge in der Datei beibehalten könnten
-      final Properties props= new Properties();
-      try (final FileInputStream fis= new FileInputStream(file)) {
-        props.load(fis);
-      } catch (IOException ex) {
-        java.util.logging.Logger.getLogger(FacadeBundleContent.class.getName()).log(Level.SEVERE, null, ex);
-      }
+      final PropertyFile propertyFile = new PropertyFile(file);
+      //FIXME: Set encoding
+      //propertyFile.setFileEncoding(fileEncoding);
+      propertyFile.setUseJavaStyleUnicodeEscaping(true);
+      propertyFile.load();
+      final PropertyMap propertyMap = propertyFile.getPropertyFileContent().getPropertyMap();
 
-      props.forEach((Object t, Object u) -> {
-        final String key= (String) t;
-        final String value= (String) u;
+      propertyMap.forEach((String key, Property value) -> {
 
-        translations.put(key, new Translation(lang, value));
+        translations.put(key, new Translation(lang, Joiner.on(",").join(value.getValueList())));
       });
     }
 

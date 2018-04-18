@@ -94,7 +94,8 @@ public class CreateXlsFromPropertiesMojo extends AbstractMojo
       if ( this.xlsFileName != null && !propertyFileSet.isEmpty() )
       {
         //
-        XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding,
+        XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(this.propertiesRootDirectory.toPath(),
+                                                                        propertyFileSet, this.propertyFileEncoding,
                                                                          localeFilter, this.fileNameLocaleGroupPattern,
                                                                          this.fileNameLocaleGroupPatternGroupIndexList,
                                                                          this.useJavaStyleUnicodeEscaping );

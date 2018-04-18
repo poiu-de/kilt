@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 Danny Kunz
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -37,15 +39,16 @@ public class ModifierHelperTest
   /* ********************************************** Constants ********************************************** */
   private final static String[] PROPERTY_FILENAMES = { "adminTest_de_DE.properties", "adminTest_en_US.properties",
       "viewTest_de_DE.properties", "viewTest_en_US.properties", "localelessTest.properties" };
-  
+
   private static final String   fileEncoding       = "utf-8";
-  
+
   /* ********************************************** Variables ********************************************** */
+  private Path                  propertiesRootDir  = Paths.get("");
   private Set<File>             propertyFileSet    = new HashSet<File>();
   private File                  xlsFile            = null;
-  
+
   /* ********************************************** Methods ********************************************** */
-  
+
   @Before
   public void setUp() throws Exception
   {
@@ -54,16 +57,16 @@ public class ModifierHelperTest
     {
       this.propertyFileSet.add( new File( this.getClass().getResource( propertyFilename ).getFile() ) );
     }
-    
+
     //
     this.xlsFile = new File( new File( this.getClass().getResource( PROPERTY_FILENAMES[0] ).getFile() ).getParent()
                              + "\\result.xls" );
-    
+
     if ( this.xlsFile.exists() )
     {
       this.xlsFile.delete();
     }
-    
+
     //
     URL resource = this.getClass().getResource( "viewTest_.properties" );
     if ( resource != null )
@@ -74,47 +77,51 @@ public class ModifierHelperTest
         newKeyPropertyFile.delete();
       }
     }
-    
+
   }
-  
+
   @Test
   public void testModifierHelperLoadAndStore()
   {
     //
     boolean useJavaStyleUnicodeEscaping = true;
-    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
+    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(this.propertiesRootDir, this.propertyFileSet, fileEncoding, new LocaleFilter(),
                                                                      null, null, useJavaStyleUnicodeEscaping );
-    
+
     //
     xlsFile.setFile( this.xlsFile );
     xlsFile.store();
-    
+
     //
     ModifierHelperTest.assertContent( xlsFile );
-    
+
     //
     ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true,
                                                        useJavaStyleUnicodeEscaping );
-    
+
     //
     xlsFile.load();
-    
+
     //
     ModifierHelperTest.assertContent( xlsFile );
-    
+
   }
-  
+
   private static void assertContent( XLSFile xlsFile )
   {
     //
     List<TableRow> tableRowList = xlsFile.getTableRowList();
     assertEquals( 6 + 1, tableRowList.size() );
-    
+
     //
     int index = 0;
     {
       TableRow tableRow = tableRowList.get( index++ );
-      assertEquals( Arrays.asList( "File", "Property key", "", "de_DE", "en_US" ), tableRow );
+      assertEquals( Arrays.asList( "Resource Bundle", "Translation Key", "", "de_DE", "en_US" ), tableRow );
+    }
+    {
+      TableRow tableRow = tableRowList.get( index++ );
+      assertEquals( Arrays.asList( "my.property.key9", "value9", "", ""), tableRow.subList( 1, tableRow.size() ) );
     }
     {
       TableRow tableRow = tableRowList.get( index++ );
@@ -126,10 +133,6 @@ public class ModifierHelperTest
     }
     {
       TableRow tableRow = tableRowList.get( index++ );
-      assertEquals( Arrays.asList( "my.property.key9", "value9", "", "" ), tableRow.subList( 1, tableRow.size() ) );
-    }
-    {
-      TableRow tableRow = tableRowList.get( index++ );
       assertEquals( Arrays.asList( "my.property.key1", "", "wert1", "value1" ), tableRow.subList( 1, tableRow.size() ) );
     }
     {
@@ -138,55 +141,55 @@ public class ModifierHelperTest
     }
     {
       TableRow tableRow = tableRowList.get( index++ );
-      assertEquals( Arrays.asList( "my.property.key4", "", "wert4", "" ), tableRow.subList( 1, tableRow.size() ) );
+      assertEquals( Arrays.asList( "my.property.key4", "", "wert4", ""), tableRow.subList( 1, tableRow.size() ) );
     }
   }
-  
+
   @Test
   public void testModifierHelperAddKey()
   {
     //
     boolean useJavaStyleUnicodeEscaping = true;
-    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( this.propertyFileSet, fileEncoding, new LocaleFilter(),
+    XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(this.propertiesRootDir, this.propertyFileSet, fileEncoding, new LocaleFilter(),
                                                                      null, null, useJavaStyleUnicodeEscaping );
-    
+
     //
     List<TableRow> tableRowList = xlsFile.getTableRowList();
-    
+
     //
     String propertyKey = "new.key";
     List<String> propertyValueList = Arrays.asList( "new.value" );
-    
+
     //
     TableRow tableRow = new TableRow();
     tableRow.addAll( tableRowList.get( tableRowList.size() - 1 ) );
     tableRow.set( 1, propertyKey );
     tableRow.set( 2, propertyValueList.get( 0 ) );
     xlsFile.getTableRowList().add( tableRow );
-    
+
     //
     xlsFile.setFile( this.xlsFile );
     xlsFile.store();
-    
+
     //
     ModifierHelper.writeXLSFileContentToPropertyFiles( xlsFile.getFile(), null, new LocaleFilter(), true,
                                                        useJavaStyleUnicodeEscaping );
-    
+
     //
     String locale = tableRowList.get( 0 ).get( 2 );
     String propertyFileName = tableRow.get( 0 ).replaceAll( Pattern.quote( "{locale}" ), locale );
     PropertyFile propertyFile = new PropertyFile( propertyFileName );
-    
+
     //
     assertTrue( propertyFile.getFile().exists() );
-    
+
     //
     propertyFile.load();
     PropertyFileContent propertyFileContent = propertyFile.getPropertyFileContent();
-    
+
     //
     assertTrue( propertyFileContent.hasPropertyKeyAndValueList( propertyKey, propertyValueList ) );
-    
+
     //clean up
     {
       //
@@ -195,7 +198,7 @@ public class ModifierHelperTest
       propertyFile.load();
       propertyFile.getPropertyFileContent().getPropertyMap().remove( propertyKey );
       propertyFile.store();
-      
+
       //
       propertyFileName = tableRow.get( 0 ).replaceAll( Pattern.quote( "{locale}" ), "de_DE" );
       propertyFile = new PropertyFile( propertyFileName );
@@ -203,7 +206,7 @@ public class ModifierHelperTest
       propertyFile.getPropertyFileContent().getPropertyMap().remove( propertyKey );
       propertyFile.store();
     }
-    
+
   }
-  
+
 }
