@@ -4,7 +4,7 @@ package org.omnaest.i18nbinder.internal.xls;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent.Translation;
+import org.omnaest.i18nbinder.internal.Translation;
 
 /**
  *

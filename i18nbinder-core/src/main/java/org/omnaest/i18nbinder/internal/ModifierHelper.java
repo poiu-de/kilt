@@ -15,30 +15,21 @@
  ******************************************************************************/
 package org.omnaest.i18nbinder.internal;
 
-import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnaest.i18nbinder.grouping.FileGroup;
 import org.omnaest.i18nbinder.grouping.FileGroupToPropertiesAdapter;
-import org.omnaest.i18nbinder.grouping.FileGrouper;
 import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
 import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
 import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContentHelper;
@@ -254,18 +245,18 @@ public class ModifierHelper
                                                        boolean useJavaStyleUnicodeEscaping) {
 
     final FacadeBundleContentHelper fbcHelper= new FacadeBundleContentHelper(propertiesRootDirectory);
-    final Map<String, Map<FacadeBundleContent.Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
+    final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 
     final Sheet i18nSheet= new Sheet("Resource Bundle", "Translation Key");
 
-    for (final Map.Entry<String, Map<FacadeBundleContent.Language, File>> entry : bundleNameToFilesMap.entrySet()) {
+    for (final Map.Entry<String, Map<Language, File>> entry : bundleNameToFilesMap.entrySet()) {
       final String bundleName= entry.getKey();
-      final Map<FacadeBundleContent.Language, File> bundleTranslations= entry.getValue();
+      final Map<Language, File> bundleTranslations= entry.getValue();
 
       final FacadeBundleContent resourceBundleContent= FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
-      for (final Map.Entry<String, Collection<FacadeBundleContent.Translation>> e : resourceBundleContent.getContent().asMap().entrySet()) {
+      for (final Map.Entry<String, Collection<Translation>> e : resourceBundleContent.getContent().asMap().entrySet()) {
         final String propertyKey= e.getKey();
-        final Collection<FacadeBundleContent.Translation> translations= e.getValue();
+        final Collection<Translation> translations= e.getValue();
 
         i18nSheet.addContentRow(new Row(bundleName, propertyKey, translations));
       }

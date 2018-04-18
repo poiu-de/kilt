@@ -34,6 +34,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 import org.omnaest.i18nbinder.internal.XLSFile;
@@ -154,7 +155,7 @@ public class I18nBinder extends Task
       Set<File> propertyFileSet = this.resolveFilesFromFileSetList( this.fileSetList );
 
       //
-      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles( propertyFileSet, this.propertyFileEncoding,
+      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(Paths.get(this.baseFolderIgnoredPath), propertyFileSet, this.propertyFileEncoding,
                                                                        this.localeFilter, this.fileNameLocaleGroupPattern,
                                                                        this.fileNameLocaleGroupPatternGroupIndexList,
                                                                        this.useJavaStyleUnicodeEscaping );
@@ -182,12 +183,12 @@ public class I18nBinder extends Task
 
       try {
         final FacadeBundleContentHelper fbcHelper = new FacadeBundleContentHelper(Paths.get(baseFolderIgnoredPath));
-        final Map<String, Map<FacadeBundleContent.Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
+        final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
 
         final FacadeCreator facadeCreator = new FacadeCreator();
-        for (final Map.Entry<String, Map<FacadeBundleContent.Language, File>> entry : bundleNameToFilesMap.entrySet()) {
+        for (final Map.Entry<String, Map<Language, File>> entry : bundleNameToFilesMap.entrySet()) {
           final String bundleName = entry.getKey();
-          final Map<FacadeBundleContent.Language, File> bundleTranslations = entry.getValue();
+          final Map<Language, File> bundleTranslations = entry.getValue();
 
           final FacadeBundleContent resourceBundleContent = FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
           final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);

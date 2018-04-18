@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent.Language;
+import org.omnaest.i18nbinder.internal.Language;
 
 
 /**
@@ -223,7 +223,7 @@ public class FacadeBundleContentHelperTest {
 
     // execution
     final FacadeBundleContentHelper helper= new FacadeBundleContentHelper(ignorableBasePath);
-    final Map<String, Map<FacadeBundleContent.Language, File>> bundleNameToFilesMap = helper.toBundleNameToFilesMap(resourceFiles);
+    final Map<String, Map<Language, File>> bundleNameToFilesMap = helper.toBundleNameToFilesMap(resourceFiles);
 
     // verification
     assertThat(bundleNameToFilesMap.keySet()).containsExactly("i18n_messages", "i18n_options");

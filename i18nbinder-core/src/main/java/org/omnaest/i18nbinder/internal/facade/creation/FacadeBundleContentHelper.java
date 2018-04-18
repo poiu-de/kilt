@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent.Language;
+import org.omnaest.i18nbinder.internal.Language;
 
 /**
  * A helper class for creating a {@link FacadeBundleContent} from a set of resource

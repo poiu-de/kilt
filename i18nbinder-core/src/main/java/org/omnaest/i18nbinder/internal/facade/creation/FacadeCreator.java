@@ -31,13 +31,11 @@ import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.logging.Level;
 import javax.annotation.Generated;
-import javax.annotation.Nullable;
 import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent.Translation;
+import org.omnaest.i18nbinder.internal.Translation;
 import org.omnaest.i18nbinder.internal.facade.I18nBundleKey;
 
 
