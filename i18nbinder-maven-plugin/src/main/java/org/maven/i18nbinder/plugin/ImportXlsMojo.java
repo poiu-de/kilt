@@ -16,8 +16,6 @@
 package org.maven.i18nbinder.plugin;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -32,35 +30,50 @@ import org.omnaest.i18nbinder.internal.ModifierHelper;
  *
  * @author <a href="mailto:awonderland6@googlemail.com">Danny Kunz</a>
  */
-@Mojo(name = "write-properties")
-public class CreatePropertiesFromXlsMojo extends AbstractMojo
-{
-  /* ************************************** Variables / State (internal/hiding) ************************************* */
+@Mojo(name = "import-xls")
+public class ImportXlsMojo extends AbstractMojo {
+
   /**
-   * Location of the output directory root
+   * Location of the output directory root.
    */
-  @Parameter(defaultValue="${project.build.directory}", required = true)
+  //FIXME: Diesen Parameter sollte es nicht geben. Stattdessen nur das explizite XLS-File
+  @Parameter(property="outputDirectory", defaultValue="${project.build.directory}", required = true)
   private File    xlsOutputDirectory;
 
   /**
    * Location of the source i18n files.
    */
-  @Parameter(defaultValue = "src/main/resources/i18n")
-  private File          propertiesRootDirectory                  = new File( "src/main/resources/i18n" );
+  @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
+  private File propertiesRootDirectory ;
 
-  @Parameter(defaultValue = ".*")
-  private String  localeFilterRegex              = ".*";
+  @Parameter(property="verbose", defaultValue="false")
+  private boolean verbose;
 
-  @Parameter(defaultValue = "i18n.xls")
-  private String  xlsFileName                    = "i18n.xls";
+  //FIXME: Should be taken from jaxb2 maven plugin
+//  @Parameter
+  private String[] i18nIncludes;
 
-  @Parameter(defaultValue = "utf-8")
-  private String  propertyFileEncoding           = "utf-8";
+//  @Parameter
+  private String[] i18nExcludes;
 
-  @Parameter(defaultValue = "true")
-  private boolean deletePropertiesWithBlankValue = true;
 
-  @Parameter(defaultValue = "true")
+  //@Parameter(defaultValue = ".*")
+  //FIXME: SOllte wegfallen
+  private String localeFilterRegex= ".*";
+
+  @Parameter(property = "propertyFileEncoding")
+  private String propertyFileEncoding;
+
+  @Parameter(property = "xlsFileEncoding", defaultValue="UTF-8")
+  private String xlsFileEncoding;
+
+  @Parameter(property = "xlsFileName", defaultValue="i18n.xls")
+  private String xlsFileName;
+
+  @Parameter(property = "deleteEmptyProperties", defaultValue = "false")
+  private boolean deleteEmptyProperties;
+
+  //@Parameter(defaultValue = "true")
   private boolean useJavaStyleUnicodeEscaping    = true;
 
   /* *************************************************** Methods **************************************************** */
@@ -86,7 +99,7 @@ public class CreatePropertiesFromXlsMojo extends AbstractMojo
         if ( file.exists() )
         {
           ModifierHelper.writeXLSFileContentToPropertyFiles(propertiesRootDirectory.toPath(), file, this.propertyFileEncoding, localeFilter,
-                                                             this.deletePropertiesWithBlankValue,
+                                                             this.deleteEmptyProperties,
                                                              this.useJavaStyleUnicodeEscaping );
         }
       }

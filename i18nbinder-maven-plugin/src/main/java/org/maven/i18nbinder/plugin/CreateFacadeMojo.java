@@ -19,11 +19,11 @@ import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -35,7 +35,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.omnaest.i18nbinder.internal.Language;
-import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ResourceBundleContent;
 import org.omnaest.i18nbinder.internal.ResourceBundleContentHelper;
 import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
@@ -44,11 +43,11 @@ import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
 /**
  * Generates the I18N enum Facades to allow type safe access to localized messages.
  */
-@Mojo(name="generateI18nFacade",
+@Mojo(name="create-facade",
       defaultPhase=LifecyclePhase.GENERATE_SOURCES,
       requiresDependencyResolution = ResolutionScope.COMPILE)
 @Execute(phase=LifecyclePhase.GENERATE_SOURCES)
-public class CreateI18nFacadeMojo extends AbstractMojo {
+public class CreateFacadeMojo extends AbstractMojo {
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -58,38 +57,23 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
   /**
    * The location to which the generated Java files are written.
    */
-  @Parameter(defaultValue = "${project.build.directory}/generated-sources/i18nbinder", required = true)
+  @Parameter(property="outputDirectory", defaultValue = "${project.build.directory}/generated-sources/i18nbinder", required = true)
   private File outputDirectory;
 
   /**
    * The location of the source i18n resource bundle files.
    */
-  @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/i18n")
+  @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/i18n", required=true)
   private File propertiesRootDirectory;
 
-  /**
-   * Whether to execute the generation of the I18n enum facades.
-   * <p>
-   * Set to <code>false</code> to skip the generation.
-   */
-  @Parameter(defaultValue = "true")
-  private boolean createJavaFacade;
-
-  private boolean logResolvedPropertyFileNames = true;
-
-  /**
-   * The name of the helper class to retrieve translations for the generated enum facade(s).
-   */
-//  @Parameter(defaultValue="I18n", required=true)
-  private String i18nFacadeAccessorName = "I18n";
-
+  @Parameter(property="verbose", defaultValue="false")
+  private boolean verbose;
 
   /**
    * The package name under which the facade(s) will be generated.
    */
   @Parameter(property="generatedPackage", defaultValue="i18n.generated")
   private String generatedPackage;
-
 
   //FIXME: Should be taken from jaxb2 maven plugin
 //  @Parameter
@@ -145,34 +129,44 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
 //  @Parameter
   private String excludeLocaleRegex;
 
-  @Parameter(defaultValue = "${project}", required = true, readonly = true)
-  private MavenProject project;
+  @Parameter(property = "propertyFileEncoding")
+  private String propertyFileEncoding;
 
   // custom encoding of generated java files is not supported at the moment since
   // JavaPoet by default always writes as UTF-8
   // It could be possible to manually write via another charset, but at the moment
   // I don't see any reason to do this
-//  @Parameter(defaultValue = "${project.build.sourceEncoding}")
+  @Parameter(property = "javaFileEncoding", defaultValue = "${project.build.sourceEncoding}")
   private String javaFileEncoding;
-
-//  @Parameter(defaultValue = "???")
-  private String propertyFileEncoding;
-
 
   /**
    * Whether to copy the facade accessor class and the base interface I18nBundleKey to the
    * generation target dir.
    * This is only useful if it is necessary to avoid a runtime dependency on i18nbinder-runtime.
    */
-  @Parameter(defaultValue= "false")
+  @Parameter(property="copyFacadeAccessorClasses", defaultValue= "false")
   private boolean copyFacadeAccessorClasses;
 
   /**
    * The name of the facade accessor class when copying the facade accessor classes.
    * This is only meaningful in combination with {@link #copyFacadeAccessorClasses}.
    */
-  @Parameter(defaultValue= "I18n")
+  @Parameter(property="facadeAccessorClassName", defaultValue= "I18n")
   private String facadeAccessorClassName;
+
+  /**
+   * Whether to execute the generation of the I18n enum facades.
+   * <p>
+   * Set to <code>true</code> to skip the generation.
+   */
+  @Parameter(property = "skip", defaultValue = "false")
+  private boolean skipFacadeGeneration;
+
+
+
+  @Parameter(defaultValue = "${project}", required = true, readonly = true)
+  private MavenProject project;
+
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -185,9 +179,8 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
-    if (!this.createJavaFacade) {
-      this.getLog()
-              .info("Skipping to create the i18n Java facade since it is disabled by the createJavaFacade property within the configuration");
+    if (this.skipFacadeGeneration) {
+      this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
       this.getLog().info("Create Java source code facade file from property files.");
       this.logConfigurationProperties();
@@ -221,7 +214,7 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
         }
 
         this.project.addCompileSourceRoot(this.outputDirectory.getCanonicalPath());
-      } catch (Exception e) {
+      } catch (IOException e) {
         this.getLog().error("Could not write Java facade to file", e);
       }
 
@@ -230,13 +223,9 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
   }
 
 
-  /**
-   *
-   */
   private void logConfigurationProperties() {
-    this.getLog().info("createJavaFacade=" + this.createJavaFacade);
+    this.getLog().info("createJavaFacade=" + this.skipFacadeGeneration);
     this.getLog().info("javaFileEncoding=" + this.javaFileEncoding);
-    this.getLog().info("i18nFacadeName=" + this.i18nFacadeAccessorName);
     this.getLog().info("includeLocaleRegex=" + this.includeLocaleRegex);
     this.getLog().info("excludeLocaleRegex=" + this.excludeLocaleRegex);
     this.getLog().info("i18nIncludes" + Arrays.toString(this.i18nIncludes));
@@ -245,8 +234,6 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
     this.getLog().info("generatedPackage=" + this.generatedPackage);
     this.getLog().info("propertiesRootDirectory=" + this.propertiesRootDirectory);
   }
-
-
 
 
   private Set<File> resolveFilesFromDirectoryRoot(File propertiesRootDirectory) {
@@ -269,7 +256,7 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
     final String[] fileNames = directoryScanner.getIncludedFiles();
     for (int i = 0; i < fileNames.length; i++) {
       final String fileName = fileNames[i].replaceAll("\\\\", "/");
-      if (this.logResolvedPropertyFileNames) {
+      if (this.verbose) {
         this.getLog().info("Resolved: " + fileName);
       }
       retset.add(new File(propertiesRootDirectory, fileName));
@@ -280,13 +267,5 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
     }
 
     return retset;
-  }
-
-
-
-  private LocaleFilter determineLocaleFilter() {
-    final LocaleFilter localeFilter = new LocaleFilter();
-    localeFilter.setPattern(Pattern.compile(this.includeLocaleRegex));
-    return localeFilter;
   }
 }

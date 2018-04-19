@@ -37,43 +37,56 @@ import org.omnaest.i18nbinder.internal.xls.XLSFile;
  *
  * @author <a href="mailto:awonderland6@googlemail.com">Danny Kunz</a>
  */
-@Mojo(name = "create-xls")
-public class CreateXlsFromPropertiesMojo extends AbstractMojo
-{
+@Mojo(name = "export-xls")
+public class ExportXlsMojo extends AbstractMojo {
 
-  /* ************************************** Variables / State (internal/hiding) ************************************* */
   /**
-   * Location of the output directory root
+   * Location of the output directory root.
    */
-  @Parameter(defaultValue="${project.build.directory}", required = true)
-  private File          xlsOutputDirectory;
+  //FIXME: Diesen Parameter sollte es nicht geben. Stattdessen nur das explizite XLS-File
+  @Parameter(property="outputDirectory", defaultValue="${project.build.directory}", required = true)
+  private File    xlsOutputDirectory;
 
   /**
    * Location of the source i18n files.
    */
-  @Parameter(defaultValue = "src/main/resources/i18n")
-  private File          propertiesRootDirectory                  = new File( "src/main/resources/i18n" );
+  @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
+  private File propertiesRootDirectory ;
 
-  @Parameter(defaultValue = ".*")
+  @Parameter(property="verbose", defaultValue="false")
+  private boolean verbose;
+
+  //FIXME: Should be taken from jaxb2 maven plugin
+//  @Parameter
+  private String[] i18nIncludes;
+
+//  @Parameter
+  private String[] i18nExcludes;
+
+  @Parameter(property = "propertyFileEncoding")
+  private String propertyFileEncoding;
+
+  @Parameter(property = "xlsFileEncoding", defaultValue="UTF-8")
+  private String xlsFileEncoding;
+
+  @Parameter(property = "xlsFileName", defaultValue="i18n.xls")
+  private String xlsFileName;
+
+
+  //@Parameter(defaultValue = ".*")
+  //FIXME: SOllte wegfallen
   private String        localeFilterRegex                        = ".*";
 
-  @Parameter(defaultValue = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties")
+  //@Parameter(defaultValue = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties")
+  //FIXME: SOllte wegfallen
   private String        fileNameLocaleGroupPattern               = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties";
 
-  @Parameter
+  //@Parameter
+  //FIXME: SOllte wegfallen
   private List<Integer> fileNameLocaleGroupPatternGroupIndexList = Arrays.asList( 2, 3, 4 );
-
-  @Parameter(defaultValue = "false")
-  private boolean       logResolvedPropertyFileNames             = false;
 
 //  @Parameter(defaultValue = "true")
   private boolean       useJavaStyleUnicodeEscaping              = true;
-
-  @Parameter(defaultValue = "i18n.xls")
-  private String        xlsFileName                              = "i18n.xls";
-
-  @Parameter(defaultValue = "utf-8")
-  private String        propertyFileEncoding                     = "utf-8";
 
   /* *************************************************** Methods **************************************************** */
 
@@ -158,7 +171,7 @@ public class CreateXlsFromPropertiesMojo extends AbstractMojo
     for ( int i = 0; i < fileNames.length; i++ )
     {
       final String fileName = fileNames[i].replaceAll( "\\\\", "/" );
-      if ( this.logResolvedPropertyFileNames )
+      if ( this.verbose )
       {
         this.getLog().info( "Resolved: " + fileName );
       }
