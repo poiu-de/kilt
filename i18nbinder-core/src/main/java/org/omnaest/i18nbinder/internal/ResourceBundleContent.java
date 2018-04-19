@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.facade.creation;
+package org.omnaest.i18nbinder.internal;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMultimap;
@@ -50,7 +50,7 @@ import org.omnaest.utils.propertyfile.content.element.Property;
  *
  * @author mherrn
  */
-public class FacadeBundleContent {
+public class ResourceBundleContent {
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ public class FacadeBundleContent {
    * @param bundleBaseName the bundleBasename
    * @param content all keys and their translations for this bundle
    */
-  private FacadeBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
+  private ResourceBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
     this.bundlBaseName= bundleBaseName;
     //FIXME: Sollte das irgendwie sortiert sein? Alphabetisch? Oder nach der gelesenen Reihenfolge?
     this.content.putAll(content);
@@ -121,9 +121,9 @@ public class FacadeBundleContent {
    * @param bundleName the bundleBasename
    * @return a new FacadeBundleContent for the the given bundle
    */
-  public static FacadeBundleContent forName(final String bundleName) {
+  public static ResourceBundleContent forName(final String bundleName) {
     final ImmutableMultimap<String, Translation> emptyMap= ImmutableMultimap.of();
-    return new FacadeBundleContent(bundleName, emptyMap);
+    return new ResourceBundleContent(bundleName, emptyMap);
   }
 
 
@@ -135,7 +135,7 @@ public class FacadeBundleContent {
    * @return a FacadeBundleContent with the translations from the given files
    * @throws InconsistentBundleBaseNameException if thegiven files don't share a common basename
    */
-  public FacadeBundleContent fromFiles(final Map<Language, File> bundleFiles) {
+  public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles) {
     final SetMultimap<String, Translation> translations= MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
     for (final Map.Entry<Language, File> entry : bundleFiles.entrySet()) {
@@ -155,7 +155,7 @@ public class FacadeBundleContent {
       });
     }
 
-    return new FacadeBundleContent(this.bundlBaseName, translations);
+    return new ResourceBundleContent(this.bundlBaseName, translations);
   }
 
 

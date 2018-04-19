@@ -38,8 +38,8 @@ import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 import org.omnaest.i18nbinder.internal.XLSFile;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.internal.ResourceBundleContent;
+import org.omnaest.i18nbinder.internal.ResourceBundleContentHelper;
 import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
 
 public class I18nBinder extends Task
@@ -182,7 +182,7 @@ public class I18nBinder extends Task
       final Set<File> propertyFileSet = this.resolveFilesFromFileSetList( this.fileSetList );
 
       try {
-        final FacadeBundleContentHelper fbcHelper = new FacadeBundleContentHelper(Paths.get(baseFolderIgnoredPath));
+        final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(Paths.get(baseFolderIgnoredPath));
         final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
 
         final FacadeCreator facadeCreator = new FacadeCreator();
@@ -190,7 +190,7 @@ public class I18nBinder extends Task
           final String bundleName = entry.getKey();
           final Map<Language, File> bundleTranslations = entry.getValue();
 
-          final FacadeBundleContent resourceBundleContent = FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+          final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
           final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
           final JavaFile javaFile = JavaFile.builder(packageName, resourceBundleEnumTypeSpec).build();
           javaFile.writeTo(Paths.get(""));
@@ -418,7 +418,7 @@ public class I18nBinder extends Task
 
   public void setPackageName( String packageName )
   {
-    org.omnaest.i18nbinder.facade.creation.Objects.requireNonWhitespace(packageName, "packageName may not be empty");
+    org.omnaest.i18nbinder.util.Objects.requireNonWhitespace(packageName, "packageName may not be empty");
     this.log( "packageName=" + packageName );
     this.packageName = packageName;
   }

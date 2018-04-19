@@ -15,6 +15,8 @@
  */
 package org.omnaest.i18nbinder.facade.creation;
 
+import org.omnaest.i18nbinder.util.Objects;
+import org.omnaest.i18nbinder.internal.ResourceBundleContent;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -68,7 +70,7 @@ public class FacadeCreator {
    * @param resourceContent the resource bundle for which to create the enum class.
    * @return the created enum class TypeSpec
    */
-  public TypeSpec createFacadeEnumFor(final FacadeBundleContent resourceContent) {
+  public TypeSpec createFacadeEnumFor(final ResourceBundleContent resourceContent) {
     final String enumName= this.getEnumClassNameFor(resourceContent);
 
     // build an enum class for the resource bundle
@@ -147,7 +149,7 @@ public class FacadeCreator {
    * @param resourceContent the resource bundle for which to return the class name.
    * @return the class name for this resource bundle
    */
-  private String getEnumClassNameFor(final FacadeBundleContent resourceContent) {
+  private String getEnumClassNameFor(final ResourceBundleContent resourceContent) {
     return BundleNormalizer.toClassName(resourceContent.getBundleBaseName());
   }
 

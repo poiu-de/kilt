@@ -36,8 +36,8 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.internal.ResourceBundleContent;
+import org.omnaest.i18nbinder.internal.ResourceBundleContentHelper;
 import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
 
 
@@ -199,7 +199,7 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
 //                                                                FacadeCreatorHelper.DEFAULT_JAVA_FACADE_FILENAME_I18N_FACADE);
 
         // generate the the enum facade(s)
-        final FacadeBundleContentHelper fbcHelper = new FacadeBundleContentHelper(propertiesRootDirectory);
+        final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(propertiesRootDirectory);
         final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
 
         final FacadeCreator facadeCreator = new FacadeCreator();
@@ -207,7 +207,7 @@ public class CreateI18nFacadeMojo extends AbstractMojo {
           final String bundleName = entry.getKey();
           final Map<Language, File> bundleTranslations = entry.getValue();
 
-          final FacadeBundleContent resourceBundleContent = FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+          final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
           final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
           final JavaFile javaFile = JavaFile.builder(generatedPackage, resourceBundleEnumTypeSpec).build();
           javaFile.writeTo(outputDirectory);

@@ -27,8 +27,6 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
 import org.omnaest.i18nbinder.internal.xls.Row;
 import org.omnaest.i18nbinder.internal.xls.Sheet;
 import org.omnaest.utils.propertyfile.PropertyFile;
@@ -90,7 +88,7 @@ public class ModifierHelper
     }
 
     // remember all the bundles read and the translated values in these bundles
-    final Map<String, FacadeBundleContent> translatedBundleContents= new LinkedHashMap<>();
+    final Map<String, ResourceBundleContent> translatedBundleContents= new LinkedHashMap<>();
 
     for (final TableRow tableRow : tableRowList.subList(0, tableRowList.size())) {
       final String bundleBaseName= tableRow.get(0);
@@ -98,12 +96,12 @@ public class ModifierHelper
 
       // create the bundleContent object, if we haven't done already
       if (!translatedBundleContents.containsKey(bundleBaseName)) {
-        final FacadeBundleContent bundleContent= FacadeBundleContent.forName(bundleBaseName);
+        final ResourceBundleContent bundleContent= ResourceBundleContent.forName(bundleBaseName);
         translatedBundleContents.put(bundleBaseName, bundleContent);
       }
 
       // insert the translation for each language into the bundleContent object
-      final FacadeBundleContent bundleContent= translatedBundleContents.get(bundleBaseName);
+      final ResourceBundleContent bundleContent= translatedBundleContents.get(bundleBaseName);
       for (Map.Entry<Language, Integer> e : localeIndexMap.entrySet()) {
         final Language language= e.getKey();
         final String translatedValue= tableRow.get(e.getValue());
@@ -115,7 +113,7 @@ public class ModifierHelper
 
     //FIXME: Auf diese Weise werden gelöschte Schlüssel nicht entfernt. Aber wäre das sinnvoll? Nur, wenn vom Benutzer explizit verlangt.
     // for each bundle…
-    for (final FacadeBundleContent bundleContent : translatedBundleContents.values()) {
+    for (final ResourceBundleContent bundleContent : translatedBundleContents.values()) {
       // …for each key…
       for (Map.Entry<String, Collection<Translation>> e : bundleContent.getContent().asMap().entrySet()) {
         final String resourceKey= e.getKey();
@@ -170,7 +168,7 @@ public class ModifierHelper
                                                        List<Integer> groupingPatternGroupingGroupIndexList,
                                                        boolean useJavaStyleUnicodeEscaping) {
 
-    final FacadeBundleContentHelper fbcHelper= new FacadeBundleContentHelper(propertiesRootDirectory);
+    final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
     final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 
     final Sheet i18nSheet= new Sheet("Resource Bundle", "Translation Key");
@@ -179,7 +177,7 @@ public class ModifierHelper
       final String bundleName= entry.getKey();
       final Map<Language, File> bundleTranslations= entry.getValue();
 
-      final FacadeBundleContent resourceBundleContent= FacadeBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+      final ResourceBundleContent resourceBundleContent= ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
       for (final Map.Entry<String, Collection<Translation>> e : resourceBundleContent.getContent().asMap().entrySet()) {
         final String propertyKey= e.getKey();
         final Collection<Translation> translations= e.getValue();

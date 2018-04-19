@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.facade.creation;
+package org.omnaest.i18nbinder.internal;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 import org.omnaest.i18nbinder.internal.Language;
 
 /**
- * A helper class for creating a {@link FacadeBundleContent} from a set of resource
+ * A helper class for creating a {@link ResourceBundleContent} from a set of resource
  * bundle files.
  * <p>
  * It allow setting an ignorableBasePath (which is usually necessary) when building the bundle name.
@@ -41,7 +41,7 @@ import org.omnaest.i18nbinder.internal.Language;
  *
  * @author mherrn
  */
-public class FacadeBundleContentHelper {
+public class ResourceBundleContentHelper {
   private static final Logger LOGGER= LogManager.getLogger();
 
   // The format of the optional parts was taken from the Javadoc of the Locale class
@@ -90,14 +90,14 @@ public class FacadeBundleContentHelper {
    * Creates a new FacadeBundleContentHelper with the default ignorableBasePath (the current working
    * directory.
    */
-  public FacadeBundleContentHelper() {
+  public ResourceBundleContentHelper() {
   }
 
   /**
    * Creates a new FacadeBundleContentHelper with the given ignorableBasePath.
    * @param ignorableBasePath the path to ignore when building the bundle name
    */
-  public FacadeBundleContentHelper(final File ignorableBasePath) {
+  public ResourceBundleContentHelper(final File ignorableBasePath) {
     java.util.Objects.requireNonNull(ignorableBasePath);
     this.ignorableBasePath= ignorableBasePath.toPath();
   }
@@ -106,7 +106,7 @@ public class FacadeBundleContentHelper {
    * Creates a new FacadeBundleContentHelper with the default ignorableBasePath.
    * @param ignorableBasePath the path to ignore when building the bundle name
    */
-  public FacadeBundleContentHelper(final Path ignorableBasePath) {
+  public ResourceBundleContentHelper(final Path ignorableBasePath) {
     java.util.Objects.requireNonNull(ignorableBasePath);
     this.ignorableBasePath= ignorableBasePath;
   }
@@ -117,17 +117,17 @@ public class FacadeBundleContentHelper {
   // Methods
 
   /**
-   * Creates a list of {@link FacadeBundleContent}s from the given resource bundle files.
+   * Creates a list of {@link ResourceBundleContent}s from the given resource bundle files.
    *
    *
    * @param files the resource bundle files for which to create the FacadeBundleContents
    * @return the FacadeBundleContents for the given collection of files
    */
   //FIXME: Das hier sollte ein Pattern für Inclusion/Exclusion erlauben
-  public List<FacadeBundleContent> buildFacadeBundleContentFromFiles(final Collection<File> files) {
+  public List<ResourceBundleContent> buildFacadeBundleContentFromFiles(final Collection<File> files) {
     java.util.Objects.requireNonNull(files);
-    final List<FacadeBundleContent> result= new LinkedList<>();
-    final Map<String, FacadeBundleContent> map= new LinkedHashMap<>();
+    final List<ResourceBundleContent> result= new LinkedList<>();
+    final Map<String, ResourceBundleContent> map= new LinkedHashMap<>();
 
     for (final File file : files) {
       final Matcher matcher = PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(file.getName());

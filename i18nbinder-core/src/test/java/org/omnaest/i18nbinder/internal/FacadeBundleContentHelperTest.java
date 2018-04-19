@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.facade.creation;
+package org.omnaest.i18nbinder.internal;
 
-import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.internal.ResourceBundleContentHelper;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Path;
@@ -40,7 +40,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -58,7 +58,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_de.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -76,7 +76,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_deu.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -94,7 +94,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_en_US.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -112,7 +112,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_en_Latn.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -130,7 +130,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_en_Latn_US.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -148,7 +148,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_en_US_WINDOWSVISTA.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -166,7 +166,7 @@ public class FacadeBundleContentHelperTest {
     final String resourceBundleFileName= "myBasename_en_Latn_US_WINDOWSVISTA.properties";
 
     // execution
-    final Matcher matcher= FacadeBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
+    final Matcher matcher= ResourceBundleContentHelper.PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(resourceBundleFileName);
 
     // verification
     assertThat(matcher.matches()).isTrue();
@@ -182,7 +182,7 @@ public class FacadeBundleContentHelperTest {
   @Test
   public void testGetBundlePrefix() {
     final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
-    final FacadeBundleContentHelper helper= new FacadeBundleContentHelper(ignorableBasePath);
+    final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
     assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("/i18n/");
     assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/my/sub/options_de.properties"))).isEqualTo("/i18n/my/sub/");
   }
@@ -192,7 +192,7 @@ public class FacadeBundleContentHelperTest {
   public void testGetBundlePrefix_inWrongBasePath() {
     final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
     final Path otherBasePath= Paths.get("/some/other/path");
-    final FacadeBundleContentHelper helper= new FacadeBundleContentHelper(ignorableBasePath);
+    final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
     assertThatIllegalArgumentException().isThrownBy(() -> {
       helper.getBundlePrefix(otherBasePath.resolve("i18n/messages_de.properties"));
     }).withMessage("All files should live below the ignorable base path /some/path/src/main/resources. Given path is /some/other/path/i18n/messages_de.properties");
@@ -202,7 +202,7 @@ public class FacadeBundleContentHelperTest {
   @Test
   public void testGetBundlePrefix_byPathOrFile() {
     final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
-    final FacadeBundleContentHelper helper= new FacadeBundleContentHelper(ignorableBasePath);
+    final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
     assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("/i18n/");
     assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties").toFile())).isEqualTo("/i18n/");
     assertThat(helper.getBundlePrefix(new File(ignorableBasePath.toFile(), "i18n/messages_de.properties"))).isEqualTo("/i18n/");
@@ -223,7 +223,7 @@ public class FacadeBundleContentHelperTest {
     );
 
     // execution
-    final FacadeBundleContentHelper helper= new FacadeBundleContentHelper(ignorableBasePath);
+    final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
     final Map<String, Map<Language, File>> bundleNameToFilesMap = helper.toBundleNameToFilesMap(resourceFiles);
 
     System.out.println(bundleNameToFilesMap.keySet());
