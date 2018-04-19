@@ -30,7 +30,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
-import org.omnaest.i18nbinder.internal.XLSFile;
+import org.omnaest.i18nbinder.internal.xls.XLSFile;
 
 /**
  * Goal which executes the i18nBinder xls file generation

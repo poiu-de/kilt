@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.omnaest.i18nbinder.internal;
 
+import org.omnaest.i18nbinder.internal.xls.XLSFile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -30,7 +31,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
+import org.omnaest.i18nbinder.internal.xls.XLSFile.TableRow;
 import org.omnaest.utils.propertyfile.PropertyFile;
 import org.omnaest.utils.propertyfile.content.PropertyFileContent;
 

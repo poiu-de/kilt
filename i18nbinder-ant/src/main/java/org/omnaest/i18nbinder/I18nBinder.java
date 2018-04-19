@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
-import org.omnaest.i18nbinder.internal.XLSFile;
+import org.omnaest.i18nbinder.internal.xls.XLSFile;
 import org.omnaest.i18nbinder.internal.ResourceBundleContent;
 import org.omnaest.i18nbinder.internal.ResourceBundleContentHelper;
 import org.omnaest.i18nbinder.facade.creation.FacadeCreator;

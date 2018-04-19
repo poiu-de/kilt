@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  ******************************************************************************/
-package org.omnaest.i18nbinder.internal;
+package org.omnaest.i18nbinder.internal.xls;
 
 import com.google.common.base.Joiner;
 import java.io.BufferedInputStream;

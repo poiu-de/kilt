@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.omnaest.i18nbinder.internal;
 
+import org.omnaest.i18nbinder.internal.xls.XLSFile;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
+import org.omnaest.i18nbinder.internal.xls.XLSFile.TableRow;
 import org.omnaest.i18nbinder.internal.xls.Row;
 import org.omnaest.i18nbinder.internal.xls.Sheet;
 import org.omnaest.utils.propertyfile.PropertyFile;
@@ -41,19 +42,8 @@ import org.omnaest.utils.propertyfile.content.element.Property;
 public class ModifierHelper
 {
   /* ********************************************** Constants ********************************************** */
-  public static final String GROUPING_PATTERN_REPLACEMENT_PATTERN_STRING = "{locale}";
   public static final Logger LOGGER                                      = LogManager.getLogger();
 
-  /* ********************************************** Classes/Interfaces ********************************************** */
-  protected static class PropertyKeyToValueMap extends HashMap<String, String>
-  {
-    private static final long serialVersionUID = 8625552580988921881L;
-  }
-
-  protected static class FilenameToPropertyKeyToValueMap extends HashMap<String, PropertyKeyToValueMap>
-  {
-    private static final long serialVersionUID = 8631992954259477041L;
-  }
 
   /* ********************************************** Methods ********************************************** */
   /**
