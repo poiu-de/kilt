@@ -94,8 +94,10 @@ public class ModifierHelper
       final ResourceBundleContent bundleContent= translatedBundleContents.get(bundleBaseName);
       for (Map.Entry<Language, Integer> e : localeIndexMap.entrySet()) {
         final Language language= e.getKey();
-        final String translatedValue= tableRow.get(e.getValue());
-        bundleContent.addTranslation(bundleKey, new Translation(language, translatedValue));
+        if (tableRow.size() > e.getValue()) {
+          final String translatedValue= tableRow.get(e.getValue());
+          bundleContent.addTranslation(bundleKey, new Translation(language, translatedValue));
+        }
       }
     }
 

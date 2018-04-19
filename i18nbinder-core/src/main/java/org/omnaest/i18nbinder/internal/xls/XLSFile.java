@@ -114,7 +114,6 @@ public class XLSFile implements Serializable
   {
     try
     {
-      //
       InputStream inputStream = new BufferedInputStream( new FileInputStream( this.file ) );
       Workbook wb = this.newWorkbookFrom( inputStream );
       Sheet sheet = wb.getSheet( MAINSHEETPAGENAME );
@@ -122,29 +121,22 @@ public class XLSFile implements Serializable
         sheet = wb.getSheetAt(0);
       }
 
-      //
       this.clear();
-      for ( Row iRow : sheet )
-      {
-        //
-        TableRow newTableRow = new TableRow();
+      for (Row iRow : sheet) {
+        final TableRow newTableRow = new TableRow();
 
-        //
-        for ( Cell iCell : iRow )
-        {
-
-		  //
-		  if ( iCell.getCellType() == Cell.CELL_TYPE_NUMERIC )
-		  {
-            newTableRow.add( String.valueOf(iCell.getNumericCellValue()) );
-		  }
-		  else
-		  {
-            newTableRow.add( iCell.getStringCellValue() );
+        for (int col= 0; col < iRow.getLastCellNum(); col++) {
+          final Cell iCell= iRow.getCell(col);
+          if (iCell == null) {
+            // if the cell does not contain any content, add an empty string
+            newTableRow.add("");
+          } else if (iCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            newTableRow.add(String.valueOf(iCell.getNumericCellValue()));
+		  } else {
+             newTableRow.add(iCell.getStringCellValue());
 		  }
         }
 
-        //
         this.tableRowList.add( newTableRow );
       }
 
