@@ -131,7 +131,6 @@ public class BundleNormalizer {
     sb.append(Character.toLowerCase(chars[0]));
 
     for (int i=1; i<chars.length; i++) {
-      System.out.print(chars[i]);
       if (chars[i] == '_') {
         // if char is underscore, leave it out…
         if (chars.length > i+1) {
@@ -139,12 +138,10 @@ public class BundleNormalizer {
           final char nextChar= chars[i+1];
           sb.append(Character.toUpperCase(nextChar));
           i++;
-          System.out.println(" -> []"+nextChar);
         }
       } else {
         // leave all other chars as the are
         sb.append(chars[i]);
-        System.out.println(" -> "+chars[i]);
       }
     }
 
