@@ -25,6 +25,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 
+
 /**
  * Goal which executes the i18nBinder property files write back from the xls file
  *
@@ -36,17 +37,16 @@ public class ImportXlsMojo extends AbstractMojo {
   /**
    * Location of the output directory root.
    */
-  //FIXME: Diesen Parameter sollte es nicht geben. Stattdessen nur das explizite XLS-File
-  @Parameter(property="outputDirectory", defaultValue="${project.build.directory}", required = true)
-  private File    xlsOutputDirectory;
+  @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}", required = true)
+  private File xlsOutputDirectory;
 
   /**
    * Location of the source i18n files.
    */
   @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
-  private File propertiesRootDirectory ;
+  private File propertiesRootDirectory;
 
-  @Parameter(property="verbose", defaultValue="false")
+  @Parameter(property = "verbose", defaultValue = "false")
   private boolean verbose;
 
   //FIXME: Should be taken from jaxb2 maven plugin
@@ -58,80 +58,64 @@ public class ImportXlsMojo extends AbstractMojo {
   private String[] i18nExcludes;
 
 
-  //@Parameter(defaultValue = ".*")
-  //FIXME: SOllte wegfallen
-  private String localeFilterRegex= ".*";
+  private String localeFilterRegex = ".*";
 
   @Parameter(property = "propertyFileEncoding")
   private String propertyFileEncoding;
 
-  @Parameter(property = "xlsFileEncoding", defaultValue="UTF-8")
+  @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
   private String xlsFileEncoding;
 
-  @Parameter(property = "xlsFileName", defaultValue="i18n.xls")
+  @Parameter(property = "xlsFileName", defaultValue = "i18n.xls")
   private String xlsFileName;
 
   @Parameter(property = "deleteEmptyProperties", defaultValue = "false")
   private boolean deleteEmptyProperties;
 
-  //@Parameter(defaultValue = "true")
-  private boolean useJavaStyleUnicodeEscaping    = true;
+  private boolean useJavaStyleUnicodeEscaping = true;
+
 
   /* *************************************************** Methods **************************************************** */
 
   @Override
-  public void execute() throws MojoExecutionException
-  {
-
-    //
-    this.getLog().info( "Write properties from XLS file back to property files..." );
+  public void execute() throws MojoExecutionException {
+    this.getLog().info("Write properties from XLS file back to property files...");
     this.logConfigurationProperties();
 
-    //
     final LocaleFilter localeFilter = this.determineLocaleFilter();
-    try
-    {
-      //
-      if ( this.xlsFileName != null )
-      {
-        //
-        File file = new File( this.xlsOutputDirectory, this.xlsFileName );
-        this.getLog().info( "Looking for xls file at:" + file );
-        if ( file.exists() )
-        {
+    try {
+      if (this.xlsFileName != null) {
+        File file = new File(this.xlsOutputDirectory, this.xlsFileName);
+        this.getLog().info("Looking for xls file at:" + file);
+        if (file.exists()) {
           ModifierHelper.writeXLSFileContentToPropertyFiles(propertiesRootDirectory.toPath(), file, this.propertyFileEncoding, localeFilter,
-                                                             this.deleteEmptyProperties,
-                                                             this.useJavaStyleUnicodeEscaping );
+                                                            this.deleteEmptyProperties,
+                                                            this.useJavaStyleUnicodeEscaping);
         }
       }
 
-    }
-    catch ( Exception e )
-    {
-      this.getLog().error( "Could not write properties from xls", e );
+    } catch (Exception e) {
+      this.getLog().error("Could not write properties from xls", e);
     }
 
-    //
-    this.getLog().info( "...done" );
-
+    this.getLog().info("...done");
   }
+
 
   /**
    *
    */
-  private void logConfigurationProperties()
-  {
-    this.getLog().info( "localeFilterRegex=" + this.localeFilterRegex );
-    this.getLog().info( "xlsOutputDirectory=" + this.xlsOutputDirectory );
-    this.getLog().info( "xlsFileName=" + this.xlsFileName );
-    this.getLog().info( "useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping );
-
+  private void logConfigurationProperties() {
+    this.getLog().info("localeFilterRegex=" + this.localeFilterRegex);
+    this.getLog().info("xlsOutputDirectory=" + this.xlsOutputDirectory);
+    this.getLog().info("xlsFileName=" + this.xlsFileName);
+    this.getLog().info("useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping);
   }
 
-  private LocaleFilter determineLocaleFilter()
-  {
+
+  private LocaleFilter determineLocaleFilter() {
     final LocaleFilter localeFilter = new LocaleFilter();
-    localeFilter.setPattern( Pattern.compile( this.localeFilterRegex ) );
+    localeFilter.setPattern(Pattern.compile(this.localeFilterRegex));
     return localeFilter;
   }
 

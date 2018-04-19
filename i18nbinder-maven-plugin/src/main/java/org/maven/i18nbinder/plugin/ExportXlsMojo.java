@@ -17,6 +17,7 @@ package org.maven.i18nbinder.plugin;
 
 import com.google.common.collect.ImmutableSet;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -33,6 +34,7 @@ import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 import org.omnaest.i18nbinder.internal.xls.XLSFile;
 
+
 /**
  * Goal which executes the i18nBinder xls file generation
  *
@@ -44,17 +46,16 @@ public class ExportXlsMojo extends AbstractMojo {
   /**
    * Location of the output directory root.
    */
-  //FIXME: Diesen Parameter sollte es nicht geben. Stattdessen nur das explizite XLS-File
-  @Parameter(property="outputDirectory", defaultValue="${project.build.directory}", required = true)
-  private File    xlsOutputDirectory;
+  @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}", required = true)
+  private File xlsOutputDirectory;
 
   /**
    * Location of the source i18n files.
    */
   @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
-  private File propertiesRootDirectory ;
+  private File propertiesRootDirectory;
 
-  @Parameter(property="verbose", defaultValue="false")
+  @Parameter(property = "verbose", defaultValue = "false")
   private boolean verbose;
 
   //FIXME: Should be taken from jaxb2 maven plugin
@@ -67,98 +68,79 @@ public class ExportXlsMojo extends AbstractMojo {
   @Parameter(property = "propertyFileEncoding")
   private String propertyFileEncoding;
 
-  @Parameter(property = "xlsFileEncoding", defaultValue="UTF-8")
+  @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
   private String xlsFileEncoding;
 
-  @Parameter(property = "xlsFileName", defaultValue="i18n.xls")
+  @Parameter(property = "xlsFileName", defaultValue = "i18n.xls")
   private String xlsFileName;
 
 
-  //@Parameter(defaultValue = ".*")
-  //FIXME: SOllte wegfallen
-  private String        localeFilterRegex                        = ".*";
+  private String localeFilterRegex = ".*";
 
-  //@Parameter(defaultValue = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties")
-  //FIXME: SOllte wegfallen
-  private String        fileNameLocaleGroupPattern               = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties";
+  private String fileNameLocaleGroupPattern = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties";
 
-  //@Parameter
-  //FIXME: SOllte wegfallen
-  private List<Integer> fileNameLocaleGroupPatternGroupIndexList = Arrays.asList( 2, 3, 4 );
+  private List<Integer> fileNameLocaleGroupPatternGroupIndexList = Arrays.asList(2, 3, 4);
 
-//  @Parameter(defaultValue = "true")
-  private boolean       useJavaStyleUnicodeEscaping              = true;
+  private boolean useJavaStyleUnicodeEscaping = true;
+
 
   /* *************************************************** Methods **************************************************** */
 
   @Override
-  public void execute() throws MojoExecutionException
-  {
-
-    //
-    this.getLog().info( "Create XLS file from property files..." );
+  public void execute() throws MojoExecutionException {
+    this.getLog().info("Create XLS file from property files...");
     this.logConfigurationProperties();
 
-    //
     final LocaleFilter localeFilter = this.determineLocaleFilter();
-    final Set<File> propertyFileSet = this.resolveFilesFromDirectoryRoot( this.propertiesRootDirectory );
+    final Set<File> propertyFileSet = this.resolveFilesFromDirectoryRoot(this.propertiesRootDirectory);
 
-    try
-    {
-      if ( this.xlsFileName != null && !propertyFileSet.isEmpty() )
-      {
-        //
+    try {
+      if (this.xlsFileName != null && !propertyFileSet.isEmpty()) {
         XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(this.propertiesRootDirectory.toPath(),
                                                                         propertyFileSet, this.propertyFileEncoding,
-                                                                         localeFilter, this.fileNameLocaleGroupPattern,
-                                                                         this.fileNameLocaleGroupPatternGroupIndexList,
-                                                                         this.useJavaStyleUnicodeEscaping );
+                                                                        localeFilter, this.fileNameLocaleGroupPattern,
+                                                                        this.fileNameLocaleGroupPatternGroupIndexList,
+                                                                        this.useJavaStyleUnicodeEscaping);
 
-        //
         Files.createDirectories(this.xlsOutputDirectory.toPath());
-        File file = new File( this.xlsOutputDirectory, this.xlsFileName );
-        xlsFile.setFile( file );
+        File file = new File(this.xlsOutputDirectory, this.xlsFileName);
+        xlsFile.setFile(file);
         xlsFile.store();
 
-      }
-      else
-      {
-        this.getLog().error( "No xls file name specified. Please provide a file name for the xls file which should be created." );
+      } else {
+        this.getLog().error("No xls file name specified. Please provide a file name for the xls file which should be created.");
       }
 
-    }
-    catch ( Exception e )
-    {
-      this.getLog().error( "Could not write xls file", e );
+    } catch (IOException e) {
+      this.getLog().error("Could not write xls file", e);
     }
 
-    //
-    this.getLog().info( "...done" );
-
+    this.getLog().info("...done");
   }
+
 
   /**
    *
    */
-  private void logConfigurationProperties()
-  {
-    this.getLog().info( "fileNameLocaleGroupPattern=" + this.fileNameLocaleGroupPattern );
-    this.getLog().info( "fileNameLocaleGroupPatternGroupIndexList=" + this.fileNameLocaleGroupPatternGroupIndexList );
-    this.getLog().info( "localeFilterRegex=" + this.localeFilterRegex );
-    this.getLog().info( "xlsOutputDirectory=" + this.xlsOutputDirectory );
-    this.getLog().info( "xlsFileName=" + this.xlsFileName );
-    this.getLog().info( "propertiesRootDirectory=" + this.propertiesRootDirectory );
-    this.getLog().info( "useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping );
-    this.getLog().info( "propertyFileEncoding=" + this.propertyFileEncoding );
+  private void logConfigurationProperties() {
+    this.getLog().info("fileNameLocaleGroupPattern=" + this.fileNameLocaleGroupPattern);
+    this.getLog().info("fileNameLocaleGroupPatternGroupIndexList=" + this.fileNameLocaleGroupPatternGroupIndexList);
+    this.getLog().info("localeFilterRegex=" + this.localeFilterRegex);
+    this.getLog().info("xlsOutputDirectory=" + this.xlsOutputDirectory);
+    this.getLog().info("xlsFileName=" + this.xlsFileName);
+    this.getLog().info("propertiesRootDirectory=" + this.propertiesRootDirectory);
+    this.getLog().info("useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping);
+    this.getLog().info("propertyFileEncoding=" + this.propertyFileEncoding);
   }
+
 
   private Set<File> resolveFilesFromDirectoryRoot(final File propertiesRootDirectory) {
     if (!propertiesRootDirectory.exists()) {
-      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. Nothing will be exported.");
+      this.getLog().warn("resource bundle directory " + propertiesRootDirectory + " does not exist. Nothing will be exported.");
       return ImmutableSet.of();
     }
 
-    final Set<File> matchingFiles= new LinkedHashSet<>();
+    final Set<File> matchingFiles = new LinkedHashSet<>();
 
     final DirectoryScanner directoryScanner = new DirectoryScanner();
     directoryScanner.setIncludes(this.i18nIncludes);
@@ -181,11 +163,10 @@ public class ExportXlsMojo extends AbstractMojo {
     return matchingFiles;
   }
 
-  
-  private LocaleFilter determineLocaleFilter()
-  {
+
+  private LocaleFilter determineLocaleFilter() {
     final LocaleFilter localeFilter = new LocaleFilter();
-    localeFilter.setPattern( Pattern.compile( this.localeFilterRegex ) );
+    localeFilter.setPattern(Pattern.compile(this.localeFilterRegex));
     return localeFilter;
   }
 

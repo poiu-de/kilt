@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 /*******************************************************************************
  * Copyright 2011 Danny Kunz
@@ -18,7 +18,23 @@
 -->
 <project name="I18nBinder" basedir=".">
 
-	<taskdef name="i18nBinder" classname="org.omnaest.i18nbinder.I18nBinder">
+	<taskdef name="exportXls" classname="org.omnaest.i18nbinder.ExportXlsTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="importXls" classname="org.omnaest.i18nbinder.ImportXlsTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="createFacade" classname="org.omnaest.i18nbinder.CreateFacadeTask">
 		<classpath>
       <fileset dir="lib">
         <include name="*.jar" />
@@ -30,25 +46,48 @@
 	<property file="i18nBinder.properties" />
 
 	<!-- TARGETS -->
-	<target name="createXLSFile" description="This task creates a XLS file from a given fileset of property files.">
-		<i18nBinder xlsfilename="${xlsFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createXLSFile="true" fileEncoding="${fileEncoding}" useJavaStyleUnicodeExcaping="true">
-			<fileset dir="${i18nDirectory}">
+  <target name="clean">
+    <delete dir="${facadeGenerationDir}"/>
+  </target>
+
+  <target name="export-xls" description="Exports the translations in the resource bundle files into an XLS file.">
+    <exportXls 
+      xlsfilename="${xlsFilename}" 
+      propertyFileEncoding="${propertyFileEncoding}"
+      xlsFileEncoding="${xlsFileEncoding}" 
+    >
+
+			<fileset dir="${propertiesRootDirectory}">
 				<include name="**/*.properties" />
 			</fileset>
-		</i18nBinder>
+		</exportXls>
 	</target>
 
-	<target name="createJavaFacade" description="This task creates a Java source code facade file from a given fileset of property files.">
-		<property name="baseFolderIgnoredPath" location="${i18nDirectory}" />
-    <i18nBinder javaFacadeFileName="${javaFacadeFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileNameLocaleGroupPattern="${fileNameLocaleGroupPattern}" fileNameLocaleGroupPatternGroupIndexList="${fileNameLocaleGroupPatternGroupIndexList}" createJavaFacade="true" baseNameInTargetPlattform="${baseNameInTargetPlattform}" baseFolderIgnoredPath="${baseFolderIgnoredPath}" packageName="${packageName}" externalizeTypes="${externalizeTypes}" copyFacadeAccessorClasses="${copyFacadeAccessorClasses}" facadeAccessorClassName="${facadeAccessorClassName}" facadeGenerationDir="${facadeGenerationDir}">
-			<fileset dir="${i18nDirectory}">
-				<include name="**/*.properties" />
-			</fileset>
-		</i18nBinder>
+	<target name="import-xls" description="Imports the translations from an XLS file back into the resource bundle files.">
+		<importXls
+      xlsFileName="${xlsFilename}"
+      propertyFileEncoding="${propertyFileEncoding}"
+      xlsFileEncoding="${xlsFileEncoding}"
+      deleteEmptyProperties="${deleteEmptyProperties}"
+     />
 	</target>
 
-	<target name="writeProperties" description="Writes the properties to the property files using the XLS file as source.">
-		<i18nBinder xlsFileName="${xlsFilename}" logInfo="${logInfo}" localeFilterRegex="${localeFilterRegex}" fileEncoding="${fileEncoding}" deletePropertiesWithBlankValue="${deletePropertiesWithBlankValue}" />
+
+	<target name="create-facade" description="Creates a Java facade for accessing the translations in the resource bundle files.">
+    <createFacade
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      generatedPackage="${generatedPackage}"
+      copyFacadeAccessorClasses="${copyFacadeAccessorClasses}"
+      facadeAccessorClassName="${facadeAccessorClassName}"
+      facadeGenerationDir="${facadeGenerationDir}"
+      propertyFileEncoding="${propertyFileEncoding}"
+    >
+
+      <fileset dir="${propertiesRootDirectory}">
+        <include name="${i18nIncludes}" />
+        <exclude name="${i18nExcludes}" />
+      </fileset>
+    </createFacade>
 	</target>
 
 </project>

@@ -184,13 +184,9 @@ public class CreateFacadeMojo extends AbstractMojo {
     } else {
       this.getLog().info("Create Java source code facade file from property files.");
       this.logConfigurationProperties();
-//      final LocaleFilter localeFilter = this.determineLocaleFilter();
       final Set<File> propertyFileSet = this.resolveFilesFromDirectoryRoot(this.propertiesRootDirectory);
 
       try {
-//        final String i18nFacadeName = StringUtils.defaultString(this.i18nFacadeName,
-//                                                                FacadeCreatorHelper.DEFAULT_JAVA_FACADE_FILENAME_I18N_FACADE);
-
         // generate the the enum facade(s)
         final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(propertiesRootDirectory);
         final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
@@ -251,11 +247,11 @@ public class CreateFacadeMojo extends AbstractMojo {
     directoryScanner.scan();
 
     final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (int i = 0; i < fileNames.length; i++) {
+    for (String fileName : fileNames) {
       if (this.verbose) {
-        this.getLog().info("Including in facade: " + fileNames[i]);
+        this.getLog().info("Including in facade: " + fileName);
       }
-      matchingFiles.add(new File(propertiesRootDirectory, fileNames[i]));
+      matchingFiles.add(new File(propertiesRootDirectory, fileName));
     }
 
     if (matchingFiles.isEmpty()) {
