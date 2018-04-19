@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.internal.facade;
+package org.omnaest.i18nbinder.facade;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

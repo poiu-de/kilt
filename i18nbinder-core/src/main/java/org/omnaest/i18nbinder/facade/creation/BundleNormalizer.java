@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.internal.facade.creation;
+package org.omnaest.i18nbinder.facade.creation;
 
 import com.google.common.collect.ImmutableMap;
 import java.text.Normalizer;
 import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import java.util.logging.*;
-import static org.omnaest.i18nbinder.internal.facade.creation.Objects.requireNonWhitespace;
+import static org.omnaest.i18nbinder.facade.creation.Objects.requireNonWhitespace;
 
 /**
  * Normalizes key and bundle names to valid strings to be used as class

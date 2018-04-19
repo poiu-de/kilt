@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.internal.facade.creation;
+package org.omnaest.i18nbinder.facade.creation;
 
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -36,7 +36,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.omnaest.i18nbinder.internal.Translation;
-import org.omnaest.i18nbinder.internal.facade.I18nBundleKey;
+import org.omnaest.i18nbinder.facade.I18nBundleKey;
 
 
 /**

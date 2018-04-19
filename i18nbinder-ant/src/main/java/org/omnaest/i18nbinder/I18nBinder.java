@@ -38,9 +38,9 @@ import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
 import org.omnaest.i18nbinder.internal.ModifierHelper;
 import org.omnaest.i18nbinder.internal.XLSFile;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContentHelper;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeCreator;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
 
 public class I18nBinder extends Task
 {
@@ -418,7 +418,7 @@ public class I18nBinder extends Task
 
   public void setPackageName( String packageName )
   {
-    org.omnaest.i18nbinder.internal.facade.creation.Objects.requireNonWhitespace(packageName, "packageName may not be empty");
+    org.omnaest.i18nbinder.facade.creation.Objects.requireNonWhitespace(packageName, "packageName may not be empty");
     this.log( "packageName=" + packageName );
     this.packageName = packageName;
   }

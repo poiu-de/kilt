@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.internal.facade.creation;
+package org.omnaest.i18nbinder.facade.creation;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMultimap;
@@ -56,7 +56,7 @@ public class FacadeBundleContent {
   // Attributes
 
   /** The bundleBasename of this bundle. */
-  private final String bundleName;
+  private final String bundlBaseeName;
 
   /** All keys of this bundle and their available translations. */
   private final Multimap<String, Translation> content;
@@ -69,11 +69,11 @@ public class FacadeBundleContent {
   /**
    * Creates a new FacadeBundleContent for the given bundle with the given translations.
    *
-   * @param bundleName the bundleBasename
+   * @param bundleBaseName the bundleBasename
    * @param content all keys and their translations for this bundle
    */
-  private FacadeBundleContent(final String bundleName, final Multimap<String, Translation> content) {
-    this.bundleName= bundleName;
+  private FacadeBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
+    this.bundlBaseeName= bundleBaseName;
     //FIXME: Sollte das irgendwie sortiert sein? Alphabetisch? Oder nach der gelesenen Reihenfolge?
     this.content= ImmutableMultimap.copyOf(content);
   }
@@ -89,7 +89,7 @@ public class FacadeBundleContent {
    * @return the bundleBasename
    */
   public String getBundleName() {
-    return bundleName;
+    return bundlBaseeName;
   }
 
 
@@ -145,13 +145,13 @@ public class FacadeBundleContent {
       });
     }
 
-    return new FacadeBundleContent(this.bundleName, translations);
+    return new FacadeBundleContent(this.bundlBaseeName, translations);
   }
 
 
   @Override
   public String toString() {
-    return "FacadeBundleContent{" + "bundleName=" + bundleName + "\n\t, content=" + content + '}';
+    return "FacadeBundleContent{" + "bundleName=" + bundlBaseeName + "\n\t, content=" + content + '}';
   }
 
 

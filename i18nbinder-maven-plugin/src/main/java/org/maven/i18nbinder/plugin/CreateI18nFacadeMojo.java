@@ -36,9 +36,9 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.LocaleFilter;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContentHelper;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeCreator;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
 
 
 /**

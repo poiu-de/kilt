@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.omnaest.i18nbinder.internal.facade.creation;
+package org.omnaest.i18nbinder.facade.creation;
 
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Path;
