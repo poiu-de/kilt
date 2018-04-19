@@ -211,7 +211,7 @@ public class FacadeBundleContentHelper {
    * @return the bundle prefix for the given resource bundle file
    * @throws IllegalArgumentException if the given path is not located below the ignorable base path
    */
-  protected String getBundlePrefix(final Path path) {
+  protected String getBundlePrefixORIG(final Path path) {
     java.util.Objects.requireNonNull(path);
     if (!path.toAbsolutePath().startsWith(this.ignorableBasePath.toAbsolutePath())) {
       throw new IllegalArgumentException("All files should live below the ignorable base path "+this.ignorableBasePath.toAbsolutePath().toString()+". Given path is "+path.toAbsolutePath().toString());
@@ -227,6 +227,27 @@ public class FacadeBundleContentHelper {
       return "";
     } else {
       return bundlePrefix+"_";
+    }
+  }
+
+
+  protected String getBundlePrefix(final Path path) {
+    java.util.Objects.requireNonNull(path);
+    if (!path.toAbsolutePath().startsWith(this.ignorableBasePath.toAbsolutePath())) {
+      throw new IllegalArgumentException("All files should live below the ignorable base path "+this.ignorableBasePath.toAbsolutePath().toString()+". Given path is "+path.toAbsolutePath().toString());
+    }
+
+    final Path prefixPath= this.ignorableBasePath.toAbsolutePath().relativize(path.toAbsolutePath().getParent());
+    final String bundlePrefix= prefixPath.toString()
+      .replaceFirst("^", "/")  //always prepend a slash
+      .replaceFirst("$", "/")         //always append a slash
+      .replaceAll("\\/+", "/")       //reduce multiple slashes to only one
+      ;
+
+    if (bundlePrefix.isEmpty()) {
+      return "";
+    } else {
+      return bundlePrefix;
     }
   }
 

@@ -17,8 +17,10 @@ package org.omnaest.i18nbinder.facade.creation;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import com.google.common.collect.Multimaps;
 import com.google.common.collect.SetMultimap;
 import java.io.File;
 import java.util.Map;
@@ -56,10 +58,10 @@ public class FacadeBundleContent {
   // Attributes
 
   /** The bundleBasename of this bundle. */
-  private final String bundlBaseeName;
+  private final String bundlBaseName;
 
   /** All keys of this bundle and their available translations. */
-  private final Multimap<String, Translation> content;
+  private final Multimap<String, Translation> content= LinkedListMultimap.create();
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -73,9 +75,9 @@ public class FacadeBundleContent {
    * @param content all keys and their translations for this bundle
    */
   private FacadeBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
-    this.bundlBaseeName= bundleBaseName;
+    this.bundlBaseName= bundleBaseName;
     //FIXME: Sollte das irgendwie sortiert sein? Alphabetisch? Oder nach der gelesenen Reihenfolge?
-    this.content= ImmutableMultimap.copyOf(content);
+    this.content.putAll(content);
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -88,8 +90,8 @@ public class FacadeBundleContent {
    *
    * @return the bundleBasename
    */
-  public String getBundleName() {
-    return bundlBaseeName;
+  public String getBundleBaseName() {
+    return bundlBaseName;
   }
 
 
@@ -104,6 +106,13 @@ public class FacadeBundleContent {
   }
 
 
+  public void addTranslation(final String bundleKey, final Translation translation) {
+    this.content.put(bundleKey, translation);
+  }
+
+
+  //FIXME: forName und fromFiles sollte in eine Methode kombiniert werden.
+  //       Ich kriege ja immer beides aus dem Helper zur[ck
 
   /**
    * Creates a new FacadeBundleContent for the given bundle without any translations.
@@ -124,6 +133,7 @@ public class FacadeBundleContent {
    *
    * @param bundleFiles the file containing the translations for this bundle for each language
    * @return a FacadeBundleContent with the translations from the given files
+   * @throws InconsistentBundleBaseNameException if thegiven files don't share a common basename
    */
   public FacadeBundleContent fromFiles(final Map<Language, File> bundleFiles) {
     final SetMultimap<String, Translation> translations= MultimapBuilder.hashKeys().linkedHashSetValues().build();
@@ -145,13 +155,13 @@ public class FacadeBundleContent {
       });
     }
 
-    return new FacadeBundleContent(this.bundlBaseeName, translations);
+    return new FacadeBundleContent(this.bundlBaseName, translations);
   }
 
 
   @Override
   public String toString() {
-    return "FacadeBundleContent{" + "bundleName=" + bundlBaseeName + "\n\t, content=" + content + '}';
+    return "FacadeBundleContent{" + "bundleName=" + bundlBaseName + "\n\t, content=" + content + '}';
   }
 
 

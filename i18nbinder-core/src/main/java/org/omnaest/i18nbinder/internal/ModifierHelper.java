@@ -17,26 +17,22 @@ package org.omnaest.i18nbinder.internal;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.omnaest.i18nbinder.grouping.FileGroupToPropertiesAdapter;
 import org.omnaest.i18nbinder.internal.XLSFile.TableRow;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContent;
-import org.omnaest.i18nbinder.internal.facade.creation.FacadeBundleContentHelper;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContent;
+import org.omnaest.i18nbinder.facade.creation.FacadeBundleContentHelper;
 import org.omnaest.i18nbinder.internal.xls.Row;
 import org.omnaest.i18nbinder.internal.xls.Sheet;
 import org.omnaest.utils.propertyfile.PropertyFile;
-import org.omnaest.utils.propertyfile.content.PropertyMap;
+import org.omnaest.utils.propertyfile.content.PropertyFileContent;
 import org.omnaest.utils.propertyfile.content.element.Property;
 
 /**
@@ -73,166 +69,96 @@ public class ModifierHelper
    * @param deletePropertiesWithBlankValue
    * @param useJavaStyleUnicodeEscaping
    */
-  public static void writeXLSFileContentToPropertyFiles( File file,
+  public static void writeXLSFileContentToPropertyFiles(final Path propertiesRootDirectory,
+                                                           File file,
                                                          String fileEncoding,
                                                          LocaleFilter localeFilter,
                                                          boolean deletePropertiesWithBlankValue,
-                                                         boolean useJavaStyleUnicodeEscaping )
-  {
-    //
-    if ( XLSFile.isXLSFile( file ) )
-    {
-      //
-      XLSFile xlsFile = new XLSFile( file );
-      xlsFile.load();
+                                                         boolean useJavaStyleUnicodeEscaping ) {
 
-      //
-      List<TableRow> tableRowList = xlsFile.getTableRowList();
+    // read XLS file
+    final XLSFile xlsFile= new XLSFile(file);
+    xlsFile.load();
+    final List<TableRow> tableRowList = xlsFile.getTableRowList();
 
-      //
-      final List<String> missingPropertyInformationList = new ArrayList<String>();
+    // save the locales defined in the header with their indexes
+    final TableRow headerRow= tableRowList.get(0);
+    final Map<Language, Integer> localeIndexMap= new LinkedHashMap<>();
+    for (int i= 2; i<headerRow.size(); i++) {
+      final Language language= Language.of(headerRow.get(i));
+      localeIndexMap.put(language, i);
+    }
 
-      //
-      List<String> localeList = new ArrayList<String>();
-      {
-        //
-        TableRow tableRow = tableRowList.get( 0 );
-        localeList.addAll( tableRow.subList( 2, tableRow.size() ) );
-        localeList.remove( null );
+    // remember all the bundles read and the translated values in these bundles
+    final Map<String, FacadeBundleContent> translatedBundleContents= new LinkedHashMap<>();
 
-        //
-        for ( String locale : new ArrayList<String>( localeList ) )
-        {
-          if ( !localeFilter.isLocaleAccepted( locale ) )
-          {
-            localeList.remove( locale );
-          }
-        }
+    for (final TableRow tableRow : tableRowList.subList(0, tableRowList.size())) {
+      final String bundleBaseName= tableRow.get(0);
+      final String bundleKey= tableRow.get(1);
+
+      // create the bundleContent object, if we haven't done already
+      if (!translatedBundleContents.containsKey(bundleBaseName)) {
+        final FacadeBundleContent bundleContent= FacadeBundleContent.forName(bundleBaseName);
+        translatedBundleContents.put(bundleBaseName, bundleContent);
       }
 
-      //
-      FilenameToPropertyKeyToValueMap filenameToPropertyKeyToValueMap = new FilenameToPropertyKeyToValueMap();
-      for ( TableRow tableRow : tableRowList.subList( 1, tableRowList.size() ) )
-      {
-        //
-        String fileNameLocaleIndependent = tableRow.get( 0 );
-        String propertyKey = tableRow.get( 1 );
-
-        //
-        ModifierHelper.LOGGER.info( "Processing: " + fileNameLocaleIndependent + " " + propertyKey );
-
-        //
-        int index = 2;
-        for ( String locale : localeList )
-        {
-          //
-          try
-          {
-            //
-            String value = tableRow.get( index++ );
-
-            //
-            String fileName = fileNameLocaleIndependent.replaceAll( Pattern.quote( GROUPING_PATTERN_REPLACEMENT_PATTERN_STRING ),
-                                                                    locale );
-
-            //
-            if ( !filenameToPropertyKeyToValueMap.containsKey( fileName ) )
-            {
-              filenameToPropertyKeyToValueMap.put( fileName, new PropertyKeyToValueMap() );
-            }
-
-            //
-            PropertyKeyToValueMap propertyKeyToValueMap = filenameToPropertyKeyToValueMap.get( fileName );
-
-            //
-            if ( value != null )
-            {
-              propertyKeyToValueMap.put( propertyKey, value );
-            }
-          }
-          catch ( Exception e )
-          {
-            //
-            String message = "Missing property value within " + fileNameLocaleIndependent + " for locale " + locale
-                             + " and property" + propertyKey;
-            missingPropertyInformationList.add( message );
-          }
-        }
-
+      // insert the translation for each language into the bundleContent object
+      final FacadeBundleContent bundleContent= translatedBundleContents.get(bundleBaseName);
+      for (Map.Entry<Language, Integer> e : localeIndexMap.entrySet()) {
+        final Language language= e.getKey();
+        final String translatedValue= tableRow.get(e.getValue());
+        bundleContent.addTranslation(bundleKey, new Translation(language, translatedValue));
       }
+    }
 
-      //
-      for ( String fileName : filenameToPropertyKeyToValueMap.keySet() )
-      {
-        //
-        PropertyKeyToValueMap propertyKeyToValueMap = filenameToPropertyKeyToValueMap.get( fileName );
+    final Map<String, Map<Language, PropertyFile>> bundleFileMapping= new LinkedHashMap<>();
 
-        //
-        PropertyFile propertyFile = new PropertyFile( fileName );
-        if ( fileEncoding != null )
-        {
-          propertyFile.setFileEncoding( fileEncoding );
-        }
-        propertyFile.setUseJavaStyleUnicodeEscaping( useJavaStyleUnicodeEscaping );
-        propertyFile.load();
-        PropertyMap propertyMap = propertyFile.getPropertyFileContent().getPropertyMap();
+    //FIXME: Auf diese Weise werden gelöschte Schlüssel nicht entfernt. Aber wäre das sinnvoll? Nur, wenn vom Benutzer explizit verlangt.
+    // for each bundle…
+    for (final FacadeBundleContent bundleContent : translatedBundleContents.values()) {
+      // …for each key…
+      for (Map.Entry<String, Collection<Translation>> e : bundleContent.getContent().asMap().entrySet()) {
+        final String resourceKey= e.getKey();
+        final Collection<Translation> translations= e.getValue();
 
-        //
-        boolean contentChanged = false;
-        for ( String propertyKey : propertyKeyToValueMap.keySet() )
-        {
-          //
-          String value = propertyKeyToValueMap.get( propertyKey );
-
-          //
-          if ( StringUtils.isNotEmpty( value ) )
-          {
-            //
-            String[] values = value.split( Pattern.quote( FileGroupToPropertiesAdapter.MULTILINE_VALUES_SEPARATOR ) );
-
-            //
-            Property property = propertyMap.containsKey( propertyKey ) ? property = propertyMap.get( propertyKey )
-                                                                      : new Property();
-
-            //
-            property.setKey( propertyKey );
+        // …update the translation for each language
+        for (final Translation translation : translations) {
+          if (!bundleFileMapping.containsKey(bundleContent.getBundleBaseName())) {
+            bundleFileMapping.put(bundleContent.getBundleBaseName(), new LinkedHashMap<>());
+          }
+          if (!bundleFileMapping.get(bundleContent.getBundleBaseName()).containsKey(translation.getLang())) {
+            final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleContent.getBundleBaseName(), translation.getLang());
+            final PropertyFile propertyFile= new PropertyFile(fileForBundle);
+            if (fileEncoding != null) {
+              propertyFile.setFileEncoding(fileEncoding);
+            }
+            propertyFile.setUseJavaStyleUnicodeEscaping(useJavaStyleUnicodeEscaping);
+            propertyFile.load();
+            bundleFileMapping.get(bundleContent.getBundleBaseName()).put(translation.getLang(), propertyFile);
+          }
+          final PropertyFile propertyFile= bundleFileMapping.get(bundleContent.getBundleBaseName()).get(translation.getLang());
+          final PropertyFileContent propertyFileContent= propertyFile.getPropertyFileContent();
+          final Property defaultProperty= new Property();
+          defaultProperty.setKey(resourceKey);
+          final Property property= propertyFileContent.getPropertyMap().getOrDefault(resourceKey, defaultProperty);
+          if (!property.getValueList().equals(Arrays.asList(translation.getValue()))) {
             property.clearValues();
-            property.addAllValues( Arrays.asList( values ) );
-
-            //
-            propertyMap.put( property );
-
-            //
-            contentChanged = true;
+            property.addValue(translation.getValue());
           }
-          else if ( propertyMap.containsKey( propertyKey ) && deletePropertiesWithBlankValue )
-          {
-            //
-            propertyMap.remove( propertyKey );
-
-            //
-            contentChanged = true;
-          }
-        }
-
-        //
-        if ( contentChanged )
-        {
-          propertyFile.store();
-        }
-      }
-
-      //
-      if ( !missingPropertyInformationList.isEmpty() )
-      {
-        //
-        ModifierHelper.LOGGER.info( "Following property information were incomplete..." );
-        for ( String missingPropertyInformation : missingPropertyInformationList )
-        {
-          ModifierHelper.LOGGER.info( missingPropertyInformation );
         }
       }
     }
+
+    //now write the property files back to disk
+    //FIXME: Könnte man das nicht oben in der Liste öffnen und schließen, um nicht alle gleichzeitig offen zu haben?
+    bundleFileMapping.values().forEach((Map<Language, PropertyFile> langPropMap) -> {
+      langPropMap.values().forEach((PropertyFile propertyFile) -> {
+        // only write files if they have some content (avoid creating unwanted empty files for unsupported locales)
+        if (propertyFile.getPropertyFileContent().size() > 0) {
+          propertyFile.store();
+        }
+      });
+    });
   }
 
 
@@ -269,4 +195,18 @@ public class ModifierHelper
 
     return xlsFile;
   }
+
+
+  private static File getFileForBundle(final File propertiesRootDirectory, final String bundleBasename, final Language language) {
+    final StringBuilder sb= new StringBuilder();
+
+    sb.append(bundleBasename);
+    if (!language.getLang().isEmpty()) {
+      sb.append("_").append(language.getLang());
+    }
+    sb.append(".properties");
+
+    return new File(propertiesRootDirectory, sb.toString());
+  }
+
 }

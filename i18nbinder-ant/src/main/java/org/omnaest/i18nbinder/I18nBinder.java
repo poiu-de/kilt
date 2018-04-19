@@ -131,7 +131,7 @@ public class I18nBinder extends Task
       File file = new File( this.xlsFileName );
       if ( file.exists() )
       {
-        ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.propertyFileEncoding, this.localeFilter,
+        ModifierHelper.writeXLSFileContentToPropertyFiles(Paths.get(this.baseFolderIgnoredPath), file, this.propertyFileEncoding, this.localeFilter,
                                                            this.deletePropertiesWithBlankValue, this.useJavaStyleUnicodeEscaping );
       }
 

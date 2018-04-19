@@ -16,6 +16,8 @@
 package org.maven.i18nbinder.plugin;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
@@ -40,6 +42,12 @@ public class CreatePropertiesFromXlsMojo extends AbstractMojo
   @Parameter(defaultValue="${project.build.directory}", required = true)
   private File    xlsOutputDirectory;
 
+  /**
+   * Location of the source i18n files.
+   */
+  @Parameter(defaultValue = "src/main/resources/i18n")
+  private File          propertiesRootDirectory                  = new File( "src/main/resources/i18n" );
+
   @Parameter(defaultValue = ".*")
   private String  localeFilterRegex              = ".*";
 
@@ -52,8 +60,8 @@ public class CreatePropertiesFromXlsMojo extends AbstractMojo
   @Parameter(defaultValue = "true")
   private boolean deletePropertiesWithBlankValue = true;
 
-  @Parameter(defaultValue = "false")
-  private boolean useJavaStyleUnicodeEscaping    = false;
+  @Parameter(defaultValue = "true")
+  private boolean useJavaStyleUnicodeEscaping    = true;
 
   /* *************************************************** Methods **************************************************** */
 
@@ -77,7 +85,7 @@ public class CreatePropertiesFromXlsMojo extends AbstractMojo
         this.getLog().info( "Looking for xls file at:" + file );
         if ( file.exists() )
         {
-          ModifierHelper.writeXLSFileContentToPropertyFiles( file, this.propertyFileEncoding, localeFilter,
+          ModifierHelper.writeXLSFileContentToPropertyFiles(propertiesRootDirectory.toPath(), file, this.propertyFileEncoding, localeFilter,
                                                              this.deletePropertiesWithBlankValue,
                                                              this.useJavaStyleUnicodeEscaping );
         }
