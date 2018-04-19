@@ -76,10 +76,10 @@ public class CreateFacadeMojo extends AbstractMojo {
   private String generatedPackage;
 
   //FIXME: Should be taken from jaxb2 maven plugin
-//  @Parameter
+  @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
   private String[] i18nIncludes;
 
-//  @Parameter
+  @Parameter(property="i18nExcludes")
   private String[] i18nExcludes;
 
   /**
@@ -242,30 +242,26 @@ public class CreateFacadeMojo extends AbstractMojo {
       return ImmutableSet.of();
     }
 
-    final Set<File> retset = new LinkedHashSet<>();
+    final Set<File> matchingFiles= new LinkedHashSet<>();
 
-    final String[] includes = {"**/*.properties"};
-    DirectoryScanner directoryScanner = new DirectoryScanner();
-    {
-      directoryScanner.setIncludes(includes);
-      directoryScanner.setBasedir(propertiesRootDirectory);
-      directoryScanner.setCaseSensitive(true);
-      directoryScanner.scan();
-    }
+    final DirectoryScanner directoryScanner = new DirectoryScanner();
+    directoryScanner.setIncludes(this.i18nIncludes);
+    directoryScanner.setExcludes(this.i18nExcludes);
+    directoryScanner.setBasedir(propertiesRootDirectory);
+    directoryScanner.scan();
 
-    final String[] fileNames = directoryScanner.getIncludedFiles();
+    final String[] fileNames= directoryScanner.getIncludedFiles();
     for (int i = 0; i < fileNames.length; i++) {
-      final String fileName = fileNames[i].replaceAll("\\\\", "/");
       if (this.verbose) {
-        this.getLog().info("Resolved: " + fileName);
+        this.getLog().info("Including in facade: " + fileNames[i]);
       }
-      retset.add(new File(propertiesRootDirectory, fileName));
+      matchingFiles.add(new File(propertiesRootDirectory, fileNames[i]));
     }
 
-    if (retset.isEmpty()) {
-      this.getLog().warn("No resource bundles found. No enum facades will be generated");
+    if (matchingFiles.isEmpty()) {
+      this.getLog().warn("No resource bundles found. No enum facades will be generated.");
     }
 
-    return retset;
+    return matchingFiles;
   }
 }

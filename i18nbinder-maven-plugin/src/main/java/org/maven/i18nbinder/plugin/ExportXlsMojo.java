@@ -15,6 +15,7 @@
  ******************************************************************************/
 package org.maven.i18nbinder.plugin;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
@@ -151,37 +152,36 @@ public class ExportXlsMojo extends AbstractMojo {
     this.getLog().info( "propertyFileEncoding=" + this.propertyFileEncoding );
   }
 
-  private Set<File> resolveFilesFromDirectoryRoot( File propertiesRootDirectory )
-  {
-    //
-    final Set<File> retset = new LinkedHashSet<File>();
-
-    //
-    final String[] includes = { "**/*.properties" };
-    DirectoryScanner directoryScanner = new DirectoryScanner();
-    {
-      directoryScanner.setIncludes( includes );
-      directoryScanner.setBasedir( propertiesRootDirectory );
-      directoryScanner.setCaseSensitive( true );
-      directoryScanner.scan();
+  private Set<File> resolveFilesFromDirectoryRoot(final File propertiesRootDirectory) {
+    if (!propertiesRootDirectory.exists()) {
+      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. Nothing will be exported.");
+      return ImmutableSet.of();
     }
 
-    //
+    final Set<File> matchingFiles= new LinkedHashSet<>();
+
+    final DirectoryScanner directoryScanner = new DirectoryScanner();
+    directoryScanner.setIncludes(this.i18nIncludes);
+    directoryScanner.setExcludes(this.i18nExcludes);
+    directoryScanner.setBasedir(propertiesRootDirectory);
+    directoryScanner.scan();
+
     final String[] fileNames = directoryScanner.getIncludedFiles();
-    for ( int i = 0; i < fileNames.length; i++ )
-    {
-      final String fileName = fileNames[i].replaceAll( "\\\\", "/" );
-      if ( this.verbose )
-      {
-        this.getLog().info( "Resolved: " + fileName );
+    for (int i = 0; i < fileNames.length; i++) {
+      if (this.verbose) {
+        this.getLog().info("Including in XLS: " + fileNames[i]);
       }
-      retset.add( new File( propertiesRootDirectory, fileName ) );
+      matchingFiles.add(new File(propertiesRootDirectory, fileNames[i]));
     }
 
-    //
-    return retset;
+    if (matchingFiles.isEmpty()) {
+      this.getLog().warn("No resource bundles found. Nothing will be exported.");
+    }
+
+    return matchingFiles;
   }
 
+  
   private LocaleFilter determineLocaleFilter()
   {
     final LocaleFilter localeFilter = new LocaleFilter();

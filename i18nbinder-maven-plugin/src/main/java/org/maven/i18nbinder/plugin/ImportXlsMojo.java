@@ -50,6 +50,7 @@ public class ImportXlsMojo extends AbstractMojo {
   private boolean verbose;
 
   //FIXME: Should be taken from jaxb2 maven plugin
+  //FIXME: Die werden hier gar nicht genutzt. Aber das sollte auch eingeschränkt werden können
 //  @Parameter
   private String[] i18nIncludes;
 
