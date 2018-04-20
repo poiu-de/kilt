@@ -71,6 +71,7 @@ public class XlsImExporter
 
         if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
           final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleBasename, translation.getLang());
+          //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
           final PropertyFile propertyFile= new PropertyFile(fileForBundle);
           if (fileEncoding != null) {
             propertyFile.setFileEncoding(fileEncoding);
