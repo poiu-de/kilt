@@ -22,7 +22,7 @@
       <plugin>
         <groupId>org.omnaest.i18nbinder</groupId>
         <artifactId>i18nbinder-maven-plugin</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>${project.version}</version>
         <configuration>
           <generatedPackage>de.poiu.kilt.facade</generatedPackage>
           <copyFacadeAccessorClasses>true</copyFacadeAccessorClasses>

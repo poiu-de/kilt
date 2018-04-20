@@ -17,12 +17,12 @@
     <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
     <url>https://github.com/hupfdule/i18n-binder</url>
 
-		<licenses>
-			<license>
-				<name>Apache License, Version 2.0</name>
-				<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			</license>
-		</licenses>
+    <licenses>
+      <license>
+        <name>Apache License, Version 2.0</name>
+        <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      </license>
+    </licenses>
 
     <scm>
       <url>https://github.com/hupfdule/i18n-binder</url>
@@ -38,9 +38,9 @@
 
     <developers>
         <developer>
-            <id>omnaest</id>
-            <name>Danny Kunz</name>
-            <email>awonderland6@googlemail.com</email>
+            <id>hupfdule</id>
+            <name>Marco Herrn</name>
+            <email>marco@mherrn.de</email>
         </developer>
     </developers>
 
@@ -58,45 +58,68 @@
                 <artifactId>i18nbinder-core</artifactId>
                 <version>0.2.0-SNAPSHOT</version>
             </dependency>
+            <dependency>
+              <groupId>junit</groupId>
+              <artifactId>junit</artifactId>
+              <version>4.12</version>
+              <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
+      <pluginManagement>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-jar-plugin</artifactId>
-							<version>3.1.0</version>
-							<configuration>
-								<archive>
-									<manifest>
-										<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-										<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-									</manifest>
-								</archive>
-							</configuration>
-						</plugin>
-
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-site-plugin</artifactId>
-							<version>3.7.1</version>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-project-info-reports-plugin</artifactId>
-							<version>3.0.0</version>
-						</plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.0</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>3.1.0</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-site-plugin</artifactId>
+            <version>3.7.1</version>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-project-info-reports-plugin</artifactId>
+            <version>3.0.0</version>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+          </plugin>
         </plugins>
+      </pluginManagement>
+
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <configuration>
+            <source>1.8</source>
+            <target>1.8</target>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+            <archive>
+              <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              </manifest>
+            </archive>
+          </configuration>
+        </plugin>
+      </plugins>
     </build>
 </project>

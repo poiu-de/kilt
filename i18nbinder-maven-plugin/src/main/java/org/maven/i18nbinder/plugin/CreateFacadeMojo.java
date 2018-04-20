@@ -24,14 +24,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.DirectoryScanner;
 import org.omnaest.i18nbinder.internal.Language;
 import org.omnaest.i18nbinder.internal.ResourceBundleContent;
@@ -46,7 +44,7 @@ import org.omnaest.i18nbinder.facade.creation.FacadeCreator;
       defaultPhase=LifecyclePhase.GENERATE_SOURCES,
       requiresDependencyResolution = ResolutionScope.COMPILE)
 @Execute(phase=LifecyclePhase.GENERATE_SOURCES)
-public class CreateFacadeMojo extends AbstractMojo {
+public class CreateFacadeMojo extends AbstractKiltMojo {
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -59,17 +57,6 @@ public class CreateFacadeMojo extends AbstractMojo {
   @Parameter(property="outputDirectory", defaultValue = "${project.build.directory}/generated-sources/i18nbinder", required = true)
   private File outputDirectory;
 
-  /**
-   * The location of the source i18n resource bundle files.
-   */
-  @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/i18n", required=true)
-  private File propertiesRootDirectory;
-
-  /**
-   * Whether to give more verbose output.
-   */
-  @Parameter(property="verbose", defaultValue="false")
-  private boolean verbose;
 
   /**
    * The package name under which the facade(s) will be generated.
@@ -77,59 +64,6 @@ public class CreateFacadeMojo extends AbstractMojo {
   @Parameter(property="generatedPackage", defaultValue="i18n.generated")
   private String generatedPackage;
 
-  /**
-   * The files to process as resource bundles.
-   * File globbing is supported with the following semantics>
-   * <p>
-   * <code>'?'</code> matches a single character
-   * <p>
-   * <code>'*'</code> matches zero or more characters
-   * <p>
-   * <code>'**'</code> matches zero or more directories
-   * <p>
-   *
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages_en.properties</li>
-   * </ul>
-   * these are the results for the following patterns>
-   * <table>
-   *   <tr><th>Pattern</th><th>Resulting files</th></tr>
-   *   <tr><td>**&#47;*.properties</td><td>All properties files</td></tr>
-   *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
-   *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
-   * </table>
-   * <p>
-   * File separators may be given as forward (/) or backward slash (\). They can be used independently
-   * of the actual filesystem.
-   *
-   * @see #i18nExcludes
-   */
-  @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
-  private String[] i18nIncludes;
-
-  /**
-   * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
-   * <p>
-   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
-   *
-   * @see #i18nIncludes
-   */
-  @Parameter(property="i18nExcludes")
-  private String[] i18nExcludes;
-
-  /**
-   * The encoding of the properties files.
-   */
-  @Parameter(property = "propertyFileEncoding")
-  private String propertyFileEncoding;
 
   // custom encoding of generated java files is not supported at the moment since
   // JavaPoet by default always writes as UTF-8
@@ -161,10 +95,6 @@ public class CreateFacadeMojo extends AbstractMojo {
   @Parameter(property = "skip", defaultValue = "false")
   private boolean skipFacadeGeneration;
 
-
-
-  @Parameter(defaultValue = "${project}", required = true, readonly = true)
-  private MavenProject project;
 
 
   /////////////////////////////////////////////////////////////////////////////

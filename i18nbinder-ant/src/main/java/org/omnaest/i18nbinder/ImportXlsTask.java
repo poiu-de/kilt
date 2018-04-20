@@ -136,8 +136,7 @@ public class ImportXlsTask extends Task {
         XlsImExporter.importXls(Paths.get(propertiesRootDirectory),
                                  file,
                                  this.propertyFileEncoding,
-                                 this.deleteEmptyProperties,
-                                 true);
+                                 this.deleteEmptyProperties);
       }
 
       this.log("...done");

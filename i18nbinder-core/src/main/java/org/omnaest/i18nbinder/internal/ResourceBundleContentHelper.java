@@ -123,7 +123,6 @@ public class ResourceBundleContentHelper {
    * @param files the resource bundle files for which to create the FacadeBundleContents
    * @return the FacadeBundleContents for the given collection of files
    */
-  //FIXME: Das hier sollte ein Pattern für Inclusion/Exclusion erlauben
   public List<ResourceBundleContent> buildFacadeBundleContentFromFiles(final Collection<File> files) {
     java.util.Objects.requireNonNull(files);
     final List<ResourceBundleContent> result= new LinkedList<>();

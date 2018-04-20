@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -34,7 +33,7 @@ import org.omnaest.i18nbinder.internal.XlsImExporter;
  * @author <a href="mailto:awonderland6@googlemail.com">Danny Kunz</a>
  */
 @Mojo(name = "import-xls")
-public class ImportXlsMojo extends AbstractMojo {
+public class ImportXlsMojo extends AbstractKiltMojo {
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -46,72 +45,14 @@ public class ImportXlsMojo extends AbstractMojo {
   @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}", required = true)
   private File xlsOutputDirectory;
 
-  /**
-   * Location of the source i18n files.
-   */
-  @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
-  private File propertiesRootDirectory;
-
-  @Parameter(property = "verbose", defaultValue = "false")
-  private boolean verbose;
-
-  /**
-   * The files to process as resource bundles.
-   * File globbing is supported with the following semantics>
-   * <p>
-   * <code>'?'</code> matches a single character
-   * <p>
-   * <code>'*'</code> matches zero or more characters
-   * <p>
-   * <code>'**'</code> matches zero or more directories
-   * <p>
-   *
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages_en.properties</li>
-   * </ul>
-   * these are the results for the following patterns>
-   * <table>
-   *   <tr><th>Pattern</th><th>Resulting files</th></tr>
-   *   <tr><td>**&#47;*.properties</td><td>All properties files</td></tr>
-   *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
-   *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
-   * </table>
-   * <p>
-   * File separators may be given as forward (/) or backward slash (\). They can be used independently
-   * of the actual filesystem.
-   *
-   * @see #i18nExcludes
-   */
-  @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
-  private String[] i18nIncludes;
-
-  /**
-   * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
-   * <p>
-   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
-   *
-   * @see #i18nIncludes
-   */
-  @Parameter(property="i18nExcludes")
-  private String[] i18nExcludes;
-
-
-  @Parameter(property = "propertyFileEncoding")
-  private String propertyFileEncoding;
 
   @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
   private String xlsFileEncoding;
 
+  
   @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
   private String xlsFileName;
+
 
   @Parameter(property = "deleteEmptyProperties", defaultValue = "false")
   private boolean deleteEmptyProperties;
