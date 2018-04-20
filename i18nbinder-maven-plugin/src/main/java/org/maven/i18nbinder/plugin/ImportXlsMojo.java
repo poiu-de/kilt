@@ -15,15 +15,17 @@
  ******************************************************************************/
 package org.maven.i18nbinder.plugin;
 
+import com.google.common.collect.ImmutableSet;
 import java.io.File;
-import java.util.regex.Pattern;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.omnaest.i18nbinder.internal.LocaleFilter;
-import org.omnaest.i18nbinder.internal.ModifierHelper;
+import org.codehaus.plexus.util.DirectoryScanner;
+import org.omnaest.i18nbinder.internal.XlsImExporter;
 
 
 /**
@@ -33,6 +35,10 @@ import org.omnaest.i18nbinder.internal.ModifierHelper;
  */
 @Mojo(name = "import-xls")
 public class ImportXlsMojo extends AbstractMojo {
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Attributes
 
   /**
    * Location of the output directory root.
@@ -49,16 +55,54 @@ public class ImportXlsMojo extends AbstractMojo {
   @Parameter(property = "verbose", defaultValue = "false")
   private boolean verbose;
 
-  //FIXME: Should be taken from jaxb2 maven plugin
-  //FIXME: Die werden hier gar nicht genutzt. Aber das sollte auch eingeschränkt werden können
-//  @Parameter
+  /**
+   * The files to process as resource bundles.
+   * File globbing is supported with the following semantics>
+   * <p>
+   * <code>'?'</code> matches a single character
+   * <p>
+   * <code>'*'</code> matches zero or more characters
+   * <p>
+   * <code>'**'</code> matches zero or more directories
+   * <p>
+   *
+   * For example if you have the following resource bundles:
+   * <ul>
+   *   <li>messages_de.properties</li>
+   *   <li>messages_en.properties</li>
+   *   <li>buttons_de.properties</li>
+   *   <li>buttons_en.properties</li>
+   *   <li>internal/exceptions_de.properties</li>
+   *   <li>internal/exceptions_en.properties</li>
+   *   <li>internal/messages.properties</li>
+   *   <li>internal/messages_en.properties</li>
+   * </ul>
+   * these are the results for the following patterns>
+   * <table>
+   *   <tr><th>Pattern</th><th>Resulting files</th></tr>
+   *   <tr><td>**&#47;*.properties</td><td>All properties files</td></tr>
+   *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
+   *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
+   * </table>
+   * <p>
+   * File separators may be given as forward (/) or backward slash (\). They can be used independently
+   * of the actual filesystem.
+   *
+   * @see #i18nExcludes
+   */
+  @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
   private String[] i18nIncludes;
 
-//  @Parameter
+  /**
+   * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
+   * <p>
+   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
+   *
+   * @see #i18nIncludes
+   */
+  @Parameter(property="i18nExcludes")
   private String[] i18nExcludes;
 
-
-  private String localeFilterRegex = ".*";
 
   @Parameter(property = "propertyFileEncoding")
   private String propertyFileEncoding;
@@ -66,57 +110,70 @@ public class ImportXlsMojo extends AbstractMojo {
   @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
   private String xlsFileEncoding;
 
-  @Parameter(property = "xlsFileName", defaultValue = "i18n.xls")
+  @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
   private String xlsFileName;
 
   @Parameter(property = "deleteEmptyProperties", defaultValue = "false")
   private boolean deleteEmptyProperties;
 
-  private boolean useJavaStyleUnicodeEscaping = true;
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Constructors
 
 
-  /* *************************************************** Methods **************************************************** */
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Methods
 
   @Override
   public void execute() throws MojoExecutionException {
-    this.getLog().info("Write properties from XLS file back to property files...");
-    this.logConfigurationProperties();
+    this.getLog().info("Importing translated properties from XLS.");
 
-    final LocaleFilter localeFilter = this.determineLocaleFilter();
-    try {
-      if (this.xlsFileName != null) {
-        File file = new File(this.xlsOutputDirectory, this.xlsFileName);
-        this.getLog().info("Looking for xls file at:" + file);
-        if (file.exists()) {
-          ModifierHelper.writeXLSFileContentToPropertyFiles(propertiesRootDirectory.toPath(), file, this.propertyFileEncoding, localeFilter,
-                                                            this.deleteEmptyProperties,
-                                                            this.useJavaStyleUnicodeEscaping);
-        }
-      }
-
-    } catch (Exception e) {
-      this.getLog().error("Could not write properties from xls", e);
+    final File file = new File(this.xlsOutputDirectory, this.xlsFileName);
+    if (!file.exists()) {
+      throw new RuntimeException("XLS file "+file.getAbsolutePath()+" does not exist.");
     }
+
+    //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
+
+    XlsImExporter.importXls(propertiesRootDirectory.toPath(),
+                                file,
+                                this.propertyFileEncoding,
+                                this.deleteEmptyProperties);
 
     this.getLog().info("...done");
   }
 
 
-  /**
-   *
-   */
-  private void logConfigurationProperties() {
-    this.getLog().info("localeFilterRegex=" + this.localeFilterRegex);
-    this.getLog().info("xlsOutputDirectory=" + this.xlsOutputDirectory);
-    this.getLog().info("xlsFileName=" + this.xlsFileName);
-    this.getLog().info("useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping);
+  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
+    //FIXME: Hier d[rfte es keine Warnungen geben. Das wird halt alles erstellt.
+    //       Doch! Warnung, wenn matchingFiles is empty. Aber das weiß ich doch erst _nach_ der Bearbeitung!
+    if (!propertiesRootDirectory.exists()) {
+      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No resources will be imported.");
+      return ImmutableSet.of();
+    }
+
+    final Set<File> matchingFiles= new LinkedHashSet<>();
+
+    final DirectoryScanner directoryScanner = new DirectoryScanner();
+    directoryScanner.setIncludes(this.i18nIncludes);
+    directoryScanner.setExcludes(this.i18nExcludes);
+    directoryScanner.setBasedir(propertiesRootDirectory);
+    directoryScanner.scan();
+
+    final String[] fileNames= directoryScanner.getIncludedFiles();
+    for (String fileName : fileNames) {
+      if (this.verbose) {
+        this.getLog().info("Including in facade: " + fileName);
+      }
+      matchingFiles.add(new File(propertiesRootDirectory, fileName));
+    }
+
+    if (matchingFiles.isEmpty()) {
+      this.getLog().warn("No resource bundles found. No resources will be imported.");
+    }
+
+    return matchingFiles;
   }
-
-
-  private LocaleFilter determineLocaleFilter() {
-    final LocaleFilter localeFilter = new LocaleFilter();
-    localeFilter.setPattern(Pattern.compile(this.localeFilterRegex));
-    return localeFilter;
-  }
-
 }

@@ -16,7 +16,6 @@
 package org.omnaest.i18nbinder;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,8 +28,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.omnaest.i18nbinder.internal.ModifierHelper;
-import org.omnaest.i18nbinder.internal.xls.XLSFile;
+import org.omnaest.i18nbinder.internal.XlsImExporter;
 
 
 public class ExportXlsTask extends Task {
@@ -127,16 +125,14 @@ public class ExportXlsTask extends Task {
     } else {
       this.log("Create XLS file from property files...");
 
-      Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
+      final Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
+      final File file = new File(this.xlsFileName);
 
-      XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(Paths.get(this.propertiesRootDirectory), propertyFileSet, this.propertyFileEncoding,
-                                                                      null, null,
-                                                                      null,
-                                                                      true);
-
-      File file = new File(this.xlsFileName);
-      xlsFile.setFile(file);
-      xlsFile.store();
+      XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),
+                                 propertyFileSet,
+                                 this.propertyFileEncoding,
+                                 file.toPath(),
+                                 this.xlsFileEncoding);
 
       this.log("...done");
     }

@@ -26,8 +26,8 @@
 
     <scm>
       <url>https://github.com/hupfdule/i18n-binder</url>
-      <connection>csm:git:git://github.com/hupfdule/i18n-binder.git</connection>
-      <developerConnection>csm:git:git@github.com://github.com/hupfdule/i18n-binder.git</developerConnection>
+      <connection>scm:git:git://github.com/hupfdule/i18n-binder.git</connection>
+      <developerConnection>scm:git:git@github.com://github.com/hupfdule/i18n-binder.git</developerConnection>
     </scm>
 
     <issueManagement>
@@ -85,6 +85,17 @@
 									</manifest>
 								</archive>
 							</configuration>
+						</plugin>
+
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-site-plugin</artifactId>
+							<version>3.7.1</version>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-project-info-reports-plugin</artifactId>
+							<version>3.0.0</version>
 						</plugin>
         </plugins>
     </build>

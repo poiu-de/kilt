@@ -20,7 +20,6 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -66,6 +65,9 @@ public class CreateFacadeMojo extends AbstractMojo {
   @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/i18n", required=true)
   private File propertiesRootDirectory;
 
+  /**
+   * Whether to give more verbose output.
+   */
   @Parameter(property="verbose", defaultValue="false")
   private boolean verbose;
 
@@ -75,60 +77,57 @@ public class CreateFacadeMojo extends AbstractMojo {
   @Parameter(property="generatedPackage", defaultValue="i18n.generated")
   private String generatedPackage;
 
-  //FIXME: Should be taken from jaxb2 maven plugin
+  /**
+   * The files to process as resource bundles.
+   * File globbing is supported with the following semantics>
+   * <p>
+   * <code>'?'</code> matches a single character
+   * <p>
+   * <code>'*'</code> matches zero or more characters
+   * <p>
+   * <code>'**'</code> matches zero or more directories
+   * <p>
+   *
+   * For example if you have the following resource bundles:
+   * <ul>
+   *   <li>messages_de.properties</li>
+   *   <li>messages_en.properties</li>
+   *   <li>buttons_de.properties</li>
+   *   <li>buttons_en.properties</li>
+   *   <li>internal/exceptions_de.properties</li>
+   *   <li>internal/exceptions_en.properties</li>
+   *   <li>internal/messages.properties</li>
+   *   <li>internal/messages_en.properties</li>
+   * </ul>
+   * these are the results for the following patterns>
+   * <table>
+   *   <tr><th>Pattern</th><th>Resulting files</th></tr>
+   *   <tr><td>**&#47;*.properties</td><td>All properties files</td></tr>
+   *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
+   *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
+   * </table>
+   * <p>
+   * File separators may be given as forward (/) or backward slash (\). They can be used independently
+   * of the actual filesystem.
+   *
+   * @see #i18nExcludes
+   */
   @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
   private String[] i18nIncludes;
 
+  /**
+   * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
+   * <p>
+   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
+   *
+   * @see #i18nIncludes
+   */
   @Parameter(property="i18nExcludes")
   private String[] i18nExcludes;
 
   /**
-   * A regex to filter the resource bundle files for which to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to generate the facade only for the messages and internal messages,
-   * specify <code>.*\/messages_.*\.properties</code>.
-   *
-   * @see #includeLocaleRegex
+   * The encoding of the properties files.
    */
-//  @Parameter(defaultValue=".*")
-  private String includeLocaleRegex;
-
-  /**
-   * A regex to filter the resource bundle files for with to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to avoid the generation of the facade for the internal exceptions,
-   * specify <code>internal\/exceptions_.*\.properties</code> here (assuming
-   * that the <code>includeLocaleRegex</code> includes all properties files.
-   *
-   * @see #excludeLocaleRegex
-   */
-//  @Parameter
-  private String excludeLocaleRegex;
-
   @Parameter(property = "propertyFileEncoding")
   private String propertyFileEncoding;
 
@@ -183,8 +182,7 @@ public class CreateFacadeMojo extends AbstractMojo {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
       this.getLog().info("Create Java source code facade file from property files.");
-      this.logConfigurationProperties();
-      final Set<File> propertyFileSet = this.resolveFilesFromDirectoryRoot(this.propertiesRootDirectory);
+      final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
 
       try {
         // generate the the enum facade(s)
@@ -219,20 +217,7 @@ public class CreateFacadeMojo extends AbstractMojo {
   }
 
 
-  private void logConfigurationProperties() {
-    this.getLog().info("createJavaFacade=" + this.skipFacadeGeneration);
-    this.getLog().info("javaFileEncoding=" + this.javaFileEncoding);
-    this.getLog().info("includeLocaleRegex=" + this.includeLocaleRegex);
-    this.getLog().info("excludeLocaleRegex=" + this.excludeLocaleRegex);
-    this.getLog().info("i18nIncludes" + Arrays.toString(this.i18nIncludes));
-    this.getLog().info("i18nExcludes" + Arrays.toString(this.i18nExcludes));
-    this.getLog().info("outputDirectory=" + this.outputDirectory);
-    this.getLog().info("generatedPackage=" + this.generatedPackage);
-    this.getLog().info("propertiesRootDirectory=" + this.propertiesRootDirectory);
-  }
-
-
-  private Set<File> resolveFilesFromDirectoryRoot(File propertiesRootDirectory) {
+  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
     if (!propertiesRootDirectory.exists()) {
       this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No enum facades will be generated.");
       return ImmutableSet.of();

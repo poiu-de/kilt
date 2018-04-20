@@ -29,7 +29,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.omnaest.i18nbinder.internal.ModifierHelper;
+import org.omnaest.i18nbinder.internal.XlsImExporter;
 
 
 public class ImportXlsTask extends Task {
@@ -133,8 +133,11 @@ public class ImportXlsTask extends Task {
 
       File file = new File(this.xlsFileName);
       if (file.exists()) {
-        ModifierHelper.writeXLSFileContentToPropertyFiles(Paths.get(this.propertiesRootDirectory), file, this.propertyFileEncoding, null,
-                                                          this.deleteEmptyProperties, true);
+        XlsImExporter.importXls(Paths.get(propertiesRootDirectory),
+                                 file,
+                                 this.propertyFileEncoding,
+                                 this.deleteEmptyProperties,
+                                 true);
       }
 
       this.log("...done");

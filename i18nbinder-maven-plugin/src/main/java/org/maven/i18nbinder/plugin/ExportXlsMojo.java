@@ -19,20 +19,15 @@ import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
-import org.omnaest.i18nbinder.internal.LocaleFilter;
-import org.omnaest.i18nbinder.internal.ModifierHelper;
-import org.omnaest.i18nbinder.internal.xls.XLSFile;
+import org.omnaest.i18nbinder.internal.XlsImExporter;
 
 
 /**
@@ -42,6 +37,10 @@ import org.omnaest.i18nbinder.internal.xls.XLSFile;
  */
 @Mojo(name = "export-xls")
 public class ExportXlsMojo extends AbstractMojo {
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Attributes
 
   /**
    * Location of the output directory root.
@@ -55,14 +54,58 @@ public class ExportXlsMojo extends AbstractMojo {
   @Parameter(property = "propertiesRootDirectory", defaultValue = "src/main/resources/i18n")
   private File propertiesRootDirectory;
 
+  /**
+   * Whether to give more verbose output.
+   */
   @Parameter(property = "verbose", defaultValue = "false")
   private boolean verbose;
 
-  //FIXME: Should be taken from jaxb2 maven plugin
-//  @Parameter
+  /**
+   * The files to process as resource bundles.
+   * File globbing is supported with the following semantics>
+   * <p>
+   * <code>'?'</code> matches a single character
+   * <p>
+   * <code>'*'</code> matches zero or more characters
+   * <p>
+   * <code>'**'</code> matches zero or more directories
+   * <p>
+   *
+   * For example if you have the following resource bundles:
+   * <ul>
+   *   <li>messages_de.properties</li>
+   *   <li>messages_en.properties</li>
+   *   <li>buttons_de.properties</li>
+   *   <li>buttons_en.properties</li>
+   *   <li>internal/exceptions_de.properties</li>
+   *   <li>internal/exceptions_en.properties</li>
+   *   <li>internal/messages.properties</li>
+   *   <li>internal/messages_en.properties</li>
+   * </ul>
+   * these are the results for the following patterns>
+   * <table>
+   *   <tr><th>Pattern</th><th>Resulting files</th></tr>
+   *   <tr><td>**&#47;*.properties</td><td>All properties files</td></tr>
+   *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
+   *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
+   * </table>
+   * <p>
+   * File separators may be given as forward (/) or backward slash (\). They can be used independently
+   * of the actual filesystem.
+   *
+   * @see #i18nExcludes
+   */
+  @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
   private String[] i18nIncludes;
 
-//  @Parameter
+  /**
+   * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
+   * <p>
+   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
+   *
+   * @see #i18nIncludes
+   */
+  @Parameter(property="i18nExcludes")
   private String[] i18nExcludes;
 
   @Parameter(property = "propertyFileEncoding")
@@ -71,70 +114,43 @@ public class ExportXlsMojo extends AbstractMojo {
   @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
   private String xlsFileEncoding;
 
-  @Parameter(property = "xlsFileName", defaultValue = "i18n.xls")
+  @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
   private String xlsFileName;
 
 
-  private String localeFilterRegex = ".*";
-
-  private String fileNameLocaleGroupPattern = ".*?((_\\w{2,3}_\\w{2,3})|(_\\w{2,3})|())\\.properties";
-
-  private List<Integer> fileNameLocaleGroupPatternGroupIndexList = Arrays.asList(2, 3, 4);
-
-  private boolean useJavaStyleUnicodeEscaping = true;
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Constructors
 
 
-  /* *************************************************** Methods **************************************************** */
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // Methods
 
   @Override
   public void execute() throws MojoExecutionException {
-    this.getLog().info("Create XLS file from property files...");
-    this.logConfigurationProperties();
+    this.getLog().info("Exporting properties to XLS.");
 
-    final LocaleFilter localeFilter = this.determineLocaleFilter();
-    final Set<File> propertyFileSet = this.resolveFilesFromDirectoryRoot(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
 
     try {
-      if (this.xlsFileName != null && !propertyFileSet.isEmpty()) {
-        XLSFile xlsFile = ModifierHelper.createXLSFileFromPropertyFiles(this.propertiesRootDirectory.toPath(),
-                                                                        propertyFileSet, this.propertyFileEncoding,
-                                                                        localeFilter, this.fileNameLocaleGroupPattern,
-                                                                        this.fileNameLocaleGroupPatternGroupIndexList,
-                                                                        this.useJavaStyleUnicodeEscaping);
+      Files.createDirectories(this.xlsOutputDirectory.toPath());
+      final File file = new File(this.xlsOutputDirectory, this.xlsFileName);
 
-        Files.createDirectories(this.xlsOutputDirectory.toPath());
-        File file = new File(this.xlsOutputDirectory, this.xlsFileName);
-        xlsFile.setFile(file);
-        xlsFile.store();
-
-      } else {
-        this.getLog().error("No xls file name specified. Please provide a file name for the xls file which should be created.");
-      }
-
+      XlsImExporter.exportXls(this.propertiesRootDirectory.toPath(),
+                                propertyFileSet,
+                                this.propertyFileEncoding,
+                                file.toPath(),
+                                this.xlsFileEncoding);
     } catch (IOException e) {
-      this.getLog().error("Could not write xls file", e);
+      throw new RuntimeException("Error exporting property files to XLS.", e);
     }
 
     this.getLog().info("...done");
   }
 
 
-  /**
-   *
-   */
-  private void logConfigurationProperties() {
-    this.getLog().info("fileNameLocaleGroupPattern=" + this.fileNameLocaleGroupPattern);
-    this.getLog().info("fileNameLocaleGroupPatternGroupIndexList=" + this.fileNameLocaleGroupPatternGroupIndexList);
-    this.getLog().info("localeFilterRegex=" + this.localeFilterRegex);
-    this.getLog().info("xlsOutputDirectory=" + this.xlsOutputDirectory);
-    this.getLog().info("xlsFileName=" + this.xlsFileName);
-    this.getLog().info("propertiesRootDirectory=" + this.propertiesRootDirectory);
-    this.getLog().info("useJavaStyleUnicodeEscaping=" + this.useJavaStyleUnicodeEscaping);
-    this.getLog().info("propertyFileEncoding=" + this.propertyFileEncoding);
-  }
-
-
-  private Set<File> resolveFilesFromDirectoryRoot(final File propertiesRootDirectory) {
+  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
     if (!propertiesRootDirectory.exists()) {
       this.getLog().warn("resource bundle directory " + propertiesRootDirectory + " does not exist. Nothing will be exported.");
       return ImmutableSet.of();
@@ -161,13 +177,6 @@ public class ExportXlsMojo extends AbstractMojo {
     }
 
     return matchingFiles;
-  }
-
-
-  private LocaleFilter determineLocaleFilter() {
-    final LocaleFilter localeFilter = new LocaleFilter();
-    localeFilter.setPattern(Pattern.compile(this.localeFilterRegex));
-    return localeFilter;
   }
 
 }
