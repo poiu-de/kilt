@@ -1,7 +1,7 @@
-# i18n-binder
+# Kilt
 Create an XLS sheet from Java localization resource bundles and vice versa.
 
-The i18n Binder provides an Apache Ant task and an Apache Maven Plugin which allows you to
+Kilt provides an Apache Ant task and an Apache Maven Plugin which allows you to
  * map i18n properties from multiple property files to an Microsoft Excel XLS file
  * write changed properties within the XLS file back to the original source files
  * create a Java source code facade based on the property files and their folder structure

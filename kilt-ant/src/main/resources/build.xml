@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*******************************************************************************
+ * Copyright 2011 Danny Kunz
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
+-->
+<project name="kilt" basedir=".">
+
+	<taskdef name="exportXls" classname="de.poiu.kilt.ant.ExportXlsTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="importXls" classname="de.poiu.kilt.ant.ImportXlsTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="createFacade" classname="de.poiu.kilt.ant.CreateFacadeTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<!-- INITIALIZE -->
+	<property file="kilt.properties" />
+
+	<!-- TARGETS -->
+  <target name="clean">
+    <delete dir="${facadeGenerationDir}"/>
+  </target>
+
+  <target name="export-xls" description="Exports the translations in the resource bundle files into an XLS file.">
+    <exportXls
+      xlsfilename="${xlsFilename}"
+      propertyFileEncoding="${propertyFileEncoding}"
+      xlsFileEncoding="${xlsFileEncoding}"
+    >
+
+			<fileset dir="${propertiesRootDirectory}">
+				<include name="**/*.properties" />
+			</fileset>
+		</exportXls>
+	</target>
+
+	<target name="import-xls" description="Imports the translations from an XLS file back into the resource bundle files.">
+		<importXls
+      xlsFileName="${xlsFilename}"
+      propertyFileEncoding="${propertyFileEncoding}"
+      xlsFileEncoding="${xlsFileEncoding}"
+      deleteEmptyProperties="${deleteEmptyProperties}"
+     />
+	</target>
+
+
+	<target name="create-facade" description="Creates the I18n enum facades for type safe access to localized messages.">
+    <createFacade
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      generatedPackage="${generatedPackage}"
+      copyFacadeAccessorClasses="${copyFacadeAccessorClasses}"
+      facadeAccessorClassName="${facadeAccessorClassName}"
+      facadeGenerationDir="${facadeGenerationDir}"
+      propertyFileEncoding="${propertyFileEncoding}"
+    >
+
+      <fileset dir="${propertiesRootDirectory}">
+        <include name="${i18nIncludes}" />
+        <exclude name="${i18nExcludes}" />
+      </fileset>
+    </createFacade>
+	</target>
+
+</project>
