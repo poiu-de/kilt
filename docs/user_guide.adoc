@@ -4,8 +4,8 @@ Marco Herrn <marco@mherrn.de>
 2018-08-03
 :toc: left
 :toclevels: 4
-:y: icon:check[role="green"]
-:n: icon:times[role="red"]
+:y: ✔
+:n: 
 :c: icon:file-text-o[role="blue"]
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
@@ -14,6 +14,8 @@ Marco Herrn <marco@mherrn.de>
 :kilt-version: 0.2.0
 
 User Guide for Kilt (**K**een **I**18n **L**10n and **I**9n) 
+
+Create an XLS(X) sheet from Java localization resource bundles and vice versa.
 
 image::kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n, width=100]
 
@@ -105,7 +107,7 @@ that file may be prettified to be better readable for the translators. Kilt
 will only modify the actual translation contents in subsequent generation
 steps.
 
-The generation of an XLS sheet for Java i18n resource bundles works closely
+The generation of an XLS(X) sheet for Java i18n resource bundles works closely
 together with the reimport of that sheet to provide a common translation
 workflow. Please see the next section of how to import the translation
 sheet back into the Java i18n resource bundles.
@@ -161,9 +163,9 @@ The accessor class allows marking missing translations instead of throwing
 a MissingResourceException. This allow to easily spot missing translations
 without breaking the functionality of the application.
 
-.Example screenshot of a marked missing translation
-image::screenshot_marked_missing_translation.png[Screenshot of a marked
-missing translation]
+//.Example screenshot of a marked missing translation
+//image::screenshot_marked_missing_translation.png[Screenshot of a marked
+//missing translation]
 
 Translations are marked only after no fallback translation can be found.
 
@@ -219,7 +221,7 @@ Kilt can be used in three different ways.
 
 === Standalone tool
 
-To use Kilt as a standalone tool, download and unpack the kilt-bin package
+To use Kilt as a standalone tool, download and unpack the kilt-cli package
 from the {download-page}[Download] page.
 
 It contains a shell script for Linux and a batch file for windows and a
@@ -247,7 +249,7 @@ create an XLS(X) sheet only for the english language run
 ./kilt.sh create-xls --i18nIncludes=**/*_en*.properties
 ----
 
-See <<_commands>> for a list of the available commands and <<_parameters>>
+See <<commands>> for a list of the available commands and <<parameters>>
 for a detailed description of the available configuration parameters.
 
 To show the usage help of the tool call with the parameter `-h` or `--help`
@@ -281,7 +283,7 @@ To execute a command run
 ant <command>
 ----
 
-See <<_commands>> for a list of the available commands and <<_parameters>>
+See <<commands>> for a list of the available commands and <<parameters>>
 for a detailed description of the available configuration parameters.
 
 
@@ -328,7 +330,7 @@ mvn kilt:<command>
 ----
 
 You may override the configuration of the pom by specifying some properties
-as parameters to the command. For example to create an XLS sheet only for
+as parameters to the command. For example to create an XLS(X) sheet only for
 the english language run
 
 ----
@@ -336,6 +338,7 @@ mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
 ----
 
 
+[[commands]]
 Commands
 --------
 
@@ -352,6 +355,7 @@ create-facade:: Creates the I18n enum facades for type safe access to
 localized messages.
 
 
+[[parameters]]
 Parameters
 ----------
 
@@ -369,33 +373,33 @@ they apply.
 [.Kilt parameters]
 [width="100%",cols="1s,2d,1d,1d,1d"]
 |===
-| Parameter                 | Description                                    3+| Applies to
+| Parameter                  | Description                                    3+| Applies to
 
-| {empty}                   | {empty}                                         m| export-xls m| import-xls m| create-facade 
-| outputDirectory           | The directory to write the generated file(s) to. | {y}         |  {?}        | {y}           
-| propertiesRootDirectory   | The directory below which the i18n resource      
-                              bundle files reside.                             | {y}         |  {y}        | {y}           
-| verbose                   | Whether to generate more verbose output. May     
-                              be given up to 2 times to get even more verbose
-                              output.                                          | {y}         |  {y}        | {y}           
-| i18nIncludes              | The Java i18n resource bundles to include in the
-                              processing.                                      | {y}         |  {y}        | {y}           
-| i18nExcludes              | The Java i18n resource bundles to exclude from 
-                              the processing.                                  | {y}         |  {y}        | {y}           
-| propertyFileEncoding      | The encoding of the Java i18n resource bundle
-                              files. Prior to Java 9 the default encoding in
-                              Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}           
-| xlsFileName               | The file name of the XLS(X) file.                | {y}         |  {y}        | {n}
-| deleteEmptyProperties     | Whether to delete keys from the target files
-                              that are existent in the target file, but not
-                              in the input file(s).                            | {y}         |  {y}        | {n}
-| generatedPackage          | The package name into which to generate the
-                              Java enum facade classes.                        | {n}         |  {n}        | {y}           
-| javaFileEncoding          | The encoding of the generated Java classes.      | {n}         |  {n}        | {y}           
-| copyFacadeAccessorClasses | Whether to copy the Facade accessor classes into
-                              the generated output.                            | {n}         |  {n}        | {y}           
-| facadeAccessorClassName   | The class name to use when copying the facade   
-                              accessor classes.                                | {n}         |  {n}        | {y}           
+| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade 
+| propertiesRootDirectory    | The directory below which the i18n resource      
+                               bundle files reside.                             | {y}         |  {y}        | {y}           
+| verbose                    | Whether to generate more verbose output. May     
+                               be given up to 2 times to get even more verbose
+                               output.                                          | {y}         |  {y}        | {y}           
+| i18nIncludes               | The Java i18n resource bundles to include in the
+                               processing.                                      | {y}         |  {y}        | {y}           
+| i18nExcludes               | The Java i18n resource bundles to exclude from 
+                               the processing.                                  | {y}         |  {y}        | {y}           
+| propertyFileEncoding       | The encoding of the Java i18n resource bundle
+                               files. Prior to Java 9 the default encoding in
+                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}           
+| xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}
+| deleteEmptyProperties      | Whether to delete keys from the target files
+                               that are existent in the target file, but not
+                               in the input file(s).                            | {n}         |  {y}        | {n}
+| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}           
+| generatedPackage           | The package name into which to generate the
+                               Java enum facade classes.                        | {n}         |  {n}        | {y}           
+| javaFileEncoding           | The encoding of the generated Java classes.      | {n}         |  {n}        | {y}           
+| copyFacadeAccessorClasses  | Whether to copy the Facade accessor classes into
+                               the generated output.                            | {n}         |  {n}        | {y}           
+| facadeAccessorClassName    | The class name to use when copying the facade   
+                               accessor classes.                                | {n}         |  {n}        | {y}           
 
 
 |===
