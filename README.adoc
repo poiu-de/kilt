@@ -1,30 +1,144 @@
 Kilt
 ====
+Marco Herrn <marco@mherrn.de>
+2018-05-03
+:toc:
+:homepage: https://github.com/hupfdule/kilt
+:download-page: https://github.com/hupfdule/kilt/releases
+:license-link: ../LICENSE-2.0.html
+:kilt-version: 0.2.0
 
-Create an XLS sheet from Java localization resource bundles and vice versa.
+**K**een **I**18n **L**10n and **T**9n
 
-Kilt provides an Apache Ant task and an Apache Maven Plugin which allows you to
- * map i18n properties from multiple property files to an Microsoft Excel XLS file
- * write changed properties within the XLS file back to the original source files
- * create a Java source code facade based on the property files and their folder structure
+image:kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
+width=100]
 
-In the first step the locales are separated from the absolute file path by a declared regualar expression pattern. This results in a as many columns as locales are matched within the XLS file. As rows all property keys per file are listed.
 
-In the second step the properies changed within the XLS file are merged back into the original files. This is done with minimal impact on the property files which means comments and blank line are maintained as they are.
+What is Kilt
+------------
 
-Features
---------
+Kilt is a set of small tools to convert Java i18n resource bundles to
+XLS(X) and vice versa. It also contains a generator for a facade to access
+the translation resources in a type-safe manner.
 
- * Supports file encoding like UTF-8
- * Allows minimal invasive changes (comments, blank line are maintained)
- * Easy to integrate in build tools like Apache Ant and Apache Maven
- * Pretty good overview over property values for different locales
- * Easier translation changes
- * Validation of existence of property keys over all locales
- * Generation of a Java source code facade
+Kilt is available as a standalone application or as ant task
+to be integrated with an ant-based application and also as a maven plugin
+to be integrated with a maven-based application.
+
+Why to use Kilt
+---------------
+
+The localizations of Java i18n resource bundles are cluttered among serveral
+files. That's no problem for software engineers, but not very helpful to
+translators. Translators ususally don't have access to or the knowledge to
+use the same translation tools as a software engineer. Therefore this tool
+allows to convert the Java i18n resource bundles to a single XLS sheet to
+be transmitted to the translators. The translators can make their changes
+directly in the XSL sheet and send it back to the software engineers who
+incorporate the changes back into the actual Java i18n resource bundles.
+
+Also using Java i18n resource bundles usually involve accessing them by
+string which is not type safe and requires the knowledge of the exact name
+of the key to use. Kilt can create a facade to access the resource bundle
+keys in a type-safe manner. This allows for using code completion in and
+IDE to find the available keys. It even lists the available translations in
+the generated Javadoc!
+
+The benefits of Kilt are in short form:
+
+ - Support of professional translation workflow
+ - Minimal invasive changes on import and export of translations (comments,
+   blank lines and order remain intact)
+ - Good integration into ant and maven build tools
+ - Type safe access to translation resources via facade
+
+
+Prerequisites
+-------------
+
+=== Basic prerequisites
+
+ - Java 8 or higher
+
+=== To be integrated into an ant build script
+
+ - Apache ant 1.8.1 or higher
+
+=== To be integrated into a maven build
+ 
+ - Apache maven 3.0.3 or higher
+
+
+Installation
+------------
+
+=== Maven plugin
+
+To use the maven plugin of Kilt include the following plugin section in
+the pom or your project:
+
+[source,xml,subs="verbatim,attributes"]
+----
+  <build>  
+    <plugins>
+      ... 
+      <plugin>
+        <groupId>de.poiu.kilt</groupId>
+        <artifactId>kilt-maven-plugin</artifactId>
+        <version>{kilt-version}</version>
+        <configuration>
+          ...
+        </configuration>
+        <executions>
+          <execution>
+            <id>i18n-facade-generation</id>
+            <goals>
+              <goal>create-facade</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      ...
+    <plugins>
+  <build>  
+----
+
+See link::docs/user_guide.adoc[the Kilt User Guide] for a 
+detailed description of the available goals and configuration parameters.
+
+=== Ant task
+
+To use the ant task of Kilt download the kilt-ant package from the
+{download-page}[Download] section and either use the integrated `build.xml` file or
+use it as a sample to include it in your own ant build script.
+
+You will need the accompanied properties file and lib directory as well.
+
+=== As standalone tool
+
+To use Kilt as a standalone tool download the kilt-bin package from the
+{download-page}[Download] section and unpack it to a directory of your choice.
+
+
+Usage
+-----
+
+// Hier was schnelles hinschreiben?
+
+See <<docs/user_guide.adoc#,the main user guide>> for a detailed usage
+description of Kilt.
+
 
 License
 -------
 
-This project is licensed unter the terms of the Apache license 2.0.
+Kilt is licensed under the terms of the link:{license-link}[Apache license 2.0].
 
+
+History
+-------
+
+Kilt is based on https://github.com/alexchiri/i18n-binder[i18n-binder]
+which is apparently orphaned. It started as bugfixes for i18n-binder, but
+soon involved such massive changes that it was forked into a new project
+with the new name *Kilt*.
