@@ -10,7 +10,7 @@ Marco Herrn <marco@mherrn.de>
 
 **K**een **I**18n **L**10n and **T**9n
 
-image:kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
+image:docs/kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
 width=100]
 
 
