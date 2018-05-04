@@ -50,11 +50,6 @@ public class CreateFacadeTask extends Task {
   // Attributes
 
   /**
-   * The location to which the generated Java files are written.
-   */
-  private File outputDirectory;
-
-  /**
    * The location of the source i18n resource bundle files.
    */
   private String propertiesRootDirectory= "i18n";
@@ -69,51 +64,6 @@ public class CreateFacadeTask extends Task {
   private String[] i18nIncludes= new String[]{"**/*.properties"};
 
   private String[] i18nExcludes= new String[]{};
-
-  /**
-   * A regex to filter the resource bundle files for which to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to generate the facade only for the messages and internal messages,
-   * specify <code>.*\/messages_.*\.properties</code>.
-   *
-   * @see #includeLocaleRegex
-   */
-  private String includeLocaleRegex;
-
-  /**
-   * A regex to filter the resource bundle files for with to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to avoid the generation of the facade for the internal exceptions,
-   * specify <code>internal\/exceptions_.*\.properties</code> here (assuming
-   * that the <code>includeLocaleRegex</code> includes all properties files.
-   *
-   * @see #excludeLocaleRegex
-   */
-  private String excludeLocaleRegex;
 
   private String propertyFileEncoding;
 
@@ -145,7 +95,7 @@ public class CreateFacadeTask extends Task {
 
   private boolean deleteEmptyProperties= false;
 
-  private Path facadeGenerationDir = Paths.get("generated-sources");
+  private Path facadeGenerationDirectory = Paths.get("generated-sources");
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -174,11 +124,11 @@ public class CreateFacadeTask extends Task {
         final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
         final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
         final JavaFile javaFile = JavaFile.builder(generatedPackage, resourceBundleEnumTypeSpec).build();
-        javaFile.writeTo(facadeGenerationDir);
+        javaFile.writeTo(facadeGenerationDirectory);
       }
 
       if (copyFacadeAccessorClasses) {
-        facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, generatedPackage, facadeGenerationDir);
+        facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, generatedPackage, facadeGenerationDirectory);
       }
     } catch (IOException e) {
       this.log("Could not write Java facade to file", e, Project.MSG_ERR);
@@ -313,6 +263,6 @@ public class CreateFacadeTask extends Task {
 
   public void setFacadeGenerationDir(final String facadeGenerationDir) {
     this.log("facadeGenerationDir=" + facadeGenerationDir);
-    this.facadeGenerationDir = Paths.get(facadeGenerationDir);
+    this.facadeGenerationDirectory = Paths.get(facadeGenerationDir);
   }
 }

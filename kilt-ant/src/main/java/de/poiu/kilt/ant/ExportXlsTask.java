@@ -56,54 +56,7 @@ public class ExportXlsTask extends Task {
 
   private String[] i18nExcludes= new String[]{};
 
-  /**
-   * A regex to filter the resource bundle files for which to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to generate the facade only for the messages and internal messages,
-   * specify <code>.*\/messages_.*\.properties</code>.
-   *
-   * @see #includeLocaleRegex
-   */
-  private String includeLocaleRegex;
-
-  /**
-   * A regex to filter the resource bundle files for with to generate the Facade(s).
-   * <p>
-   * For example if you have the following resource bundles:
-   * <ul>
-   *   <li>messages_de.properties</li>
-   *   <li>messages_en.properties</li>
-   *   <li>buttons_de.properties</li>
-   *   <li>buttons_en.properties</li>
-   *   <li>internal/exceptions_de.properties</li>
-   *   <li>internal/exceptions_en.properties</li>
-   *   <li>internal/messages.properties</li>
-   *   <li>internal/messages.properties</li>
-   * </ul>
-   *
-   * and want to avoid the generation of the facade for the internal exceptions,
-   * specify <code>internal\/exceptions_.*\.properties</code> here (assuming
-   * that the <code>includeLocaleRegex</code> includes all properties files.
-   *
-   * @see #excludeLocaleRegex
-   */
-  private String excludeLocaleRegex;
-
   private String propertyFileEncoding;
-
-  private String xlsFileEncoding= "UTF-8";
 
   private final List<FileSet> fileSetList = new ArrayList<>();
 
@@ -134,8 +87,7 @@ public class ExportXlsTask extends Task {
       XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),
                                  propertyFileSet,
                                  this.propertyFileEncoding,
-                                 file.toPath(),
-                                 this.xlsFileEncoding);
+                                 file.toPath());
 
       this.log("...done");
     }
@@ -230,11 +182,4 @@ public class ExportXlsTask extends Task {
     this.log("propertiesRootDirectory=" + propertiesRootDirectory);
     this.propertiesRootDirectory = propertiesRootDirectory;
   }
-
-
-  public void setXlsFileEncoding(String xlsFileEncoding) {
-    this.log("javaXlsEncoding=" + xlsFileEncoding);
-    this.xlsFileEncoding = xlsFileEncoding;
-  }
-
 }

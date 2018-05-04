@@ -54,8 +54,8 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
   /**
    * The location to which the generated Java files are written.
    */
-  @Parameter(property="outputDirectory", defaultValue = "${project.build.directory}/generated-sources/kilt", required = true)
-  private File outputDirectory;
+  @Parameter(property="facadeGenerationDirectory", defaultValue = "${project.build.directory}/generated-sources/kilt", required = true)
+  private File facadeGenerationDirectory;
 
 
   /**
@@ -127,17 +127,17 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
           final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
           final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
           final JavaFile javaFile = JavaFile.builder(generatedPackage, resourceBundleEnumTypeSpec).build();
-          javaFile.writeTo(outputDirectory);
+          javaFile.writeTo(facadeGenerationDirectory);
           // TODO: To allow for custom charsets, we need to call javaFile.toString.getBytes(Charset), but this involves
           //       creating the directoy structure and identifying the correct file name.
         }
 
         // copy the facade accessor classes if requested
         if (copyFacadeAccessorClasses) {
-          facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, generatedPackage, outputDirectory.toPath());
+          facadeCreator.copyFacadeAccessorTemplates(facadeAccessorClassName, generatedPackage, facadeGenerationDirectory.toPath());
         }
 
-        this.project.addCompileSourceRoot(this.outputDirectory.getCanonicalPath());
+        this.project.addCompileSourceRoot(this.facadeGenerationDirectory.getCanonicalPath());
       } catch (IOException e) {
         this.getLog().error("Could not write Java facade to file", e);
       }

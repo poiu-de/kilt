@@ -46,10 +46,6 @@ public class ExportXlsMojo extends AbstractKiltMojo {
   private File xlsOutputDirectory;
 
 
-  @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
-  private String xlsFileEncoding;
-
-
   @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
   private String xlsFileName;
 
@@ -76,8 +72,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
       XlsImExporter.exportXls(this.propertiesRootDirectory.toPath(),
                                 propertyFileSet,
                                 this.propertyFileEncoding,
-                                file.toPath(),
-                                this.xlsFileEncoding);
+                                file.toPath());
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);
     }

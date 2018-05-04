@@ -109,8 +109,7 @@ public class XlsImExporter
   public static void exportXls(final Path propertiesRootDirectory,
                                final Set<File> resourceBundleFiles,
                                final String propertyFileEncoding,
-                               final Path xlsFilePath,
-                               final String xlsFileEncoding) {
+                               final Path xlsFilePath) {
     final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
     final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 

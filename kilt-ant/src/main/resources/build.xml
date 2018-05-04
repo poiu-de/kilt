@@ -54,7 +54,6 @@
     <exportXls
       xlsfilename="${xlsFilename}"
       propertyFileEncoding="${propertyFileEncoding}"
-      xlsFileEncoding="${xlsFileEncoding}"
     >
 
 			<fileset dir="${propertiesRootDirectory}">
@@ -67,7 +66,6 @@
 		<importXls
       xlsFileName="${xlsFilename}"
       propertyFileEncoding="${propertyFileEncoding}"
-      xlsFileEncoding="${xlsFileEncoding}"
       deleteEmptyProperties="${deleteEmptyProperties}"
      />
 	</target>
