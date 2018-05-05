@@ -62,7 +62,7 @@ public class CreateFacadeTask extends Task {
 
   private String propertyFileEncoding;
 
-  private String javaFileEncoding= "UTF-8";
+  //private String javaFileEncoding= "UTF-8";
 
   private Path facadeGenerationDirectory = Paths.get("generated-sources");
 
@@ -192,10 +192,10 @@ public class CreateFacadeTask extends Task {
   }
 
 
-  public void setFileEncoding(String fileEncoding) {
-    this.propertyFileEncoding = fileEncoding;
-    this.javaFileEncoding = fileEncoding;
-  }
+//  public void setFileEncoding(String fileEncoding) {
+//    this.propertyFileEncoding = fileEncoding;
+//    this.javaFileEncoding = fileEncoding;
+//  }
 
 
 
@@ -215,9 +215,9 @@ public class CreateFacadeTask extends Task {
   }
 
 
-  public void setJavaFileEncoding(String javaFileEncoding) {
-    this.javaFileEncoding = javaFileEncoding;
-  }
+//  public void setJavaFileEncoding(String javaFileEncoding) {
+//    this.javaFileEncoding = javaFileEncoding;
+//  }
 
 
   public void setCopyFacadeAccessorClasses(final boolean copyFacadeAccessorClasses) {

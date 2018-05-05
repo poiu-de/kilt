@@ -72,7 +72,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
   // JavaPoet by default always writes as UTF-8
   // It could be possible to manually write via another charset, but at the moment
   // I don't see any reason to do this
-  @Parameter(property = "javaFileEncoding", defaultValue = "${project.build.sourceEncoding}")
+  //@Parameter(property = "javaFileEncoding", defaultValue = "${project.build.sourceEncoding}")
   private String javaFileEncoding;
 
   /**
@@ -114,7 +114,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
     if (this.verbose) {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
-    
+
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {

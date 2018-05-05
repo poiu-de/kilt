@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.cli;
 
+import de.poiu.kilt.cli.config.KiltProperty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

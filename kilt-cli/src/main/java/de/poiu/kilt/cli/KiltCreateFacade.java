@@ -69,7 +69,7 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
   /**
    * The encoding of the generated java files.
    */
-  @Option(names= {"--jenc", "--javaFileEncoding"}, description= "The encoding of the generated java files. (default: ${DEFAULT-VALUE})")
+  //@Option(names= {"--jenc", "--javaFileEncoding"}, description= "The encoding of the generated java files. (default: ${DEFAULT-VALUE})")
   private String javaFileEncoding= "UTF-8";
 
 
@@ -109,7 +109,7 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
     if (this.verbose) {
       printProperties();
     }
-    
+
     final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
 
     try {
@@ -177,7 +177,7 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
     sb.append("propertyFileEncoding      = ").append(this.propertyFileEncoding).append("\n");
     sb.append("outputDirectory           = ").append(this.outputDirectory.toAbsolutePath()).append("\n");
     sb.append("generatedPackage          = ").append(this.generatedPackage).append("\n");
-    sb.append("javaFileEncoding          = ").append(this.javaFileEncoding).append("\n");
+    //sb.append("javaFileEncoding          = ").append(this.javaFileEncoding).append("\n");
     sb.append("copyFacadeAccessorClasses = ").append(this.copyFacadeAccessorClasses).append("\n");
     sb.append("facadeAccessorClassName   = ").append(this.facadeAccessorClassName).append("\n");
 

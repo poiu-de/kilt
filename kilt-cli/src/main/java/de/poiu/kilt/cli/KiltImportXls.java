@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.cli;
 
+import de.poiu.kilt.cli.config.KiltProperty;
 import com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

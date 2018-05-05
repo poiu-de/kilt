@@ -393,7 +393,6 @@ they apply.
 | facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}           
 | generatedPackage           | The package name into which to generate the
                                Java enum facade classes.                        | {n}         |  {n}        | {y}           
-| javaFileEncoding           | The encoding of the generated Java classes.      | {n}         |  {n}        | {y}           
 | copyFacadeAccessorClasses  | Whether to copy the Facade accessor classes into
                                the generated output.                            | {n}         |  {n}        | {y}           
 | facadeAccessorClassName    | The class name to use when copying the facade   
