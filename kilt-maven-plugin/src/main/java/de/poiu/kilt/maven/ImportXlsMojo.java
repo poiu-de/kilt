@@ -25,6 +25,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.internal.XlsImExporter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 
 /**
@@ -45,10 +48,6 @@ public class ImportXlsMojo extends AbstractKiltMojo {
   private File xlsOutputDirectory;
 
 
-  @Parameter(property = "xlsFileEncoding", defaultValue = "UTF-8")
-  private String xlsFileEncoding;
-
-  
   @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
   private String xlsFileName;
 
@@ -68,6 +67,10 @@ public class ImportXlsMojo extends AbstractKiltMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (this.verbose) {
+      Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
+    }
+
     this.getLog().info("Importing translated properties from XLS.");
 
     final File file = new File(this.xlsOutputDirectory, this.xlsFileName);

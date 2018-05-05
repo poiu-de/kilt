@@ -37,6 +37,9 @@ import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
 import de.poiu.kilt.facade.creation.FacadeCreator;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 
 /**
@@ -56,18 +59,17 @@ public class CreateFacadeTask extends Task {
 
   private boolean verbose= false;
 
-  /**
-   * The package name under which the facade(s) will be generated.
-   */
-  private String generatedPackage= "i18n.generated";
-
-  private String[] i18nIncludes= new String[]{"**/*.properties"};
-
-  private String[] i18nExcludes= new String[]{};
 
   private String propertyFileEncoding;
 
   private String javaFileEncoding= "UTF-8";
+
+  private Path facadeGenerationDirectory = Paths.get("generated-sources");
+
+  /**
+   * The package name under which the facade(s) will be generated.
+   */
+  private String generatedPackage= "i18n.generated";
 
   /**
    * Whether to copy the facade accessor class and the base interface I18nBundleKey to the
@@ -82,20 +84,7 @@ public class CreateFacadeTask extends Task {
    */
   private String facadeAccessorClassName= "I18n";
 
-  /**
-   * Whether to execute the generation of the I18n enum facades.
-   * <p>
-   * Set to <code>true</code> to skip the generation.
-   */
-  private boolean skipFacadeGeneration= false;
-
   private final List<FileSet> fileSetList = new ArrayList<>();
-
-  private String xlsFileName= null;
-
-  private boolean deleteEmptyProperties= false;
-
-  private Path facadeGenerationDirectory = Paths.get("generated-sources");
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -108,6 +97,14 @@ public class CreateFacadeTask extends Task {
 
   @Override
   public void execute() throws BuildException {
+    if (this.verbose) {
+      Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
+    }
+
+    if (this.verbose) {
+      printProperties();
+    }
+
     this.log("Create Java source code facade file from property files.");
 
     final Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
@@ -195,74 +192,66 @@ public class CreateFacadeTask extends Task {
   }
 
 
-  public String getXlsFileName() {
-    return this.xlsFileName;
-  }
-
-
-  public void setXlsFileName(String xlsFileName) {
-    this.log("xlsFileName=" + xlsFileName);
-    this.xlsFileName = xlsFileName;
-  }
-
-
   public void setFileEncoding(String fileEncoding) {
-    this.log("fileEncoding=" + fileEncoding);
     this.propertyFileEncoding = fileEncoding;
     this.javaFileEncoding = fileEncoding;
   }
 
 
-  public boolean isDeleteEmptyProperties() {
-    return this.deleteEmptyProperties;
-  }
-
-
-  public void setDeleteEmptyProperties(boolean deleteEmptyProperties) {
-    this.log("deleteEmptyProperties=" + deleteEmptyProperties);
-    this.deleteEmptyProperties = deleteEmptyProperties;
-  }
-
 
   public void setPropertiesRootDirectory(String propertiesRootDirectory) {
-    this.log("propertiesRootDirectory=" + propertiesRootDirectory);
     this.propertiesRootDirectory = propertiesRootDirectory;
   }
 
 
   public void setGeneratedPackage(String generatedPackage) {
     de.poiu.kilt.util.Objects.requireNonWhitespace(generatedPackage, "generatedPackage may not be empty");
-    this.log("packageName=" + generatedPackage);
     this.generatedPackage = generatedPackage;
   }
 
 
   public void setPropertyFileEncoding(String propertyFileEncoding) {
-    this.log("propertyFileEncoding=" + propertyFileEncoding);
     this.propertyFileEncoding = propertyFileEncoding;
   }
 
 
   public void setJavaFileEncoding(String javaFileEncoding) {
-    this.log("javaFileEncoding=" + javaFileEncoding);
     this.javaFileEncoding = javaFileEncoding;
   }
 
 
   public void setCopyFacadeAccessorClasses(final boolean copyFacadeAccessorClasses) {
-    this.log("copyFacadeAccessorClasses=" + copyFacadeAccessorClasses);
     this.copyFacadeAccessorClasses = copyFacadeAccessorClasses;
   }
 
 
   public void setFacadeAccessorClassName(final String facadeAccessorClassName) {
-    this.log("facadeAccessorClassName=" + facadeAccessorClassName);
     this.facadeAccessorClassName = facadeAccessorClassName;
   }
 
 
   public void setFacadeGenerationDir(final String facadeGenerationDir) {
-    this.log("facadeGenerationDir=" + facadeGenerationDir);
     this.facadeGenerationDirectory = Paths.get(facadeGenerationDir);
+  }
+
+
+  public void setVerbose(final boolean verbose) {
+    this.verbose= verbose;
+  }
+
+
+  private void printProperties(){
+    final StringBuilder sb= new StringBuilder();
+
+    sb.append("verbose                  = ").append(this.verbose).append("\n");
+    sb.append("propertiesRootDirectory   = ").append(this.propertiesRootDirectory).append("\n");
+    sb.append("i18nIncludes              = ").append(this.fileSetList).append("\n");
+    sb.append("propertyFileEncoding      = ").append(this.propertyFileEncoding).append("\n");
+    sb.append("facadeGenerationDirectory = ").append(this.facadeGenerationDirectory).append("\n");
+    sb.append("generatedPackage          = ").append(this.generatedPackage).append("\n");
+    sb.append("copyFacadeAccessorClasses = ").append(this.copyFacadeAccessorClasses).append("\n");
+    sb.append("facadeAccessorClassName   = ").append(this.facadeAccessorClassName).append("\n");
+
+    System.out.println(sb.toString());
   }
 }

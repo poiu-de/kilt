@@ -35,6 +35,9 @@ import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
 import de.poiu.kilt.facade.creation.FacadeCreator;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 
 /**
@@ -108,6 +111,10 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
 
   @Override
   public void execute() throws MojoExecutionException {
+    if (this.verbose) {
+      Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
+    }
+    
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {

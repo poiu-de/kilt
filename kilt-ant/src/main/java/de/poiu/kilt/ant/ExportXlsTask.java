@@ -29,6 +29,9 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import de.poiu.kilt.internal.XlsImExporter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.config.Configurator;
 
 
 /**
@@ -41,26 +44,17 @@ public class ExportXlsTask extends Task {
   // Attributes
 
   /**
-   * The location to which the generated Java files are written.
-   */
-  private File outputDirectory;
-
-  /**
    * The location of the source i18n resource bundle files.
    */
   private String propertiesRootDirectory= "i18n";
 
   private boolean verbose= false;
 
-  private String[] i18nIncludes= new String[]{"**/*.properties"};
-
-  private String[] i18nExcludes= new String[]{};
-
   private String propertyFileEncoding;
 
   private final List<FileSet> fileSetList = new ArrayList<>();
 
-  private String xlsFileName= null;
+  private String xlsFile= null;
 
   private boolean deleteEmptyProperties= false;
 
@@ -75,14 +69,22 @@ public class ExportXlsTask extends Task {
 
   @Override
   public void execute() throws BuildException {
-    if (this.xlsFileName == null) {
-      this.log("No xls file name specified. Please provide a file name for the xls file which should be created.", Project.MSG_ERR);
-      throw new RuntimeException("No xls file name specified. Please provide a file name for the xls file which should be created.");
+    if (this.verbose) {
+      Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
+    }
+
+    if (this.verbose) {
+      printProperties();
+    }
+
+    if (this.xlsFile == null) {
+      this.log("No xls file specified. Please provide a file name (with or without path) for the xls file which should be created.", Project.MSG_ERR);
+      throw new RuntimeException("No xls file specified. Please provide a file name (with or without path) for the xls file which should be created.");
     } else {
       this.log("Create XLS file from property files...");
 
       final Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
-      final File file = new File(this.xlsFileName);
+      final File file = new File(this.xlsFile);
 
       XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),
                                  propertyFileSet,
@@ -150,19 +152,17 @@ public class ExportXlsTask extends Task {
   }
 
 
-  public String getXlsFileName() {
-    return this.xlsFileName;
+  public String getXlsFile() {
+    return this.xlsFile;
   }
 
 
-  public void setXlsFileName(String xlsFileName) {
-    this.log("xlsFileName=" + xlsFileName);
-    this.xlsFileName = xlsFileName;
+  public void setXlsFile(String xlsFile) {
+    this.xlsFile= xlsFile;
   }
 
 
   public void setPropertyFileEncoding(String fileEncoding) {
-    this.log("propertyFileEncoding=" + fileEncoding);
     this.propertyFileEncoding = fileEncoding;
   }
 
@@ -173,13 +173,29 @@ public class ExportXlsTask extends Task {
 
 
   public void setDeleteEmptyProperties(boolean deleteEmptyProperties) {
-    this.log("deleteEmptyProperties=" + deleteEmptyProperties);
     this.deleteEmptyProperties = deleteEmptyProperties;
   }
 
 
   public void setPropertiesRootDirectory(String propertiesRootDirectory) {
-    this.log("propertiesRootDirectory=" + propertiesRootDirectory);
     this.propertiesRootDirectory = propertiesRootDirectory;
+  }
+
+
+  public void setVerbose(final boolean verbose) {
+    this.verbose= verbose;
+  }
+
+
+  private void printProperties(){
+    final StringBuilder sb= new StringBuilder();
+
+    sb.append("verbose                 = ").append(this.verbose).append("\n");
+    sb.append("propertiesRootDirectory = ").append(this.propertiesRootDirectory).append("\n");
+    sb.append("i18nIncludes              = ").append(this.fileSetList).append("\n");
+    sb.append("propertyFileEncoding    = ").append(this.propertyFileEncoding).append("\n");
+    sb.append("xlsFile                 = ").append(this.xlsFile).append("\n");
+
+    System.out.println(sb.toString());
   }
 }

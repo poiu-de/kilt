@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+PatternLayout described at https://logging.apache.org/log4j/2.x/manual/layouts.html
+
+Some examples (without details):
+%c  Loggername
+%C  classname (expensive!)
+%d  date
+%ex Exception stack trace
+%m  actual log message
+%M  method (expensive!)
+%n  line separator
+%p  log level
+%t  thread
+-->
+<Configuration monitorinterval="30" status="info" strict="true">
+    <Appenders>
+        <Appender type="Console" name="Console">
+            <Layout type="PatternLayout" pattern="[%-6p] %m%n" />
+        </Appender>
+        <Appender type="Console" name="Trace">
+            <Layout type="PatternLayout" pattern="[%-6p] [%C#%M] (%t) %m %ex%n" />
+        </Appender>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <!-- Use Trace instead of Console to trace down exact method sending the msg. 
+                 This is more expensive and should be used only temporarily. -->
+            <AppenderRef ref="Console" />
+        </Root>
+        <Logger name="de.poiu.kilt" level="INFO" />
+    </Loggers>
+</Configuration>
