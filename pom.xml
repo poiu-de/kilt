@@ -47,6 +47,7 @@
         <module>kilt-core</module>
         <module>kilt-maven-plugin</module>
         <module>kilt-ant</module>
+        <module>kilt-cli</module>
         <module>kilt-runtime</module>
     </modules>
 

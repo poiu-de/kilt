@@ -118,7 +118,7 @@ You will need the accompanied properties file and lib directory as well.
 
 === As standalone tool
 
-To use Kilt as a standalone tool download the kilt-bin package from the
+To use Kilt as a standalone tool download the kilt-cli package from the
 {download-page}[Download] section and unpack it to a directory of your choice.
 
 
