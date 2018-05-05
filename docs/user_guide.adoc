@@ -378,9 +378,7 @@ they apply.
 | {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade 
 | propertiesRootDirectory    | The directory below which the i18n resource      
                                bundle files reside.                             | {y}         |  {y}        | {y}           
-| verbose                    | Whether to generate more verbose output. May     
-                               be given up to 2 times to get even more verbose
-                               output.                                          | {y}         |  {y}        | {y}           
+| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}           
 | i18nIncludes               | The Java i18n resource bundles to include in the
                                processing.                                      | {y}         |  {y}        | {y}           
 | i18nExcludes               | The Java i18n resource bundles to exclude from 
