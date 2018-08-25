@@ -24,10 +24,19 @@
       <directory>${project.build.directory}/classes</directory>
       <outputDirectory>.</outputDirectory>
       <includes>
-        <include>kilt.sh</include>
         <include>kilt.bat</include>
         <include>*.properties</include>
       </includes>
+    </fileSet>
+
+    <fileSet>
+      <!--directory>${project.basedir}/src/main/resources</directory-->
+      <directory>${project.build.directory}/classes</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>kilt.sh</include>
+      </includes>
+      <fileMode>0755</fileMode>
     </fileSet>
   </fileSets>
   
