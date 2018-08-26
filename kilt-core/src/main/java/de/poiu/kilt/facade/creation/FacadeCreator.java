@@ -72,6 +72,7 @@ public class FacadeCreator {
    */
   public TypeSpec createFacadeEnumFor(final ResourceBundleContent resourceContent) {
     final String enumName= this.getEnumClassNameFor(resourceContent);
+    final String bundleBaseName= BundleNormalizer.toBundleName(resourceContent.getBundleBaseName());
 
     // build an enum class for the resource bundle
     final TypeSpec.Builder bundleEnumBuilder= TypeSpec.enumBuilder(enumName)
@@ -83,7 +84,7 @@ public class FacadeCreator {
             .addSuperinterface(ClassName.get(KiltEnumFacade.class))
             // BASENAME of the bundle as static const
             .addField(FieldSpec.builder(String.class, "BASENAME", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$S", resourceContent.getBundleBaseName())
+                    .initializer("$S", bundleBaseName)
                     .build())
             // the resource key as a field of each enum constant
             .addField(String.class, "key", Modifier.PRIVATE, Modifier.FINAL)

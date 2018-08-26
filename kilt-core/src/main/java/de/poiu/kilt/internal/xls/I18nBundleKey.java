@@ -76,4 +76,11 @@ public class I18nBundleKey {
     return true;
   }
 
+
+  @Override
+  public String toString() {
+    return "I18nBundleKey{" + "bundleBaseName=" + bundleBaseName + ", key=" + key + '}';
+  }
+
+
 } // I18nKey

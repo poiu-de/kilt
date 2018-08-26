@@ -17,6 +17,7 @@ package de.poiu.kilt.internal;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import java.util.Objects;
 
 /**
  * Encapsulates a single translated value for a specific language.
@@ -64,6 +65,40 @@ public class Translation implements Comparable<Translation> {
   public String toString() {
     return "Translation{" + "lang=" + lang + ", value=" + value + '}';
   }
+
+
+  @Override
+  public int hashCode() {
+    int hash = 7;
+    hash = 41 * hash + Objects.hashCode(this.lang);
+    hash = 41 * hash + Objects.hashCode(this.value);
+    return hash;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null) {
+      return false;
+    }
+    if (getClass() != obj.getClass()) {
+      return false;
+    }
+    final Translation other = (Translation) obj;
+    if (!Objects.equals(this.value, other.value)) {
+      return false;
+    }
+    if (!Objects.equals(this.lang, other.lang)) {
+      return false;
+    }
+    return true;
+  }
+
+
+
 
 
   @Override

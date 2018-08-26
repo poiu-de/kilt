@@ -130,6 +130,7 @@ public class XlsFile {
 
     // if headerRow does not exist, create it!
     if (headerRow == null) {
+      LOGGER.log(Level.DEBUG, "Header row does not exist. Creating it.");
       headerRow= this.i18nSheet.createRow(0);
       final Cell bundleBasenameCell= headerRow.createCell(0);
       bundleBasenameCell.setCellValue(this.workbook.getCreationHelper().createRichTextString("Bundle Basename"));
@@ -147,7 +148,7 @@ public class XlsFile {
       if (cell == null){
         continue;
       } else {
-        final String cellValue= cell != null ? cell.getStringCellValue() : "";
+        final String cellValue= cell.getStringCellValue();
         final Language language= Language.of(cellValue);
         if (this.languageColumnMap.containsKey(language)) {
           LOGGER.log(Level.WARN, "Language '" + language.getLang() + "' is found multiple times in file. Only using the first one.");
@@ -158,10 +159,12 @@ public class XlsFile {
     }
 
     // store the indexes of the i18n keys rows for easier access
-    for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum(); i++) {
+    for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
       final String baseBundleName= this.i18nSheet.getRow(i).getCell(0).getStringCellValue(); //FIXME Avoid NPE?
       final String key= this.i18nSheet.getRow(i).getCell(1).getStringCellValue(); //FIXME Avoid NPE?
       final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName, key);
+
+      LOGGER.log(Level.DEBUG, "Found bundle key {}->{} at row {}", baseBundleName, key, i);
 
       if (this.i18nKeyRowMap.containsKey(i18nKey)) {
         LOGGER.log(Level.WARN, "I18n Key " + i18nKey + " is found multiple times in file. Only using the first one.");
@@ -178,14 +181,17 @@ public class XlsFile {
     final Row row;
     if (this.i18nKeyRowMap.containsKey(i18nKey)) {
       row= this.i18nSheet.getRow(this.i18nKeyRowMap.get(i18nKey));
+      LOGGER.log(Level.DEBUG, "bundle key {} already exists at row {}.", i18nKey, row.getRowNum());
     } else {
       row= this.i18nSheet.createRow(this.i18nSheet.getLastRowNum() + 1);
       row.createCell(0).setCellValue(this.workbook.getCreationHelper().createRichTextString(i18nKey.getBundleBaseName()));
       row.createCell(1).setCellValue(this.workbook.getCreationHelper().createRichTextString(i18nKey.getKey()));
       this.i18nKeyRowMap.put(i18nKey, row.getRowNum());
+      LOGGER.log(Level.DEBUG, "bundle key {} doesn't exist yet. Creating a new row for it at row {}.", i18nKey, row.getRowNum());
     }
 
     if (!this.languageColumnMap.containsKey(language)) {
+      LOGGER.log(Level.DEBUG, "language {} doesn't exist yet. Creating a new column for it.", i18nKey);
       this.appendLanguageColumn(language);
     }
 
@@ -195,8 +201,10 @@ public class XlsFile {
     if (row.getCell(languageColumnIdx) != null) {
       cell= row.getCell(languageColumnIdx);
     } else {
+      LOGGER.log(Level.DEBUG, "cell for bundle {} and language {} doesn't exist yet. Creating a new one.", i18nKey, language.getLang());
       cell= row.createCell(languageColumnIdx);
     }
+    LOGGER.log(Level.DEBUG, "setting cell value at row={} column={} to {}", cell.getRowIndex(), cell.getColumnIndex(), value);
     cell.setCellValue(this.workbook.getCreationHelper().createRichTextString(value));
   }
 
@@ -224,6 +232,7 @@ public class XlsFile {
     languageColumn.setCellValue(this.workbook.getCreationHelper().createRichTextString(language.getLang()));
 
     this.languageColumnMap.put(language, languageColumn.getColumnIndex());
+    LOGGER.log(Level.DEBUG, "Added new column for language {} at {}", language.getLang(), languageColumn.getColumnIndex());
   }
 
 
@@ -254,7 +263,7 @@ public class XlsFile {
   public Map<I18nBundleKey, Collection<Translation>> getContent() {
     final Multimap<I18nBundleKey, Translation> contentMap= LinkedHashMultimap.create();
 
-    for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum(); i++) {
+    for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
       final Row row= this.i18nSheet.getRow(i);
       final String baseBundleName= this.i18nSheet.getRow(i).getCell(0).getStringCellValue(); //FIXME Avoid NPE?
       final String key= this.i18nSheet.getRow(i).getCell(1).getStringCellValue(); //FIXME Avoid NPE?

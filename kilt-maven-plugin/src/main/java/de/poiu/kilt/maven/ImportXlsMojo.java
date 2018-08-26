@@ -48,7 +48,7 @@ public class ImportXlsMojo extends AbstractKiltMojo {
   private File xlsOutputDirectory;
 
 
-  @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xls")
+  @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xlsx")
   private String xlsFileName;
 
 

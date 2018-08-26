@@ -34,7 +34,7 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
   /**
    * The location of the source i18n resource bundle files.
    */
-  @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/i18n", required=true)
+  @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/", required=true)
   File propertiesRootDirectory;
 
 

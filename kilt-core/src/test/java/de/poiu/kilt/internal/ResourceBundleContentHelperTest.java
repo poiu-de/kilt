@@ -32,7 +32,7 @@ import de.poiu.kilt.internal.Language;
  *
  * @author mherrn
  */
-public class FacadeBundleContentHelperTest {
+public class ResourceBundleContentHelperTest {
 
   @Test
   public void test_ResourceBundleRegex_onlyBasename() {
@@ -183,8 +183,8 @@ public class FacadeBundleContentHelperTest {
   public void testGetBundlePrefix() {
     final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
     final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
-    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("/i18n/");
-    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/my/sub/options_de.properties"))).isEqualTo("/i18n/my/sub/");
+    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("i18n");
+    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/my/sub/options_de.properties"))).isEqualTo("i18n/my/sub");
   }
 
 
@@ -203,9 +203,9 @@ public class FacadeBundleContentHelperTest {
   public void testGetBundlePrefix_byPathOrFile() {
     final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
     final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
-    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("/i18n/");
-    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties").toFile())).isEqualTo("/i18n/");
-    assertThat(helper.getBundlePrefix(new File(ignorableBasePath.toFile(), "i18n/messages_de.properties"))).isEqualTo("/i18n/");
+    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties"))).isEqualTo("i18n");
+    assertThat(helper.getBundlePrefix(ignorableBasePath.resolve("i18n/messages_de.properties").toFile())).isEqualTo("i18n");
+    assertThat(helper.getBundlePrefix(new File(ignorableBasePath.toFile(), "i18n/messages_de.properties"))).isEqualTo("i18n");
   }
 
 
@@ -228,13 +228,13 @@ public class FacadeBundleContentHelperTest {
 
     System.out.println(bundleNameToFilesMap.keySet());
     // verification
-    assertThat(bundleNameToFilesMap.keySet()).containsExactly("/i18n/messages", "/i18n/options");
-    assertThat(bundleNameToFilesMap.get("/i18n/messages")).containsKeys(Language.of("de"), Language.of("en"));
-    assertThat(bundleNameToFilesMap.get("/i18n/messages").get(Language.of("de"))).hasName("messages_de.properties");
-    assertThat(bundleNameToFilesMap.get("/i18n/messages").get(Language.of("en"))).hasName("messages_en.properties");
-    assertThat(bundleNameToFilesMap.get("/i18n/options")).containsKeys(Language.of(""), Language.of("en_US"), Language.of("en_GB"));
-    assertThat(bundleNameToFilesMap.get("/i18n/options").get(Language.of(""))).hasName("options.properties");
-    assertThat(bundleNameToFilesMap.get("/i18n/options").get(Language.of("en_US"))).hasName("options_en_US.properties");
-    assertThat(bundleNameToFilesMap.get("/i18n/options").get(Language.of("en_GB"))).hasName("options_en_GB.properties");
+    assertThat(bundleNameToFilesMap.keySet()).containsExactly("i18n/messages", "i18n/options");
+    assertThat(bundleNameToFilesMap.get("i18n/messages")).containsKeys(Language.of("de"), Language.of("en"));
+    assertThat(bundleNameToFilesMap.get("i18n/messages").get(Language.of("de"))).hasName("messages_de.properties");
+    assertThat(bundleNameToFilesMap.get("i18n/messages").get(Language.of("en"))).hasName("messages_en.properties");
+    assertThat(bundleNameToFilesMap.get("i18n/options")).containsKeys(Language.of(""), Language.of("en_US"), Language.of("en_GB"));
+    assertThat(bundleNameToFilesMap.get("i18n/options").get(Language.of(""))).hasName("options.properties");
+    assertThat(bundleNameToFilesMap.get("i18n/options").get(Language.of("en_US"))).hasName("options_en_US.properties");
+    assertThat(bundleNameToFilesMap.get("i18n/options").get(Language.of("en_GB"))).hasName("options_en_GB.properties");
   }
 }

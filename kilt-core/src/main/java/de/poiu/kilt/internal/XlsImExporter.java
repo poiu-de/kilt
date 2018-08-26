@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.internal;
 
+import de.poiu.kilt.facade.creation.BundleNormalizer;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Arrays;

@@ -16,8 +16,8 @@
 package de.poiu.kilt.facade.creation;
 
 import de.poiu.kilt.facade.creation.BundleNormalizer;
-import org.junit.Test;
 import static org.assertj.core.api.Assertions.*;
+import org.junit.Test;
 
 
 public class BundleNormalizerTest {
@@ -119,6 +119,16 @@ public class BundleNormalizerTest {
     final String expected= "text_over_multiple_lines";
 
     final String actual= BundleNormalizer.normalize(input);
+
+    assertThat(actual).isEqualTo(expected);
+  }
+
+  @Test
+  public void testToBundleName() {
+    final String input = "my/bundles/path";
+    final String expected= "my.bundles.path";
+
+    final String actual= BundleNormalizer.toBundleName(input);
 
     assertThat(actual).isEqualTo(expected);
   }

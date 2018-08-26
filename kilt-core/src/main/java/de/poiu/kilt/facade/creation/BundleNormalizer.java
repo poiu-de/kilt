@@ -181,6 +181,21 @@ public class BundleNormalizer {
 
 
   /**
+   * Normalizes a string to be used as a resource bundle name.
+   * This actually converts all slashes to dots.
+   *
+   * @param s the string to convert
+   * @return the converted string
+   */
+  public static String toBundleName(String s) {
+    requireNonNull(s, "parameter s may not be null or empty.");
+    requireNonWhitespace(s, "parameter s may not be null or empty.");
+
+    return s.replaceAll("\\/", ".");
+  }
+
+
+  /**
    * Normalizes a string to be used as java identifier.
    * <p>
    * This actually removes, replaces or simplifies certain characters, for example

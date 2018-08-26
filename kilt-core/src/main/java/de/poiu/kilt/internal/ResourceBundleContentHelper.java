@@ -20,8 +20,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -116,39 +114,8 @@ public class ResourceBundleContentHelper {
   // Methods
 
   /**
-   * Creates a list of {@link ResourceBundleContent}s from the given resource bundle files.
-   *
-   *
-   * @param files the resource bundle files for which to create the FacadeBundleContents
-   * @return the FacadeBundleContents for the given collection of files
-   */
-  public List<ResourceBundleContent> buildFacadeBundleContentFromFiles(final Collection<File> files) {
-    java.util.Objects.requireNonNull(files);
-    final List<ResourceBundleContent> result= new LinkedList<>();
-    final Map<String, ResourceBundleContent> map= new LinkedHashMap<>();
-
-    for (final File file : files) {
-      final Matcher matcher = PATTERN_RESOURCE_BUNDLE_FILE_NAME.matcher(file.getName());
-      if (matcher.matches()) {
-        final String bundleBasename= matcher.group("BUNDLE");
-        final String langCode= matcher.group("LANG");
-
-        final String bundlePrefix= getBundlePrefix(file);
-        final String fullBundleName= bundlePrefix + bundleBasename;
-
-        if (!map.containsKey(fullBundleName)) {
-
-        }
-      }
-    }
-
-    return result;
-  }
-
-
-  /**
    * Converts a collection of resource bundle files to a nested map containing the
-   * bundle basename as the key and another map containing the translations in these
+   * bundle basepath as the key and another map containing the translations in these
    * resource bundles as the value.
    * <p>
    * This is done by applying a pattern to the given files. The files need to be named according
@@ -173,7 +140,7 @@ public class ResourceBundleContentHelper {
         final Language language= Language.of(langCode != null ? langCode : "");
 
         final String bundlePrefix= getBundlePrefix(file);
-        final String fullBundleName= bundlePrefix + bundleBasename;
+        final String fullBundleName= bundlePrefix + "/" + bundleBasename;
 
         if (!result.containsKey(fullBundleName)) {
           result.put(fullBundleName, new LinkedHashMap<>());
@@ -209,27 +176,9 @@ public class ResourceBundleContentHelper {
    * @return the bundle prefix for the given resource bundle file
    * @throws IllegalArgumentException if the given path is not located below the ignorable base path
    */
-  protected String getBundlePrefixORIG(final Path path) {
-    java.util.Objects.requireNonNull(path);
-    if (!path.toAbsolutePath().startsWith(this.ignorableBasePath.toAbsolutePath())) {
-      throw new IllegalArgumentException("All files should live below the ignorable base path "+this.ignorableBasePath.toAbsolutePath().toString()+". Given path is "+path.toAbsolutePath().toString());
-    }
-
-    final Path prefixPath= this.ignorableBasePath.toAbsolutePath().relativize(path.toAbsolutePath().getParent());
-    final String bundlePrefix= prefixPath.toString()
-      .replaceFirst("^\\/", "")
-      .replaceFirst("\\/$", "")
-      .replaceAll("\\/", "_");
-
-    if (bundlePrefix.isEmpty()) {
-      return "";
-    } else {
-      return bundlePrefix+"_";
-    }
-  }
-
-
   protected String getBundlePrefix(final Path path) {
+    LOGGER.traceEntry("getBundlePrefix for path: {}", path);
+
     java.util.Objects.requireNonNull(path);
     if (!path.toAbsolutePath().startsWith(this.ignorableBasePath.toAbsolutePath())) {
       throw new IllegalArgumentException("All files should live below the ignorable base path "+this.ignorableBasePath.toAbsolutePath().toString()+". Given path is "+path.toAbsolutePath().toString());
@@ -237,16 +186,14 @@ public class ResourceBundleContentHelper {
 
     final Path prefixPath= this.ignorableBasePath.toAbsolutePath().relativize(path.toAbsolutePath().getParent());
     final String bundlePrefix= prefixPath.toString()
-      .replaceFirst("^", "/")  //always prepend a slash
-      .replaceFirst("$", "/")         //always append a slash
+      .replaceFirst("^/+", "")         //never start with a slash
+      .replaceFirst("$/+", "")         //never end with a slash
       .replaceAll("\\/+", "/")       //reduce multiple slashes to only one
       ;
 
-    if (bundlePrefix.isEmpty()) {
-      return "";
-    } else {
-      return bundlePrefix;
-    }
+
+
+    return LOGGER.traceExit(bundlePrefix);
   }
 
 
