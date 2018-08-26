@@ -6,6 +6,7 @@
   <artifactId>kilt</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <name>kilt</name>
   <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
   <url>https://github.com/hupfdule/kilt</url>
 
@@ -20,6 +21,7 @@
     <url>https://github.com/hupfdule/kilt</url>
     <connection>scm:git:git://github.com/hupfdule/kilt.git</connection>
     <developerConnection>scm:git:git@github.com:hupfdule/kilt.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
@@ -44,12 +46,17 @@
     <module>kilt-runtime</module>
   </modules>
 
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>de.poiu.kilt</groupId>
         <artifactId>kilt-core</artifactId>
-        <version>0.2.0-SNAPSHOT</version>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
@@ -82,6 +89,11 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.0.1</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -128,7 +140,19 @@
           </archive>
         </configuration>
       </plugin>
-      
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+          <useReleaseProfile>false</useReleaseProfile>
+          <releaseProfiles>release</releaseProfiles>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
+
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -157,7 +181,7 @@
   </distributionManagement>
 
   <profiles>
-    <profile> 
+    <profile>
       <id>release</id>
       <build>
         <plugins>

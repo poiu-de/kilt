@@ -44,7 +44,7 @@ import org.omnaest.utils.propertyfile.content.element.Property;
  *                                                                     .fromFriles(myFilesMap);
  * </pre>
  *
- * To create the map with the content files, the class {@link FacadeBundleContentHelper} can be used.
+ * To create the map with the content files, the class {@link ResourceBundleContentHelper} can be used.
  *
  * @author mherrn
  */
@@ -114,7 +114,7 @@ public class ResourceBundleContent {
 
   /**
    * Creates a new FacadeBundleContent for the given bundle without any translations.
-   * To fill it with translations use the method {@link #fromFiles(java.util.Map) ).
+   * To fill it with translations use the method {@link #fromFiles(java.util.Map)}.
    *
    * @param bundleName the bundleBasename
    * @return a new FacadeBundleContent for the the given bundle

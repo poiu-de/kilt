@@ -27,7 +27,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import de.poiu.kilt.internal.Language;
 
 /**
  * A helper class for creating a {@link ResourceBundleContent} from a set of resource

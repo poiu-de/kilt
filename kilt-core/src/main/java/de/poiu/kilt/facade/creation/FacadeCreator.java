@@ -126,7 +126,7 @@ public class FacadeCreator {
    *
    * @param key the key of the resource
    * @param translations the translations of the key
-   * @return
+   * @return a code block with the javadoc for the given key
    */
   public CodeBlock buildJavadoc(final String key, final Collection<Translation> translations) {
     final CodeBlock.Builder javadocBuilder= CodeBlock.builder()
