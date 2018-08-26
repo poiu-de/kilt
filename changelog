@@ -1,0 +1,15 @@
+Kilt changelog
+==============
+
+Version 0.2.0 - 2018-08-26
+--------------------------
+
+ - Initial release of kilt after fork from i18n-binder
+ - Totally new facade generation that generates enum facades
+ - Renamed commands and parameters
+ - Update XLS(X) files instead of overwriting them
+ - Empty cells in XLS(X) and default resource bundles (without country
+   code) are now supported
+ - Added kilt-cli as commandline application without dependency on ant
+ - Added kilt-runtime as runtime module for the generated facades (and even
+   without a generated facade)
