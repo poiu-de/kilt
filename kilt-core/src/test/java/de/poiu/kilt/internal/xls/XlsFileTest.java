@@ -175,4 +175,78 @@ public class XlsFileTest {
     assertThat(writtenContent).isEqualTo(content);
   }
 
+
+  @Test
+  public void testEmptyCellsAndDefaultLanguage() throws Exception {
+    // preparation
+    final File testFile= File.createTempFile("XlsFile-test", "xlsx");
+    testFile.deleteOnExit();
+    testFile.delete();
+    final XlsFile xlsFile= new XlsFile(testFile);
+
+    // execution
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key1"), Language.of(""), "wert1");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key1"), Language.of("en"), "value1");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key2"), Language.of(""), "wert2");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key2"), Language.of("en"), "value2");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key3"), Language.of(""), "wert3");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key4"), Language.of("en"), "value4");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key5"), Language.of(""), "");
+    xlsFile.save();
+
+    // verification
+    final Map<I18nBundleKey, Collection<Translation>> content= xlsFile.getContent();
+    assertThat(content).size().isEqualTo(5);
+    assertThat(content).containsOnlyKeys(
+      new I18nBundleKey("myBundleBasePath", "key1"),
+      new I18nBundleKey("myBundleBasePath", "key2"),
+      new I18nBundleKey("myBundleBasePath", "key3"),
+      new I18nBundleKey("myBundleBasePath", "key4"),
+      new I18nBundleKey("myBundleBasePath", "key5"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key1"))).containsExactly(
+      new Translation(Language.of(""), "wert1"),
+      new Translation(Language.of("en"), "value1"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key2"))).containsExactly(
+      new Translation(Language.of(""), "wert2"),
+      new Translation(Language.of("en"), "value2"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key3"))).containsExactly(
+      new Translation(Language.of(""), "wert3"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key4"))).containsExactly(
+      new Translation(Language.of("en"), "value4"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key5"))).containsExactly(
+      new Translation(Language.of(""), ""));
+
+    final XlsFile writtenFile= new XlsFile(testFile);
+    final Map<I18nBundleKey, Collection<Translation>> writtenContent= writtenFile.getContent();
+    assertThat(writtenContent).isEqualTo(content);
+  }
+
+
+  @Test
+  public void testMultiLineValue() throws Exception {
+    // preparation
+    final File testFile= File.createTempFile("XlsFile-test", "xlsx");
+    testFile.deleteOnExit();
+    testFile.delete();
+    final XlsFile xlsFile= new XlsFile(testFile);
+
+    // execution
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key1"), Language.of("de"), "Dieser Text \ngeht über mehrere \nZeilen.");
+    xlsFile.setValue(new I18nBundleKey("myBundleBasePath", "key1"), Language.of("en"), "This text \nspan multiple \nlines.");
+    xlsFile.save();
+
+    // verification
+    final Map<I18nBundleKey, Collection<Translation>> content= xlsFile.getContent();
+    assertThat(content).size().isEqualTo(1);
+    assertThat(content).containsOnlyKeys(
+      new I18nBundleKey("myBundleBasePath", "key1"));
+    assertThat(content.get(new I18nBundleKey("myBundleBasePath", "key1"))).containsExactly(
+      new Translation(Language.of("de"), "Dieser Text \ngeht über mehrere \nZeilen."),
+      new Translation(Language.of("en"), "This text \nspan multiple \nlines."));
+
+    final XlsFile writtenFile= new XlsFile(testFile);
+    final Map<I18nBundleKey, Collection<Translation>> writtenContent= writtenFile.getContent();
+    assertThat(writtenContent).isEqualTo(content);
+  }
+
 }
