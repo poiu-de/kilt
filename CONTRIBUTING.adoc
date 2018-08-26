@@ -1,0 +1,31 @@
+= Contributing to Kilt
+
+Thanks for your interest in contributing to kilt.
+
+== How to contribute
+
+You can of course fork the project, do your intended changes and create a pull request.
+But to get the maximum benefit by contributing it would be good to get in <<Contact,contact with us>> and telling us about your intentions
+This helps avoiding duplicate work or your changes being refused for some reason.
+
+== What to contribute
+
+=== Website
+
+What is currently missing is a useful website. Anyone with some skills in web design who is willing to contribute 
+to such a website is highly welcome. 
+
+=== Finding bugs
+
+Of course kilt has bugs. If you find them please file an https://github.com/hupfdule/kilt/issues[Issue] so we can resolve them.
+
+=== Writing code
+
+Before writing some code you should definitely <<Contact,contact us>> before writing anything. 
+This allows us to find out whether your contribution can be included in kilt and possibly saves you some fruitless work.
+
+When writing some code please follow the https://google.github.io/styleguide/javaguide.html[google conventions]. 
+
+== Contact
+
+To contact us, please write an email to kilt@poiu.de.
