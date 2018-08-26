@@ -149,7 +149,12 @@ public class XlsFile {
         continue;
       } else {
         final String cellValue= cell.getStringCellValue();
-        final Language language= Language.of(cellValue);
+        final Language language;
+        if (cellValue.equals("<default>")) {
+          language= Language.of("");
+        } else {
+          language= Language.of(cellValue);
+        }
         if (this.languageColumnMap.containsKey(language)) {
           LOGGER.log(Level.WARN, "Language '" + language.getLang() + "' is found multiple times in file. Only using the first one.");
         } else {
@@ -229,7 +234,10 @@ public class XlsFile {
 
     final Row headerRow= this.i18nSheet.getRow(0);
     final Cell languageColumn = headerRow.createCell(highestLanguageColumnIdx + 1);
-    languageColumn.setCellValue(this.workbook.getCreationHelper().createRichTextString(language.getLang()));
+    languageColumn.setCellValue(this.workbook.getCreationHelper().createRichTextString(
+      language.getLang().equals("")
+      ? "<default>"
+      : language.getLang()));
 
     this.languageColumnMap.put(language, languageColumn.getColumnIndex());
     LOGGER.log(Level.DEBUG, "Added new column for language {} at {}", language.getLang(), languageColumn.getColumnIndex());

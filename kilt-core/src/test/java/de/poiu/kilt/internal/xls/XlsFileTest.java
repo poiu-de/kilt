@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.internal.xls;
 
+import com.google.common.io.Resources;
 import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.Translation;
 import java.io.File;
@@ -249,4 +250,26 @@ public class XlsFileTest {
     assertThat(writtenContent).isEqualTo(content);
   }
 
+
+  @Test
+  public void testRead_WithEmptyDefaultLanguage() throws Exception {
+    // - preparation
+    final File file= new File(Resources.getResource("i18n_expected.xlsx").toURI());
+
+    // - execution
+    final XlsFile xlsFile= new XlsFile(file);
+
+    // - verification
+    final Map<I18nBundleKey, Collection<Translation>> content= xlsFile.getContent();
+
+    assertThat(content).containsOnlyKeys(new I18nBundleKey("i18n/messages", "ok"), new I18nBundleKey("i18n/messages", "cancel"));
+    assertThat(content.get(new I18nBundleKey("i18n/messages", "ok"))).containsOnly(
+      new Translation(Language.of("de"), "OK"),
+      new Translation(Language.of(""), "OK")
+    );
+    assertThat(content.get(new I18nBundleKey("i18n/messages", "cancel"))).containsOnly(
+      new Translation(Language.of("de"), "Abbrechen"),
+      new Translation(Language.of(""), "Cancel")
+    );
+  }
 }
