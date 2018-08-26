@@ -251,7 +251,7 @@ create an XLS(X) sheet only for the english language run
 ./kilt.sh create-xls --i18nIncludes=**/*_en*.properties
 ----
 
-See <<commands>> for a list of the available commands and <<parameters>>
+See <<Commands>> for a list of the available commands and <<Parameters>>
 for a detailed description of the available configuration parameters.
 
 To show the usage help of the tool call with the parameter `-h` or `--help`
@@ -285,7 +285,7 @@ To execute a command run
 ant <command>
 ----
 
-See <<commands>> for a list of the available commands and <<parameters>>
+See <<Commands>> for a list of the available commands and <<Parameters>>
 for a detailed description of the available configuration parameters.
 
 
@@ -322,6 +322,7 @@ following plugin section in the pom or your project:
 ----
 //TODO: Da oben sollte man eine Beispielkonfiguration angeben
 
+//FIXME: Diese Datei gibt es nicht.
 See <<maven-plugin.adoc#exportXls,the Kilt Maven Plugin description>> for a 
 detailed description of the available configuration parameters.
 
@@ -340,7 +341,6 @@ mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
 ----
 
 
-[[commands]]
 Commands
 --------
 
@@ -357,7 +357,6 @@ create-facade:: Creates the I18n enum facades for type safe access to
 localized messages.
 
 
-[[parameters]]
 Parameters
 ----------
 
@@ -372,7 +371,7 @@ The parameters of the ant task can not be overridden.
 The following list describes the available parameters and to which commands
 they apply.
 
-[.Kilt parameters]
+.Kilt parameters
 [width="100%",cols="1s,2d,1d,1d,1d"]
 |===
 | Parameter                  | Description                                    3+| Applies to
