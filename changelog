@@ -9,6 +9,8 @@ Version 0.3.0 - 2018-09-27
    apron library instead
  - Implemented functionality to comment out or delete missing keys when 
    importing XLS(X) back to .properties files
+ - Add an additional info sheet to the written XLS(X) with some infos
+   about the generation
 
 
 Version 0.2.0 - 2018-08-26
