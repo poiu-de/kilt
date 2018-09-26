@@ -30,14 +30,14 @@ to be integrated with a maven-based application.
 Why to use Kilt
 ---------------
 
-The localizations of Java i18n resource bundles are cluttered among serveral
-files. That's no problem for software engineers, but not very helpful to
-translators. Translators ususally don't have access to or the knowledge to
-use the same translation tools as a software engineer. Therefore this tool
-allows to convert the Java i18n resource bundles to a single XLS sheet to
-be transmitted to the translators. The translators can make their changes
-directly in the XSL sheet and send it back to the software engineers who
-incorporate the changes back into the actual Java i18n resource bundles.
+The localizations of Java i18n resource bundles are cluttered among
+serveral files. That's no problem for software engineers, but not very
+helpful to translators without the help of additional professional
+translation tools. Therefore this tool allows to convert the Java i18n
+resource bundles to a single XLS(X) sheet to be transmitted to the
+translators. The translators can make their changes directly in the XLS(X)
+sheet and send it back to the software engineers who incorporate the
+changes back into the actual Java i18n resource bundles.
 
 Also using Java i18n resource bundles usually involve accessing them by
 string which is not type safe and requires the knowledge of the exact name
@@ -48,7 +48,7 @@ the generated Javadoc!
 
 The benefits of Kilt are in short form:
 
- - Support of professional translation workflow
+ - Support of a fast and easy translation workflow
  - Minimal invasive changes on import and export of translations (comments,
    blank lines and order remain intact)
  - Good integration into ant and maven build tools
