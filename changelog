@@ -1,6 +1,16 @@
 Kilt changelog
 ==============
 
+Version 0.3.0 - 2018-09-27
+--------------------------
+
+ - Mark default language column in XLS(X) with "<default>"
+ - Get rid of dependency on utils-apl-derived and use PropertyFile from
+   apron library instead
+ - Implemented functionality to comment out or delete missing keys when 
+   importing XLS(X) back to .properties files
+
+
 Version 0.2.0 - 2018-08-26
 --------------------------
 
