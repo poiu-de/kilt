@@ -24,6 +24,8 @@ import java.io.File;
 import java.util.Map;
 import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
 import de.poiu.apron.PropertyFile;
+import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 /**
@@ -121,25 +123,38 @@ public class ResourceBundleContent {
     return new ResourceBundleContent(bundleName, emptyMap);
   }
 
-
   /**
    * Returns a new FacadeBundleContent derived from this one and set its translations
    * based on the given map of bundle files.
+   * <p>
+   * This method assumes that the .properties file are stored with UTF-8 encoding.
    *
    * @param bundleFiles the file containing the translations for this bundle for each language
    * @return a FacadeBundleContent with the translations from the given files
    * @throws InconsistentBundleBaseNameException if thegiven files don't share a common basename
    */
   public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles) {
+    return fromFiles(bundleFiles, UTF_8);
+  }
+
+
+  /**
+   * Returns a new FacadeBundleContent derived from this one and set its translations
+   * based on the given map of bundle files.
+   *
+   * @param bundleFiles the file containing the translations for this bundle for each language
+   * @param charset the charset in which the .properties files are written
+   * @return a FacadeBundleContent with the translations from the given files
+   * @throws InconsistentBundleBaseNameException if thegiven files don't share a common basename
+   */
+  public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles, final Charset charset) {
     final SetMultimap<String, Translation> translations= MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
     for (final Map.Entry<Language, File> entry : bundleFiles.entrySet()) {
       final Language lang = entry.getKey();
       final File file = entry.getValue();
 
-      final PropertyFile propertyFile = PropertyFile.from(file);
-      //FIXME: Set encoding
-      //propertyFile.setFileEncoding(fileEncoding);
+      final PropertyFile propertyFile = PropertyFile.from(file, charset);
       propertyFile.toMap().forEach((String key, String value) -> {
         translations.put(key, new Translation(lang, value));
       });

@@ -28,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
 import de.poiu.apron.PropertyFile;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.util.Objects;
@@ -82,7 +81,7 @@ public class XlsImExporter {
     final Map<String, Map<Language, RememberingPropertyFile>> bundleFileMapping= new LinkedHashMap<>();
 
     // FIXME: Sort by bundleBasename and language? In that case we only have to have 1 property file open at a time
-    for (final Map.Entry<I18nBundleKey, Collection<Translation>> entry : content.entrySet()) {
+    content.entrySet().forEach((entry) -> {
       final I18nBundleKey bundleKey= entry.getKey();
       final String bundleBasename= bundleKey.getBundleBaseName();
       final String propertyKey= bundleKey.getKey();
@@ -104,10 +103,9 @@ public class XlsImExporter {
         final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
         rpf.propertyFile.setValue(propertyKey, translation.getValue());
       }
-    }
+    });
 
     //now write the property files back to disk
-    //FIXME: Könnte man das nicht oben in der Liste öffnen und schließen, um nicht alle gleichzeitig offen zu haben?
     bundleFileMapping.values().forEach((Map<Language, RememberingPropertyFile> langPropMap) -> {
       langPropMap.values().forEach((RememberingPropertyFile rpf) -> {
         // only write files if they have some content (avoid creating unwanted empty files for unsupported locales)
@@ -123,24 +121,25 @@ public class XlsImExporter {
                                final Set<File> resourceBundleFiles,
                                final Charset propertyFileEncoding,
                                final Path xlsFilePath) {
-    //FIXME: Charset wird gar nicht genutzt!
     final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
     final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 
     final XlsFile xlsFile= new XlsFile(xlsFilePath.toFile());
 
-    for (final Map.Entry<String, Map<Language, File>> entry : bundleNameToFilesMap.entrySet()) {
+    bundleNameToFilesMap.entrySet().forEach((entry) -> {
       final String bundleName= entry.getKey();
       final Map<Language, File> bundleTranslations= entry.getValue();
 
-      final ResourceBundleContent resourceBundleContent= ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
-      for (final Map.Entry<String, Collection<Translation>> e : resourceBundleContent.getContent().asMap().entrySet()) {
+      final ResourceBundleContent resourceBundleContent= ResourceBundleContent.forName(bundleName)
+        .fromFiles(bundleTranslations, propertyFileEncoding !=null ? propertyFileEncoding : UTF_8);
+
+      resourceBundleContent.getContent().asMap().entrySet().forEach((e) -> {
         final String propertyKey= e.getKey();
         final Collection<Translation> translations= e.getValue();
 
         xlsFile.setValue(new I18nBundleKey(bundleName, propertyKey), translations);
-      }
-    }
+      });
+    });
 
     xlsFile.save();
   }
