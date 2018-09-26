@@ -15,7 +15,7 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import de.poiu.kilt.util.Objects;
+import de.poiu.fez.Require;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
@@ -195,8 +195,8 @@ public class FacadeCreator {
    *                          (base of the package structure)
    */
   public void copyFacadeAccessorTemplates(final String accessorClassName, final String packageName, final Path targetSourcePath) {
-    Objects.requireNonWhitespace(accessorClassName);
-    Objects.requireNonWhitespace(packageName);
+    Require.nonWhitespace(accessorClassName);
+    Require.nonWhitespace(packageName);
     java.util.Objects.requireNonNull(targetSourcePath);
 
     // first create the necessary directory structure

@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import de.poiu.kilt.facade.creation.BundleNormalizer;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.Test;
 

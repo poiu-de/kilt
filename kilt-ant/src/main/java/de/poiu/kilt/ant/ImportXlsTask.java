@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.ant;
 
+import de.poiu.apron.MissingKeyAction;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import de.poiu.kilt.internal.XlsImExporter;
+import java.nio.charset.Charset;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -52,13 +54,13 @@ public class ImportXlsTask extends Task {
 
   private boolean verbose= false;
 
-  private String propertyFileEncoding;
+  private Charset propertyFileEncoding;
 
   private final List<FileSet> fileSetList = new ArrayList<>();
 
   private String xlsFile= null;
 
-  private boolean deleteEmptyProperties= false;
+  private MissingKeyAction missingKeyAction= MissingKeyAction.NOTHING;
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -90,7 +92,7 @@ public class ImportXlsTask extends Task {
         XlsImExporter.importXls(Paths.get(propertiesRootDirectory),
                                  file,
                                  this.propertyFileEncoding,
-                                 this.deleteEmptyProperties);
+                                 this.missingKeyAction);
       }
 
       this.log("...done");
@@ -164,13 +166,15 @@ public class ImportXlsTask extends Task {
   }
 
 
-  public boolean isDeleteEmptyProperties() {
-    return this.deleteEmptyProperties;
+  public MissingKeyAction getMissingKeyAction() {
+    return this.missingKeyAction;
   }
 
 
-  public void setDeleteEmptyProperties(boolean deleteEmptyProperties) {
-    this.deleteEmptyProperties = deleteEmptyProperties;
+  public void setMissingKeyAction(String missingKeyAction) {
+    if (missingKeyAction != null) {
+      this.missingKeyAction= MissingKeyAction.valueOf(missingKeyAction.toUpperCase());
+    }
   }
 
 
@@ -180,7 +184,11 @@ public class ImportXlsTask extends Task {
 
 
   public void setPropertyFileEncoding(String propertyFileEncoding) {
-    this.propertyFileEncoding = propertyFileEncoding;
+    if (propertyFileEncoding != null) {
+      this.propertyFileEncoding= Charset.forName(propertyFileEncoding);
+    } else {
+      this.propertyFileEncoding= null;
+    }
   }
 
 
@@ -194,10 +202,10 @@ public class ImportXlsTask extends Task {
 
     sb.append("verbose                 = ").append(this.verbose).append("\n");
     sb.append("propertiesRootDirectory = ").append(this.propertiesRootDirectory).append("\n");
-    sb.append("i18nIncludes              = ").append(this.fileSetList).append("\n");
+    sb.append("i18nIncludes            = ").append(this.fileSetList).append("\n");
     sb.append("propertyFileEncoding    = ").append(this.propertyFileEncoding).append("\n");
     sb.append("xlsFile                 = ").append(this.xlsFile).append("\n");
-    sb.append("deleteEmptyProperties   = ").append(this.deleteEmptyProperties).append("\n");
+    sb.append("missingKeyAction        = ").append(this.missingKeyAction).append("\n");
 
     System.out.println(sb.toString());
   }

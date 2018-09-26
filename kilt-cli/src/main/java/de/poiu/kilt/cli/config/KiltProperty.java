@@ -27,6 +27,7 @@ public enum KiltProperty {
   PROPERTY_FILE_ENCODING("propertyFileEncoding"),
   XLS_FILE("xlsFile"),
   DELETE_EMPTY_PROPERTIES("deleteEmptyProperties"),
+  MISSING_KEY_ACTION("missingKeyAction"),
   FACADE_GENERATION_DIR("facadeGenerationDir"),
   GENERATED_PACKAGE("generatedPackage"),
   COPY_FACADE_ACCESSOR_CLASSES("copyFacadeAccessorClasses"),

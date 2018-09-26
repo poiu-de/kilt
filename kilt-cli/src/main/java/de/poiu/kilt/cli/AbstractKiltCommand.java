@@ -19,6 +19,7 @@ import de.poiu.kilt.cli.config.KiltProperty;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
@@ -103,7 +104,7 @@ public abstract class AbstractKiltCommand {
    * The encoding of the properties files.
    */
   @CommandLine.Option(names= {"--penc", "--propertyFileEncoding"}, description= "The encoding of the properties files.")
-  String propertyFileEncoding;
+  Charset propertyFileEncoding;
 
 
   /**
@@ -136,7 +137,7 @@ public abstract class AbstractKiltCommand {
     }
 
     if (propsFromFile.containsKey(KiltProperty.PROPERTY_FILE_ENCODING.getKey())) {
-      this.propertyFileEncoding= propsFromFile.getProperty(KiltProperty.PROPERTY_FILE_ENCODING.getKey());
+      this.propertyFileEncoding= Charset.forName(propsFromFile.getProperty(KiltProperty.PROPERTY_FILE_ENCODING.getKey()));
     }
 
     if (propsFromFile.containsKey(KiltProperty.VERBOSE.getKey())) {

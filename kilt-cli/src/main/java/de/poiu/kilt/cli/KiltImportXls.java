@@ -17,6 +17,7 @@ package de.poiu.kilt.cli;
 
 import de.poiu.kilt.cli.config.KiltProperty;
 import com.google.common.base.Joiner;
+import de.poiu.apron.MissingKeyAction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.XlsImExporter;
@@ -44,8 +45,8 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
   private Path xlsFile= Paths.get("i18n.xlsx");
 
 
-  @Option(names = {"-d", "--deleteEmptyProperties"}, description= "Whether to delete properties that have no value in the XLS(X) file. default: ${DEFAULT-VALUE})")
-  private boolean deleteEmptyProperties;
+  @Option(names = {"-m", "--missingKeyAction"}, description= "What to do with keys that exist in the .properties file, but not in the XLS(X) that is about to be imported. default: ${DEFAULT-VALUE})")
+  private MissingKeyAction missingKeyAction= MissingKeyAction.NOTHING;
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -59,8 +60,8 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
       this.xlsFile= Paths.get(propsFromFile.getProperty(KiltProperty.XLS_FILE.getKey()));
     }
 
-    if (propsFromFile.containsKey(KiltProperty.DELETE_EMPTY_PROPERTIES.getKey())) {
-      this.deleteEmptyProperties= Boolean.valueOf(propsFromFile.getProperty(KiltProperty.DELETE_EMPTY_PROPERTIES.getKey()));
+    if (propsFromFile.containsKey(KiltProperty.MISSING_KEY_ACTION.getKey())) {
+      this.missingKeyAction= MissingKeyAction.valueOf(propsFromFile.getProperty(KiltProperty.MISSING_KEY_ACTION.getKey()).toUpperCase());
     }
   }
 
@@ -84,7 +85,7 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
     XlsImExporter.importXls(propertiesRootDirectory,
                                 this.xlsFile.toFile(),
                                 this.propertyFileEncoding,
-                                this.deleteEmptyProperties);
+                                this.missingKeyAction);
   }
 
 
@@ -99,7 +100,7 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
     sb.append("i18nExcludes            = ").append(Joiner.on(", ").join(this.i18nExcludes)).append("\n");
     sb.append("propertyFileEncoding    = ").append(this.propertyFileEncoding).append("\n");
     sb.append("xlsFile                 = ").append(this.xlsFile.toAbsolutePath()).append("\n");
-    sb.append("deleteEmptyProperties   = ").append(this.deleteEmptyProperties).append("\n");
+    sb.append("missingKeyAction        = ").append(this.missingKeyAction).append("\n");
 
     System.out.println(sb.toString());
   }

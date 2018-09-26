@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.internal;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -24,9 +23,7 @@ import com.google.common.collect.SetMultimap;
 import java.io.File;
 import java.util.Map;
 import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
-import org.omnaest.utils.propertyfile.PropertyFile;
-import org.omnaest.utils.propertyfile.content.PropertyMap;
-import org.omnaest.utils.propertyfile.content.element.Property;
+import de.poiu.apron.PropertyFile;
 
 
 /**
@@ -140,16 +137,11 @@ public class ResourceBundleContent {
       final Language lang = entry.getKey();
       final File file = entry.getValue();
 
-      final PropertyFile propertyFile = new PropertyFile(file);
+      final PropertyFile propertyFile = PropertyFile.from(file);
       //FIXME: Set encoding
       //propertyFile.setFileEncoding(fileEncoding);
-      propertyFile.setUseJavaStyleUnicodeEscaping(true);
-      propertyFile.load();
-      final PropertyMap propertyMap = propertyFile.getPropertyFileContent().getPropertyMap();
-
-      propertyMap.forEach((String key, Property value) -> {
-
-        translations.put(key, new Translation(lang, Joiner.on(",").join(value.getValueList())));
+      propertyFile.toMap().forEach((String key, String value) -> {
+        translations.put(key, new Translation(lang, value));
       });
     }
 

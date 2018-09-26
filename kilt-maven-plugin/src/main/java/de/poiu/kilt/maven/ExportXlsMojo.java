@@ -27,6 +27,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.internal.XlsImExporter;
+import java.nio.charset.Charset;
+import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -78,7 +80,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
       XlsImExporter.exportXls(this.propertiesRootDirectory.toPath(),
                                 propertyFileSet,
-                                this.propertyFileEncoding,
+                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
                                 file.toPath());
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);

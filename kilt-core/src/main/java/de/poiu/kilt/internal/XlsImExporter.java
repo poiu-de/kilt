@@ -15,10 +15,10 @@
  */
 package de.poiu.kilt.internal;
 
-import de.poiu.kilt.facade.creation.BundleNormalizer;
+import de.poiu.apron.MissingKeyAction;
+import de.poiu.apron.Options;
 import java.io.File;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,13 +27,29 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
-import org.omnaest.utils.propertyfile.PropertyFile;
-import org.omnaest.utils.propertyfile.content.PropertyFileContent;
-import org.omnaest.utils.propertyfile.content.element.Property;
+import de.poiu.apron.PropertyFile;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.Objects;
 
 
 public class XlsImExporter {
   private static final Logger LOGGER= LogManager.getLogger();
+
+  private static class RememberingPropertyFile {
+    private final File actualFile;
+    private final PropertyFile propertyFile;
+
+    public RememberingPropertyFile(final File file, final PropertyFile propertyFile) {
+      this.actualFile= file;
+      this.propertyFile= propertyFile;
+    }
+
+    public static RememberingPropertyFile of(final File file, final PropertyFile propertyFile) {
+      return new RememberingPropertyFile(file, propertyFile);
+    }
+  }
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -48,16 +64,22 @@ public class XlsImExporter {
   // Methods
 
   public static void importXls(final Path propertiesRootDirectory,
-                                 final File file,
-                                 final String fileEncoding,
-                                 final boolean deletePropertiesWithBlankValue) {
+                                 final File xlsFile,
+                                 final Charset propertyFileEncoding,
+                                 final MissingKeyAction missingKeyAction) {
+    Objects.requireNonNull(propertiesRootDirectory);
+    Objects.requireNonNull(xlsFile);
+
+    final Options apronOptions= Options.create()
+      .with(propertyFileEncoding != null ? propertyFileEncoding : UTF_8)
+      .with(missingKeyAction);
 
     // read XLS file
-    final XlsFile xlsFile= new XlsFile(file);
-    final Map<I18nBundleKey, Collection<Translation>> content= xlsFile.getContent();
+    final XlsFile xlsFileObject= new XlsFile(xlsFile);
+    final Map<I18nBundleKey, Collection<Translation>> content= xlsFileObject.getContent();
 
     // stores the mapping of resource bundle basenames and languages to the corresponding property files
-    final Map<String, Map<Language, PropertyFile>> bundleFileMapping= new LinkedHashMap<>();
+    final Map<String, Map<Language, RememberingPropertyFile>> bundleFileMapping= new LinkedHashMap<>();
 
     // FIXME: Sort by bundleBasename and language? In that case we only have to have 1 property file open at a time
     for (final Map.Entry<I18nBundleKey, Collection<Translation>> entry : content.entrySet()) {
@@ -66,7 +88,6 @@ public class XlsImExporter {
       final String propertyKey= bundleKey.getKey();
       final Collection<Translation> translations= entry.getValue();
 
-      //FIXME: Auf diese Weise werden gelöschte Schlüssel nicht entfernt. Aber wäre das sinnvoll? Nur, wenn vom Benutzer explizit verlangt.
       // for each bundle…
       for (final Translation translation : translations) {
         if (!bundleFileMapping.containsKey(bundleBasename)) {
@@ -76,34 +97,22 @@ public class XlsImExporter {
         if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
           final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleBasename, translation.getLang());
           //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
-          final PropertyFile propertyFile= new PropertyFile(fileForBundle);
-          if (fileEncoding != null) {
-            propertyFile.setFileEncoding(fileEncoding);
-          }
-          propertyFile.setUseJavaStyleUnicodeEscaping(true);
-          propertyFile.load();
-          bundleFileMapping.get(bundleBasename).put(translation.getLang(), propertyFile);
+          final PropertyFile propertyFile= new PropertyFile();
+          bundleFileMapping.get(bundleBasename).put(translation.getLang(), RememberingPropertyFile.of(fileForBundle, propertyFile));
         }
 
-        final PropertyFile propertyFile= bundleFileMapping.get(bundleBasename).get(translation.getLang());
-        final PropertyFileContent propertyFileContent= propertyFile.getPropertyFileContent();
-        final Property defaultProperty= new Property();
-        defaultProperty.setKey(propertyKey);
-        final Property property= propertyFileContent.getPropertyMap().getOrDefault(propertyKey, defaultProperty);
-        if (!property.getValueList().equals(Arrays.asList(translation.getValue()))) {
-          property.clearValues();
-          property.addValue(translation.getValue());
-        }
+        final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
+        rpf.propertyFile.setValue(propertyKey, translation.getValue());
       }
     }
 
     //now write the property files back to disk
     //FIXME: Könnte man das nicht oben in der Liste öffnen und schließen, um nicht alle gleichzeitig offen zu haben?
-    bundleFileMapping.values().forEach((Map<Language, PropertyFile> langPropMap) -> {
-      langPropMap.values().forEach((PropertyFile propertyFile) -> {
+    bundleFileMapping.values().forEach((Map<Language, RememberingPropertyFile> langPropMap) -> {
+      langPropMap.values().forEach((RememberingPropertyFile rpf) -> {
         // only write files if they have some content (avoid creating unwanted empty files for unsupported locales)
-        if (propertyFile.getPropertyFileContent().size() > 0) {
-          propertyFile.store();
+        if (rpf.propertyFile.propertiesSize()> 0) {
+          rpf.propertyFile.saveTo(rpf.actualFile, apronOptions);
         }
       });
     });
@@ -112,8 +121,9 @@ public class XlsImExporter {
 
   public static void exportXls(final Path propertiesRootDirectory,
                                final Set<File> resourceBundleFiles,
-                               final String propertyFileEncoding,
+                               final Charset propertyFileEncoding,
                                final Path xlsFilePath) {
+    //FIXME: Charset wird gar nicht genutzt!
     final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
     final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 

@@ -20,7 +20,7 @@ import java.text.Normalizer;
 import java.util.Map;
 import static java.util.Objects.requireNonNull;
 import java.util.logging.*;
-import static de.poiu.kilt.util.Objects.requireNonWhitespace;
+import de.poiu.fez.Require;
 
 /**
  * Normalizes key and bundle names to valid strings to be used as class
@@ -71,7 +71,7 @@ public class BundleNormalizer {
    */
   public static String toClassName(String s) {
     requireNonNull(s, "parameter s may not be null or empty.");
-    requireNonWhitespace(s, "parameter s may not be null or empty.");
+    Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
 
@@ -115,7 +115,7 @@ public class BundleNormalizer {
    */
   public static String toFieldName(String s) {
     requireNonNull(s, "parameter s may not be null or empty.");
-    requireNonWhitespace(s, "parameter s may not be null or empty.");
+    Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
 
@@ -159,7 +159,7 @@ public class BundleNormalizer {
    */
   public static String toConstName(String s) {
     requireNonNull(s, "parameter s may not be null or empty.");
-    requireNonWhitespace(s, "parameter s may not be null or empty.");
+    Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
 
@@ -189,7 +189,7 @@ public class BundleNormalizer {
    */
   public static String toBundleName(String s) {
     requireNonNull(s, "parameter s may not be null or empty.");
-    requireNonWhitespace(s, "parameter s may not be null or empty.");
+    Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     return s.replaceAll("\\/", ".");
   }

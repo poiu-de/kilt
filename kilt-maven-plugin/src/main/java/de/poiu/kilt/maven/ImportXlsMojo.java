@@ -16,6 +16,7 @@
 package de.poiu.kilt.maven;
 
 import com.google.common.collect.ImmutableSet;
+import de.poiu.apron.MissingKeyAction;
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.internal.XlsImExporter;
+import java.nio.charset.Charset;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -52,8 +54,19 @@ public class ImportXlsMojo extends AbstractKiltMojo {
   private String xlsFileName;
 
 
-  @Parameter(property = "deleteEmptyProperties", defaultValue = "false")
-  private boolean deleteEmptyProperties;
+  /**
+   * How to handle key-value-pairs that exist in the .properties file, but not in the XLS(S) file
+   * to import.
+   * <p>
+   * The following values are valid:
+   * <ul>
+   *  <li>NOTHING: Leave exising key-value-pairs as they are</li>
+   *  <li>DELETE: Delete the missing key-value-pairs</li>
+   *  <li>COMMENT: Comment out the missing key-value-pairs</li>
+   * </ul>
+   */
+  @Parameter(property = "missingKeyAction", defaultValue = "NOTHING")
+  private MissingKeyAction missingKeyAction;
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -71,6 +84,8 @@ public class ImportXlsMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
+    System.out.println("MIKIAK: "+this.missingKeyAction);
+
     this.getLog().info("Importing translated properties from XLS.");
 
     final File file = new File(this.xlsOutputDirectory, this.xlsFileName);
@@ -82,8 +97,8 @@ public class ImportXlsMojo extends AbstractKiltMojo {
 
     XlsImExporter.importXls(propertiesRootDirectory.toPath(),
                                 file,
-                                this.propertyFileEncoding,
-                                this.deleteEmptyProperties);
+                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
+                                this.missingKeyAction);
 
     this.getLog().info("...done");
   }

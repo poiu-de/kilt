@@ -29,6 +29,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import de.poiu.kilt.internal.XlsImExporter;
+import java.nio.charset.Charset;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -50,7 +51,7 @@ public class ExportXlsTask extends Task {
 
   private boolean verbose= false;
 
-  private String propertyFileEncoding;
+  private Charset propertyFileEncoding;
 
   private final List<FileSet> fileSetList = new ArrayList<>();
 
@@ -163,7 +164,11 @@ public class ExportXlsTask extends Task {
 
 
   public void setPropertyFileEncoding(String fileEncoding) {
-    this.propertyFileEncoding = fileEncoding;
+    if (fileEncoding != null) {
+      this.propertyFileEncoding= Charset.forName(fileEncoding);
+    } else {
+      this.propertyFileEncoding= null;
+    }
   }
 
 
