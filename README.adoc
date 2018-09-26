@@ -8,12 +8,15 @@ Marco Herrn <marco@mherrn.de>
 :license-link: ./LICENSE-2.0.html
 :kilt-version: 0.3.0
 
+[.float-group]
+--
+image:docs/kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
+role="right", width="75"]
 **K**een **I**18n **L**10n and **T**9n
 
 Create an XLS(X) sheet from Java localization resource bundles and vice versa.
+--
 
-image:docs/kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
-width=100]
 
 
 What is Kilt
