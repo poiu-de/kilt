@@ -9,9 +9,9 @@
    id="svgroot">
 
 <g id="kilt">
-  <polygon id="outer-line" stroke="blue" stroke-width="1" fill="none" points="2,0 0,20 20,20 18,0 16,0 16,8 4,8 4,0" />
-  <polygon id="inner-line" stroke="blue" stroke-width="1" fill="none" points="6,0 6,6 14,6 14,0" />
-  <polyline id="shutter"   stroke="blue" stroke-width="1" fill="none" points="6,0 10,4 14,0" />
+  <polygon id="outer-line" stroke="blue" stroke-width="1" fill="none" points="2,0 0,20 20,20 18,0 15,0 15,8 5,8 5,0" />
+  <polygon id="inner-line" stroke="blue" stroke-width="1" fill="none" points="5,0 5,8 15,8 15,0" />
+  <polyline id="shutter"   stroke="blue" stroke-width="1" fill="none" points="5,0 10,4 15,0" />
 </g>
 
 </svg>
