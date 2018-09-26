@@ -388,9 +388,9 @@ they apply.
                                files. Prior to Java 9 the default encoding in
                                Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}           
 | xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}
-| deleteEmptyProperties      | Whether to delete keys from the target files
-                               that are existent in the target file, but not
-                               in the input file(s).                            | {n}         |  {y}        | {n}
+| missingKeyAction           | What to to if the target file contains key-value
+                               pairs that do not exist in the input file.   
+                               Possible values: DELETE, COMMENT, NOTHING        | {n}         |  {y}        | {n}
 | facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}           
 | generatedPackage           | The package name into which to generate the
                                Java enum facade classes.                        | {n}         |  {n}        | {y}           
