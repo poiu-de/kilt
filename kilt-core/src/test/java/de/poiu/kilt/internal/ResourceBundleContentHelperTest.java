@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.internal;
 
-import de.poiu.kilt.internal.ResourceBundleContentHelper;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Path;
@@ -23,9 +22,9 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import org.junit.Test;
-import de.poiu.kilt.internal.Language;
 
 
 /**
