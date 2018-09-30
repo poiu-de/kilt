@@ -79,9 +79,9 @@ public class ExportXlsMojo extends AbstractKiltMojo {
       final File file = new File(this.xlsOutputDirectory, this.xlsFileName);
 
       XlsImExporter.exportXls(this.propertiesRootDirectory.toPath(),
-                                propertyFileSet,
-                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
-                                file.toPath());
+                              propertyFileSet,
+                              this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
+                              file.toPath());
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);
     }

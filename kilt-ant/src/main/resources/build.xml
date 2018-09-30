@@ -42,6 +42,22 @@
 		</classpath>
 	</taskdef>
 
+	<taskdef name="reformat" classname="de.poiu.kilt.ant.ReformatTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
+	<taskdef name="reorder" classname="de.poiu.kilt.ant.ReorderTask">
+		<classpath>
+      <fileset dir="lib">
+        <include name="*.jar" />
+      </fileset>
+		</classpath>
+	</taskdef>
+
 	<!-- INITIALIZE -->
 	<property file="kilt.properties" />
 
@@ -54,6 +70,7 @@
     <exportXls
       xlsfilename="${xlsFilename}"
       propertyFileEncoding="${propertyFileEncoding}"
+      verbose="${verbose}"
     >
 
 			<fileset dir="${propertiesRootDirectory}">
@@ -67,9 +84,9 @@
       xlsFileName="${xlsFilename}"
       propertyFileEncoding="${propertyFileEncoding}"
       deleteEmptyProperties="${deleteEmptyProperties}"
+      verbose="${verbose}"
      />
 	</target>
-
 
 	<target name="create-facade" description="Creates the I18n enum facades for type safe access to localized messages.">
     <createFacade
@@ -79,6 +96,7 @@
       facadeAccessorClassName="${facadeAccessorClassName}"
       facadeGenerationDir="${facadeGenerationDir}"
       propertyFileEncoding="${propertyFileEncoding}"
+      verbose="${verbose}"
     >
 
       <fileset dir="${propertiesRootDirectory}">
@@ -88,4 +106,34 @@
     </createFacade>
 	</target>
 
+	<target name="reformat" description="Reformats the key-value pairs a set of java i18n .properties files.">
+		<reformat
+      propertyFileEncoding="${propertyFileEncoding}"
+      format="${format}"
+      reformatKeysAndValues="${reformatKeysAndValues}"
+      verbose="${verbose}"
+     >
+
+      <fileset dir="${propertiesRootDirectory}">
+        <include name="${i18nIncludes}" />
+        <exclude name="${i18nExcludes}" />
+      </fileset>
+   </reformat>
+	</target>
+
+	<target name="reorder" description="Reorders the key-value pairs in a set of java i18n .properties files.">
+		<reorder
+      propertyFileEncoding="${propertyFileEncoding}"
+      byKey="${byKey}"
+      template="${template}"
+      attachCommentsTo="${attachCommentsTo}"
+      verbose="${verbose}"
+     >
+
+      <fileset dir="${propertiesRootDirectory}">
+        <include name="${i18nIncludes}" />
+        <exclude name="${i18nExcludes}" />
+      </fileset>
+   </reorder>
+	</target>
 </project>

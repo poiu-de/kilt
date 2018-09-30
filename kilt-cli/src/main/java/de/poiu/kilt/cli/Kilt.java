@@ -35,7 +35,14 @@ import picocli.CommandLine.HelpCommand;
          mixinStandardHelpOptions = true,
          versionProvider = ManifestVersionProvider.class,
          description= "@|bold K|@lever @|bold I|@18n @|bold L|@10n @|bold T|@9n",
-         subcommands = {HelpCommand.class, KiltExportXls.class, KiltImportXls.class, KiltCreateFacade.class})
+         subcommands = {
+           HelpCommand.class,
+           KiltExportXls.class,
+           KiltImportXls.class,
+           KiltCreateFacade.class,
+           KiltReformat.class,
+           KiltReorder.class,
+         })
 public class Kilt implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();

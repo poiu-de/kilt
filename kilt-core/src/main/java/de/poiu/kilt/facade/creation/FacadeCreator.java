@@ -38,6 +38,7 @@ import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.Translation;
+import org.apache.logging.log4j.Level;
 
 
 /**
@@ -109,10 +110,16 @@ public class FacadeCreator {
 
     // now add the actual enum constants
     resourceContent.getContent().asMap().forEach((key, translations) -> {
+      if (key != null && !key.trim().isEmpty())  {
       bundleEnumBuilder.addEnumConstant(toEnumConstName(key),
                                         TypeSpec.anonymousClassBuilder("$S", key)
                                                 .addJavadoc(buildJavadoc(key, translations))
                                                 .build());
+      } else {
+        LOGGER.log(Level.WARN,
+                   "Invalid key-value pair in bundle {}. Found translation for an empty key: {}. "
+                     + "This will _not_ be included in the facade.", bundleBaseName, translations);
+      }
     });
 
     // build and return the bundleEnum typeSpec
