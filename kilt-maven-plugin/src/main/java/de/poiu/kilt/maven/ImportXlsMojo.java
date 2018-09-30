@@ -96,9 +96,9 @@ public class ImportXlsMojo extends AbstractKiltMojo {
     //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
 
     XlsImExporter.importXls(propertiesRootDirectory.toPath(),
-                                file,
-                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
-                                this.missingKeyAction);
+                            file,
+                            this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
+                            this.missingKeyAction);
 
     this.getLog().info("...done");
   }

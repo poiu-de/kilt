@@ -29,26 +29,15 @@ import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
 import de.poiu.apron.PropertyFile;
 import java.nio.charset.Charset;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.util.Objects;
 
 
 public class XlsImExporter {
   private static final Logger LOGGER= LogManager.getLogger();
 
-  private static class RememberingPropertyFile {
-    private final File actualFile;
-    private final PropertyFile propertyFile;
-
-    public RememberingPropertyFile(final File file, final PropertyFile propertyFile) {
-      this.actualFile= file;
-      this.propertyFile= propertyFile;
-    }
-
-    public static RememberingPropertyFile of(final File file, final PropertyFile propertyFile) {
-      return new RememberingPropertyFile(file, propertyFile);
-    }
-  }
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -97,7 +86,7 @@ public class XlsImExporter {
           final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleBasename, translation.getLang());
           //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
           final PropertyFile propertyFile= new PropertyFile();
-          bundleFileMapping.get(bundleBasename).put(translation.getLang(), RememberingPropertyFile.of(fileForBundle, propertyFile));
+          bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
         }
 
         final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
