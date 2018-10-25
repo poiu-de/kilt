@@ -203,4 +203,36 @@ public class I18n {
       return bundle.getString(key);
     }
   }
+
+
+  /**
+   * Checks whether the given resource bundle key contains a value in the given resource bundle.
+   *
+   * @param bundleKey the bundle key for which to return the translation
+   * @return whether the key contains a value
+   */
+  public boolean contains(final KiltEnumFacade bundleKey){
+    Objects.requireNonNull(bundleKey);
+    final ResourceBundle bundle= this.locale.isPresent()
+                                 ? ResourceBundle.getBundle(bundleKey.getBasename(), this.locale.get())
+                                 : ResourceBundle.getBundle(bundleKey.getBasename());
+    return bundle.containsKey(bundleKey.getKey());
+  }
+
+
+  /**
+   * Checks whether the given key contains a value in the given resource bundle.
+   *
+   * @param bundleName the basename of the bundle in which to search for the key
+   * @param key the key to check
+   * @return whether the key contains a value
+   */
+  public boolean contains(final String bundleName, final String key){
+    Objects.requireNonNull(bundleName);
+    Objects.requireNonNull(key);
+    final ResourceBundle bundle= this.locale.isPresent()
+                                 ? ResourceBundle.getBundle(bundleName, this.locale.get())
+                                 : ResourceBundle.getBundle(bundleName);
+    return bundle.containsKey(key);
+  }
 }
