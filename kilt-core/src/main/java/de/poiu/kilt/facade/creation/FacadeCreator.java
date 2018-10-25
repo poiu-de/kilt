@@ -38,7 +38,6 @@ import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.Translation;
-import de.poiu.kilt.facade.KiltEnumFacade;
 
 
 /**
@@ -81,7 +80,7 @@ public class FacadeCreator {
               .addMember("date", "$S", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
               .build())
             .addModifiers(Modifier.PUBLIC)
-            .addSuperinterface(ClassName.get(KiltEnumFacade.class))
+            .addSuperinterface(ClassName.get("de.poiu.kilt.internal.facade", "KiltEnumFacade"))
             // BASENAME of the bundle as static const
             .addField(FieldSpec.builder(String.class, "BASENAME", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                     .initializer("$S", bundleBaseName)
