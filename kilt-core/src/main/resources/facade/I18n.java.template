@@ -207,6 +207,52 @@ public class ${ACCESSOR_CLASS_NAME} {
 
 
   /**
+   * Returns the translation for a resource bundle key or the default if the key does not contain a
+   * value for the current locale.
+   *
+   * @param bundleKey the bundle key for which to return the translation
+   * @param defaultValue the value to return when no translation can be found for the given bundle key
+   * @return the translation for the bundle key or the given default value
+   *          if no translation can be found
+   */
+  public String getOrDefault(final KiltEnumFacade bundleKey, final String defaultValue){
+    Objects.requireNonNull(bundleKey);
+    final ResourceBundle bundle= this.locale.isPresent()
+                                 ? ResourceBundle.getBundle(bundleKey.getBasename(), this.locale.get())
+                                 : ResourceBundle.getBundle(bundleKey.getBasename());
+    if (bundle.containsKey(bundleKey.getKey())){
+      return bundle.getString(bundleKey.getKey());
+    }else{
+      return defaultValue;
+    }
+  }
+
+
+  /**
+   * Returns the translation for a resource bundle key or the default if the key does not contain a
+   * value for the current locale.
+   *
+   * @param bundleName the bundle in which to search for the translated key
+   * @param key the key for which to return the translation
+   * @param defaultValue the value to return when no translation can be found for the given bundle key
+   * @return the translation for the bundle key or the given default value
+   *          if no translation can be found
+   */
+  public String getOrDefault(final String bundleName, final String key, final String defaultValue){
+    Objects.requireNonNull(bundleName);
+    Objects.requireNonNull(key);
+    final ResourceBundle bundle= this.locale.isPresent()
+                                 ? ResourceBundle.getBundle(bundleName, this.locale.get())
+                                 : ResourceBundle.getBundle(bundleName);
+    if (bundle.containsKey(key)){
+      return bundle.getString(defaultValue);
+    }else{
+      return defaultValue;
+    }
+  }
+
+
+  /**
    * Checks whether the given resource bundle key contains a value in the given resource bundle.
    *
    * @param bundleKey the bundle key for which to return the translation
