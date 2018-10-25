@@ -24,7 +24,11 @@ Of course kilt has bugs. If you find them please file an https://github.com/hupf
 Before writing some code you should definitely <<Contact,contact us>> before writing anything. 
 This allows us to find out whether your contribution can be included in kilt and possibly saves you some fruitless work.
 
-When writing some code please follow the https://google.github.io/styleguide/javaguide.html[google conventions]. 
+When writing some code please follow our https://hupfdule.github.io/styleguide/javaguide.html[code conventions].
+
+Please structure your commits logically and respect the original formatting.
+Do not change formattings unrelated to any functional changes, even if the existing formatting violates the styleguide.
+To do such formatting changes, please prepare a separate pull request.
 
 == Contact
 
