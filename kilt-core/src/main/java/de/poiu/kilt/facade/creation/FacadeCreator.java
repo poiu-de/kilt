@@ -38,6 +38,9 @@ import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.Translation;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import org.apache.logging.log4j.Level;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -220,7 +223,8 @@ public class FacadeCreator {
     try(
       final InputStream in= FacadeCreator.class.getResourceAsStream("/facade/KiltEnumFacade.java.template");
       final BufferedReader reader= new BufferedReader(new InputStreamReader(in, UTF_8));
-      final PrintWriter writer= new PrintWriter(targetDir.resolve("KiltEnumFacade.java").toFile(), UTF_8);
+      final OutputStream out= new FileOutputStream(targetDir.resolve("KiltEnumFacade.java").toFile());
+      final PrintWriter writer= new PrintWriter(new OutputStreamWriter(out, UTF_8));
       ) {
       String line;
       while ((line= reader.readLine()) != null) {
