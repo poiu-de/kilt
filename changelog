@@ -1,6 +1,13 @@
 Kilt changelog
 ==============
 
+Version 0.4.0 - 2018-11-09
+--------------------------
+
+ - Provide new commands to reformat and reorder resource bundles
+ - Avoid error on values without key
+
+
 Version 0.3.0 - 2018-09-27
 --------------------------
 
