@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.maven;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import de.poiu.kilt.reformatting.KiltReformatter;
 import java.io.File;
