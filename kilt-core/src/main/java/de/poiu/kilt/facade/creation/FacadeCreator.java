@@ -40,6 +40,8 @@ import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.Translation;
 import org.apache.logging.log4j.Level;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 /**
  * This class allow the creation of the I18n Facade(s) for java localization resource
@@ -216,9 +218,9 @@ public class FacadeCreator {
 
     // then copy the I18nBundleKey class
     try(
-      final InputStream in= this.getClass().getResourceAsStream("/facade/KiltEnumFacade.java.template");
-      final BufferedReader reader= new BufferedReader(new InputStreamReader(in));
-      final PrintWriter writer= new PrintWriter(targetDir.resolve("KiltEnumFacade.java").toFile());
+      final InputStream in= FacadeCreator.class.getResourceAsStream("/facade/KiltEnumFacade.java.template");
+      final BufferedReader reader= new BufferedReader(new InputStreamReader(in, UTF_8));
+      final PrintWriter writer= new PrintWriter(targetDir.resolve("KiltEnumFacade.java").toFile(), UTF_8);
       ) {
       String line;
       while ((line= reader.readLine()) != null) {

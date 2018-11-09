@@ -19,23 +19,16 @@ import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.ApronOptions;
 import de.poiu.apron.PropertyFile;
 import de.poiu.apron.UnicodeHandling;
-import de.poiu.apron.entry.BasicEntry;
-import de.poiu.apron.entry.Entry;
-import de.poiu.apron.entry.PropertyEntry;
-import de.poiu.apron.escaping.EscapeUtils;
 import de.poiu.apron.reformatting.AttachCommentsTo;
+import de.poiu.apron.reformatting.InvalidFormatException;
 import de.poiu.apron.reformatting.ReformatOptions;
 import de.poiu.apron.reformatting.Reformatter;
 import de.poiu.kilt.internal.RememberingPropertyFile;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import javax.annotation.Nullable;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -72,22 +65,22 @@ public class KiltReformatter {
    * <p>
    * The given format string must conform to the following specification:
    * <ul>
-   *  <li>It <i>may</i> contain some leading whitespace before the key.</i>
+   *  <li>It <i>may</i> contain some leading whitespace before the key.</li>
    *  <li>It <i>must</i> contain the string <code>&lt;key&gt;</code> to indicate the position of the
    *      properties key (case doesn't matter)</li>
    *  <li>It <i>must</i> contain a separator char (either a colon or an equals sign) which <i>may</i>
-   *      be surrounded by some whitespace characters.</i>
+   *      be surrounded by some whitespace characters.</li>
    *  <li>It <i>must</i> contain the string <code>&lt;value&gt;</code> to indicate the position of the
    *      properties value (case doesn't matter)</li>
    *  <li>It <i>must</i> contain the line ending char(s) (either <code>\n</code> or <code>\r</code>
-   *      or <code>\r\n</code>)</i>
+   *      or <code>\r\n</code>)</li>
    * </ul>
    * The allowed whitespace characters are the space character, the tab character and the linefeed character.
    * <p>
    * Therefore a typical format string is
    * <pre>
    * &lt;key&gt; = &lt;value&gt;\n
-   * <pre>
+   * </pre>
    * for
    * <ul>
    *  <li>no leading whitespace</li>
@@ -203,5 +196,4 @@ public class KiltReformatter {
       rpf.propertyFile.overwrite(rpf.actualFile, APRON_OPTIONS.with(charset));
     }
   }
-
 }
