@@ -1,0 +1,113 @@
+- (mid) Extra Parameter für reorder, um Reihenfolge der Dateien anzugeben
+- (low) RememberingPropertyFile nach Apron verschieben? Bzw. gleich
+        ins PropertyFile rein?
+- (low) Charset-Behandlung vereinheitlichen. Import/Export übergibt null
+  und lässt Apron entscheiden. Reformat/Reorder übergibt UTF-8, wenn nichts
+  angegeben wurde.
+- (low) Trennen von Kilt-Core in kleinere Module
+        - kilt-core-xls
+        - kilt-core-basic
+        - kilt-core-???
+        Damit könnte man die Abhängigkeiten reduzieren. Gerade poi ist halt
+        groß
+- (low) Fassade für Zugriff auf alle öffentlichen Methoden erstellen?
+        z.B.: public class Kilt
+                - exportXls
+                - importXls
+                - createFacade
+                - reformat
+                - reorder
+- (mid) CLI-Optionen (vlt. auch woanders in 2 Varianten erlauben:
+        CamelCase und mit Bindestrich:
+        --attachCommentsTo
+        --attach-comments-to
+- (low) Sortiere Javadoc bei facade-creation
+        Zur Zeit: nl,fr,en,<default>, besser <default>,en,fr,nl
+- (low) In Javadoc bei facade-creation statt "" "<default>" schreiben
+- (low) --verbose gestaffelt anbieten? So dass man auch DEBUG- und TRACE-
+        Ausgaben sehen kann.
+- (hi)  Die Reihenfolge beim Include wird nicht beachtet.
+        Das sollte eigentlich egal sein, ist aber relevant für das
+        Reordering.
+        - Beim Reodering prüfen, dass keine Wildcardas enthalten sind, die
+          nicht auf eine eindeutige Datei verweisen?
+- (mid) autocompletion für CLI
+- (hi)  Be more flexible about --include/--exclude parameters
+        It should be possible to give them including or excluding the
+        propertiesRootDirectory
+- (hi)  Die ganzen FIXMEs und TODOs im Code abarbeiten.
+- (hi)  Ab Java (oder 9) brauch ich javax.annotations.
+        Sollte das bei kilt-runtime mit eingebunden werden?
+        Muss in der Doku aber mit erwähnt werden...
+        Vielleicht als Option erlauben, die Annotationen zu unterdrücken...
+- (hi)  example-kilt erzeugt ein XLS mit bundlePrefix ohne /i18n. Warum?
+        Passiert das auch bei CLI und ANT?
+- (low) Generierungszeitstempel in XLS-Datei schreiben und abprüfen
+        der default sein)
+        Als extra kilt-info sheet (exported on, exported with, exported by, kilt-url)
+- (low) Dependencies reduzieren (dazu eventuell Klassen aus manchen
+        Packages extrahieren)
+        Sonatype OSS Parent auch rausschmeißen. Ist eh deprecated.
+- (mid) geschickte Lösung für die Default-Language finden (die hat keine
+        Language, aber evlt. gibt es noch ne andere Language)
+- (low) Lösung finden, wie man sauber aus Maven heraus property-files und
+        XLS anpassen kann. Beide fungieren mal als Quelle, mal als Ziel.
+        Wie macht man das am saubersten in maven?
+- (low) Charset selbstständig erkennen (bei Propertyfiles per juniversalchardet, aber wie bei XLS?)
+        -> XLS brauch ich offenbar nicht. Ist nicht vorgesehen.
+- (low) maven compiler target selbständig erkennen, um ab Java 9 UTF-8 als default zu setzen, sonst latin1
+- (low) Bug in LibreOffice führt zu Bug in Kilt:
+        Löscht man eine Zeile mitten in einem XLS(X) in LibreOffice, dann
+        springt die MaxRow auf einen ganz hohen Wert. Auch mit den Columns
+        stimmt dann was nicht. Folge: import-xls klappt nicht.
+        Das muss getestet und gefixt werden.
+        Excel hat dieses Problem nicht, daher ist der Druck nicht ganz so
+        hoch.
+- (low) OpenOffice/LibreOffice als Tabellenkalkulationsformat unterstützen
+- (low) Self-contained application anbieten
+- (low) Modularisieren (Jigsaw)
+- (low) Parameter UnicodeHandling unterstützen?
+
+
+
+DOKU
+====
+
+README
+------
+ * Kurzbeschreibung
+ * Beschreibung
+   * Vorteile:
+     - Erleichterter Austausch von Übersetzungsdateien (für Übersetzer statt Entwickler)
+     - type-safe access to i18ned strings
+ * Prerequisites
+ * Installation
+ * Usage (short)
+ * Lizenz
+ -> Documentation
+    --------------
+      * Incoporate Maven Plugin
+      * Use Standalone Ant-Taks
+      * Create XLS from Resource Bundles
+      * Update Resource Bundles from XLS
+      * Facade Creation for Resource Bundles
+        (Info, dass völlig anders, als in vergangenen Releases)
+        (Enum Facades + I18n accessor class)
+        * Enum Facades
+        * Generation of I18n accessor class (only when necessary)
+
+
+andere Struktur:
+----------------
+  - Einleitung
+  - Funktionen
+    - Export XLS
+    - Import XLS
+    - Create Facade
+  - Usage
+    - maven
+    - ant
+    - cli
+  - Parameters
+  - License
+
