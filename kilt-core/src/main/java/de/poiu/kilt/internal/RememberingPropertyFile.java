@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * Wraps a {@link PropertyFile and a corresponding {@link File} object.
+ * Wraps a {@link PropertyFile} and a corresponding {@link File} object.
  *
  * @author mherrn
  */
