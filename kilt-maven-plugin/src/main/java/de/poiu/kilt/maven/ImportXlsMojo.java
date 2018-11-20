@@ -94,9 +94,14 @@ public class ImportXlsMojo extends AbstractKiltMojo {
     }
 
     //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
+    //FIXME: Das ist noch nicht richtig rund. Damit kann ich nichts importieren, was nicht schon da ist
+    //       Sollte ich besser den String-Parameter direkt übergeben?
+    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+
 
     XlsImExporter.importXls(propertiesRootDirectory.toPath(),
                             file,
+                            propertyFileSet,
                             this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
                             this.missingKeyAction);
 

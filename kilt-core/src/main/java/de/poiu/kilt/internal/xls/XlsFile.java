@@ -44,8 +44,10 @@ import de.poiu.kilt.internal.Translation;
 import de.poiu.kilt.internal.XlsImExporter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -203,6 +205,30 @@ public class XlsFile {
     }
 
     return sb;
+  }
+
+
+  /**
+   * Returns a 2-dimensional list with the contents of this XlsFile.
+   * The result contains the rows which itself contain the content of the cells of that row.
+   *
+   * @return
+   */
+  public List<List<String>> getContentMatrix() {
+    final List<List<String>> rows= new ArrayList<>();
+
+    // then print the content with a leading column of the rows indexes
+    for (int rowId= this.i18nSheet.getFirstRowNum(); rowId < this.i18nSheet.getLastRowNum() + 1; rowId++) {
+      final Row row= this.i18nSheet.getRow(rowId);
+      final List<String> resultRow= new ArrayList<>();
+      rows.add(resultRow);
+      for (int colId= row.getFirstCellNum(); colId < row.getLastCellNum(); colId++) {
+        final Cell cell= row.getCell(colId);
+        resultRow.add(cell != null ? cell.getStringCellValue() : "");
+      }
+    }
+
+    return rows;
   }
 
 

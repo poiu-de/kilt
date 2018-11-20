@@ -87,10 +87,12 @@ public class ImportXlsTask extends Task {
     } else {
       this.log("Write properties from XLS file back to property files...");
 
+      final Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
       File file = new File(this.xlsFile);
       if (file.exists()) {
         XlsImExporter.importXls(Paths.get(propertiesRootDirectory),
                                  file,
+                                 propertyFileSet,
                                  this.propertyFileEncoding,
                                  this.missingKeyAction);
       }

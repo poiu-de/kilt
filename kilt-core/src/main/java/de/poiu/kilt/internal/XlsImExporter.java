@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.util.Objects;
+import org.apache.logging.log4j.Level;
 
 
 public class XlsImExporter {
@@ -53,10 +54,13 @@ public class XlsImExporter {
 
   public static void importXls(final Path propertiesRootDirectory,
                                  final File xlsFile,
+                                 final Set<File> onlyResourceBundleFilesToImport,
                                  final Charset propertyFileEncoding,
                                  final MissingKeyAction missingKeyAction) {
     Objects.requireNonNull(propertiesRootDirectory);
     Objects.requireNonNull(xlsFile);
+
+    System.out.println("HURZ: "+onlyResourceBundleFilesToImport);
 
     final ApronOptions apronOptions= ApronOptions.create()
       .with(propertyFileEncoding != null ? propertyFileEncoding : UTF_8)
@@ -84,15 +88,25 @@ public class XlsImExporter {
 
         if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
           final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleBasename, translation.getLang());
-          //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
-          final PropertyFile propertyFile= new PropertyFile();
-          bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
+          //FIXME: Empty set meaning "all" is dirty. Should we change this somehow? Maybe to a list of bundlenames to import (* meaning all?)
+          if (onlyResourceBundleFilesToImport.isEmpty() || onlyResourceBundleFilesToImport.contains(fileForBundle)) {
+            //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
+            LOGGER.log(Level.FATAL, "Importing resources for "+fileForBundle.getAbsolutePath()+" since it is included: "+onlyResourceBundleFilesToImport);
+            System.out.println("Importing resources for "+fileForBundle.getAbsolutePath()+" since it is included: "+onlyResourceBundleFilesToImport);
+            final PropertyFile propertyFile= new PropertyFile();
+            bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
+          } else {
+            LOGGER.log(Level.FATAL, "Not importing resources for "+fileForBundle.getAbsolutePath()+" since it is not included");
+            System.out.println("Not importing resources for "+fileForBundle.getAbsolutePath()+" since it is not included");
+          }
         }
 
         final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
         // only write empty values if the key already exists in in the PropertyFile
-        if ((translation.getValue() != null && !translation.getValue().isEmpty())
-          || rpf.propertyFile.containsKey(propertyKey)) {
+        if (rpf != null // rpf may be null, if its bundleFile is not to be imported
+          && ((translation.getValue() != null && !translation.getValue().isEmpty())
+              || rpf.propertyFile.containsKey(propertyKey))
+          ) {
           rpf.propertyFile.setValue(propertyKey, translation.getValue());
         }
       }

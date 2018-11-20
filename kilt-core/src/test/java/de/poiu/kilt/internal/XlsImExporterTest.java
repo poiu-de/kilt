@@ -23,6 +23,7 @@ import de.poiu.apron.PropertyFile;
 import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -35,9 +36,26 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.assertj.core.api.Fail;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -107,7 +125,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -134,7 +152,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -167,7 +185,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.DELETE);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.DELETE);
 
     // - verification
 
@@ -201,7 +219,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.COMMENT);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.COMMENT);
 
     // - verification
 
@@ -237,7 +255,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -274,7 +292,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -315,7 +333,8 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    //FIXME: Das ist unsauber. Ein leeres Set für "alles" ist nicht ganz passend
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, Collections.EMPTY_SET, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -352,16 +371,16 @@ public class XlsImExporterTest {
 
     final File xlsFile= new File(Resources.getResource("libreoffice_emptyStrings.xlsx").toURI());
 
-    final Path buttons_fr= this.createFile(propertiesRootDirectory.resolve("buttons_fr.properties"),
-                                           "btn.cancel = to be overwritten\n");
-    final Path butons_nl= this.createFile(propertiesRootDirectory.resolve("buttons_nl.properties"),
-                                          "btn.cancel = to be overwritten\n");
-    final Path items_nl= this.createFile(propertiesRootDirectory.resolve("items_nl.properties"),
-                                         " = to be overwritten\n");
+    final File buttons_fr= this.createFile(propertiesRootDirectory.resolve("buttons_fr.properties"),
+                                           "btn.cancel = to be overwritten\n").toFile();
+    final File butons_nl= this.createFile(propertiesRootDirectory.resolve("buttons_nl.properties"),
+                                          "btn.cancel = to be overwritten\n").toFile();
+    final File items_nl= this.createFile(propertiesRootDirectory.resolve("items_nl.properties"),
+                                         " = to be overwritten\n").toFile();
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, new HashSet<>(Arrays.asList(buttons_fr, butons_nl, items_nl)), UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -402,6 +421,82 @@ public class XlsImExporterTest {
   }
 
 
+  @Test
+  public void testImportXls_ImportSingleBundle() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final File xlsFile= this.createXlsFile(toLists(new String[][]{
+      {"Bundle Basename", "I18n Key", "de", "en", "de_bayrisch"},
+      {"/buttons", "btn.ok", "OK", "OK"},
+      {"/buttons", "btn.cancel", "Abbrechen", "Cancel"},
+      {"/messages", "msg.hello", "Hallo", "", "Servus"},
+      {"/messages", "msg.bye", "Auf Wiedersehen!", "", "Pfuit di!"}
+    }));
+
+    // this one should not be altered, although the XLS file contains other content for it
+    final File buttons_de= this.createFile(propertiesRootDirectory.resolve("buttons_de.properties"),
+                                           "btn.save = Speichern\n").toFile();
+    // this one doesn't exist yet, but should be created, since we import it
+    final File messages_de= propertiesRootDirectory.resolve("messages_de.properties").toFile();
+    // - test
+
+    // import only messages_de
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, new HashSet<>(Arrays.asList(messages_de)), UTF_8, MissingKeyAction.NOTHING);
+
+    // - verification
+
+    final Path[] writtenResourceBundleFiles = Files.list(propertiesRootDirectory).toArray(Path[]::new);
+    assertThat(writtenResourceBundleFiles).containsOnly(
+      propertiesRootDirectory.resolve("buttons_de.properties"),
+      propertiesRootDirectory.resolve("messages_de.properties")
+    );
+
+    final PropertyFile pfButtonsDe= PropertyFile.from(propertiesRootDirectory.resolve("buttons_de.properties").toFile());
+    assertThat(pfButtonsDe.keys()).containsOnly("btn.save");
+    assertThat(pfButtonsDe.get("btn.save")).isEqualTo("Speichern");
+
+    final PropertyFile pfMessagesDe= PropertyFile.from(propertiesRootDirectory.resolve("messages_de.properties").toFile());
+    assertThat(pfMessagesDe.keys()).containsOnly("msg.hello", "msg.bye");
+    assertThat(pfMessagesDe.get("msg.hello")).isEqualTo("Hallo");
+    assertThat(pfMessagesDe.get("msg.bye")).isEqualTo("Auf Wiedersehen!");
+  }
+
+
+  @Test
+  public void testExportXls_AddToExistingData() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final File xlsFile= this.createXlsFile(toLists(new String[][]{
+      {"Bundle Basename", "I18n Key", "de", "en"},
+      {"/buttons", "btn.ok", "OK", "OK"},
+      {"/buttons", "btn.cancel", "Abbrechen", "Cancel"}
+    }));
+
+    final File messages_de= this.createFile(propertiesRootDirectory.resolve("messages_de.properties"), "msg.hello = Hallo\nmsg.bye = Auf Wiedersehen!\n").toFile();
+    final File messages_de_bayrisch= this.createFile(propertiesRootDirectory.resolve("messages_de_bayrisch.properties"), "msg.hello = Servus\nmsg.bye = Pfuit di!\n").toFile();
+
+    // - test
+
+    XlsImExporter.exportXls(propertiesRootDirectory, new HashSet<>(Arrays.asList(messages_de, messages_de_bayrisch)), UTF_8, xlsFile.toPath());
+
+    // - verification
+    final List<List<String>> contentMatrix= this.getContentMatrix(xlsFile);
+    System.out.println(contentMatrix);
+    assertThat(contentMatrix).isEqualTo(toLists(new String[][]{
+      {"Bundle Basename", "I18n Key", "de", "en", "de_bayrisch"},
+      {"/buttons", "btn.ok", "OK", "OK"},
+      {"/buttons", "btn.cancel", "Abbrechen", "Cancel"},
+      {"/messages", "msg.hello", "Hallo", "", "Servus"},
+      {"/messages", "msg.bye", "Auf Wiedersehen!", "", "Pfuit di!"}
+    }));
+  }
+
 
   private File copyResourceToTmp(final String resourceName) throws IOException {
     final URL resource= Resources.getResource(resourceName);
@@ -422,5 +517,73 @@ public class XlsImExporterTest {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  private File createXlsFile(final List<List<String>> rows) {
+    try {
+      final File xlsFile= this.tmpFolder.newFile("test.xlsx");
+      final XSSFWorkbook workbook = new XSSFWorkbook();
+      final XSSFSheet sheet = workbook.createSheet("i18n");
+      int rowIdx= 0;
+      int colIdx= 0;
+      for (final List<String> rowContent : rows) {
+        final XSSFRow row= sheet.createRow(rowIdx++);
+        for (final String cellValue : rowContent) {
+          final XSSFCell cell= row.createCell(colIdx++);
+          cell.setCellValue(workbook.getCreationHelper().createRichTextString(cellValue));
+        }
+        colIdx= 0;
+      }
+
+      try (final FileOutputStream fis= new FileOutputStream(xlsFile)) {
+        workbook.write(fis);
+      } catch (IOException ex) {
+        throw new RuntimeException("Error writing to file "+xlsFile.getAbsolutePath(), ex);
+      }
+
+      return xlsFile;
+    } catch (IOException ex) {
+      throw new RuntimeException(ex);
+    }
+  }
+
+
+  private List<List<String>> toLists(final String[][] contentMatrix) {
+    final List<List<String>> result= new ArrayList<>();
+    for (final String[] row : contentMatrix) {
+      final List<String> newRow= new ArrayList<>();
+      result.add(newRow);
+      for (final String cellValue : row) {
+        newRow.add(cellValue);
+      }
+    }
+    return result;
+  }
+
+
+  public List<List<String>> getContentMatrix(final File xlsFile) {
+    final List<List<String>> rows= new ArrayList<>();
+
+    final Workbook workbook;
+    try (final FileInputStream fis= new FileInputStream(xlsFile)) {
+      workbook= WorkbookFactory.create(fis);
+    } catch (IOException | InvalidFormatException ex) {
+      throw new RuntimeException("Error reading XLS data from file " + xlsFile.getAbsolutePath(), ex);
+    }
+
+    final Sheet sheet = workbook.getSheet("i18n");
+
+    for (int rowId= sheet.getFirstRowNum(); rowId < sheet.getLastRowNum() + 1; rowId++) {
+      final Row row= sheet.getRow(rowId);
+      final List<String> resultRow= new ArrayList<>();
+      rows.add(resultRow);
+      for (int colId= row.getFirstCellNum(); colId < row.getLastCellNum(); colId++) {
+        final Cell cell= row.getCell(colId);
+        resultRow.add(cell != null ? cell.getStringCellValue() : "");
+      }
+    }
+
+    return rows;
   }
 }
