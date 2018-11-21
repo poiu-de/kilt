@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.XlsImExporter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.config.Configurator;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -72,6 +74,10 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
 
   @Override
   public void run() {
+    if (this.verbose) {
+      Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
+    }
+
     if (this.verbose) {
       printProperties();
     }

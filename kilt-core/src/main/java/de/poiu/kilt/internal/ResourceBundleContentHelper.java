@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -151,6 +152,8 @@ public class ResourceBundleContentHelper {
           throw new RuntimeException("Language "+langCode+" already in map. Should never happen.");
         }
         langToFileMap.put(language, file);
+      } else {
+        LOGGER.log(Level.WARN, "File {} doesn't match the expected pattern. It will not be processed! Does your file name end with .properties?", file.getAbsolutePath());
       }
     }
 
