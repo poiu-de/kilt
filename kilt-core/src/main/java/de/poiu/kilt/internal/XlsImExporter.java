@@ -90,7 +90,11 @@ public class XlsImExporter {
         }
 
         final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
-        rpf.propertyFile.setValue(propertyKey, translation.getValue());
+        // only write empty values if the key already exists in in the PropertyFile
+        if ((translation.getValue() != null && !translation.getValue().isEmpty())
+          || rpf.propertyFile.containsKey(propertyKey)) {
+          rpf.propertyFile.setValue(propertyKey, translation.getValue());
+        }
       }
     });
 
