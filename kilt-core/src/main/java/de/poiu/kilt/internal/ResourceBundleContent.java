@@ -145,7 +145,7 @@ public class ResourceBundleContent {
    * @param bundleFiles the file containing the translations for this bundle for each language
    * @param charset the charset in which the .properties files are written
    * @return a FacadeBundleContent with the translations from the given files
-   * @throws InconsistentBundleBaseNameException if thegiven files don't share a common basename
+   * @throws InconsistentBundleBaseNameException if the given files don't share a common basename
    */
   public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles, final Charset charset) {
     final SetMultimap<String, Translation> translations= MultimapBuilder.hashKeys().linkedHashSetValues().build();
