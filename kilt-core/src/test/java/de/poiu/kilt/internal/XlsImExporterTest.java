@@ -23,7 +23,10 @@ import de.poiu.apron.PropertyFile;
 import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -35,12 +38,15 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 
 /**
@@ -295,6 +301,107 @@ public class XlsImExporterTest {
   }
 
 
+  /**
+   * This test verifies bug #4: https://github.com/hupfdule/kilt/issues/4
+   */
+  @Test
+  public void testImportXls_DoNotCreateEmptyBundleFiles() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final File xlsFile= new File(Resources.getResource("libreoffice_emptyStrings.xlsx").toURI());
+
+    // - test
+
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+
+    // - verification
+
+    final Path[] writtenResourceBundleFiles = Files.list(propertiesRootDirectory).toArray(Path[]::new);
+    assertThat(writtenResourceBundleFiles).containsOnly(
+      propertiesRootDirectory.resolve("buttons_nl.properties"),
+      propertiesRootDirectory.resolve("buttons_de.properties"),
+      propertiesRootDirectory.resolve("items_de.properties")
+    );
+
+    final PropertyFile pfButtonsDe= PropertyFile.from(propertiesRootDirectory.resolve("buttons_de.properties").toFile());
+    assertThat(pfButtonsDe.keys()).containsOnly("btn.enter", "btn.cancel");
+    assertThat(pfButtonsDe.get("btn.enter")).isEqualTo("OK");
+    assertThat(pfButtonsDe.get("btn.cancel")).isEqualTo("Abbrechen");
+
+    final PropertyFile pfButtonsNl= PropertyFile.from(propertiesRootDirectory.resolve("buttons_nl.properties").toFile());
+    assertThat(pfButtonsNl.keys()).containsOnly("btn.enter", "btn.cancel");
+    assertThat(pfButtonsNl.get("btn.enter")).isEqualTo("Ok");
+    assertThat(pfButtonsNl.get("btn.cancel")).isEqualTo("Annuleren");
+
+    final PropertyFile pfItemDe= PropertyFile.from(propertiesRootDirectory.resolve("items_de.properties").toFile());
+    assertThat(pfItemDe.keys()).containsOnly("");
+    assertThat(pfItemDe.get("")).isEqualTo("ID");
+  }
+
+
+  @Test
+  @Ignore(value = "This requires larger changes to importXls, as we need to read in the existing files first to compare")
+  public void testImportXls_OnlyWriteEmptyValuesIfKeyAlreadyExists() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final File xlsFile= new File(Resources.getResource("libreoffice_emptyStrings.xlsx").toURI());
+
+    final Path buttons_fr= this.createFile(propertiesRootDirectory.resolve("buttons_fr.properties"),
+                                           "btn.cancel = to be overwritten\n");
+    final Path butons_nl= this.createFile(propertiesRootDirectory.resolve("buttons_nl.properties"),
+                                          "btn.cancel = to be overwritten\n");
+    final Path items_nl= this.createFile(propertiesRootDirectory.resolve("items_nl.properties"),
+                                         " = to be overwritten\n");
+
+    // - test
+
+    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+
+    // - verification
+
+    final Path[] writtenResourceBundleFiles = Files.list(propertiesRootDirectory).toArray(Path[]::new);
+    assertThat(writtenResourceBundleFiles).containsOnly(
+      propertiesRootDirectory.resolve("buttons_nl.properties"),
+      propertiesRootDirectory.resolve("buttons_de.properties"),
+      propertiesRootDirectory.resolve("buttons_fr.properties"),
+      propertiesRootDirectory.resolve("items_de.properties"),
+      propertiesRootDirectory.resolve("items_nl.properties")
+    );
+
+    final PropertyFile pfButtonsDe= PropertyFile.from(propertiesRootDirectory.resolve("buttons_de.properties").toFile());
+    assertThat(pfButtonsDe.keys()).containsOnly("btn.enter", "btn.cancel");
+    assertThat(pfButtonsDe.get("btn.enter")).isEqualTo("OK");
+    assertThat(pfButtonsDe.get("btn.cancel")).isEqualTo("Abbrechen");
+
+    final PropertyFile pfButtonsNl= PropertyFile.from(propertiesRootDirectory.resolve("buttons_nl.properties").toFile());
+    assertThat(pfButtonsNl.keys()).containsOnly("btn.enter", "btn.cancel");
+    assertThat(pfButtonsNl.get("btn.enter")).isEqualTo("Ok");
+    assertThat(pfButtonsNl.get("btn.cancel")).isEqualTo("Annuleren");
+
+    final PropertyFile pfButtonsFr= PropertyFile.from(propertiesRootDirectory.resolve("buttons_fr.properties").toFile());
+    assertThat(pfButtonsFr.keys()).containsOnly("btn.cancel");
+    assertThat(pfButtonsFr.keys()).doesNotContain("btn.ok"); // this key was not existand and therefore is not written with an empty value
+    assertThat(pfButtonsFr.get("btn.cancel")).isEqualTo("");  // this key was existant and therefore is written again with an empty value
+
+    final PropertyFile pfItemDe= PropertyFile.from(propertiesRootDirectory.resolve("items_de.properties").toFile());
+    assertThat(pfItemDe.keys()).containsOnly("");
+    assertThat(pfItemDe.get("")).isEqualTo("ID");
+
+    final PropertyFile pfItemNl= PropertyFile.from(propertiesRootDirectory.resolve("items_nl.properties").toFile());
+    assertThat(pfItemNl.keys()).containsOnly("");
+    assertThat(pfItemNl.get("")).isEqualTo("");
+
+    final PropertyFile pfItemFr= PropertyFile.from(propertiesRootDirectory.resolve("items_fr.properties").toFile());
+    assertThat(pfItemFr.keys()).isEmpty();
+  }
+
+
 
   private File copyResourceToTmp(final String resourceName) throws IOException {
     final URL resource= Resources.getResource(resourceName);
@@ -303,5 +410,17 @@ public class XlsImExporterTest {
 
     Files.copy(resource.openStream(), targetFile.toPath());
     return targetFile;
+  }
+
+
+  private Path createFile(final Path pathToFile, final String content) {
+    try (final PrintWriter writer= new PrintWriter(
+      new OutputStreamWriter(
+        new FileOutputStream(pathToFile.toFile()), ISO_8859_1));) {
+      writer.print(content);
+      return pathToFile;
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 }
