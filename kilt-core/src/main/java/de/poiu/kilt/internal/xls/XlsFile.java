@@ -46,6 +46,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Optional;
 
 
 /**
@@ -66,7 +67,7 @@ public class XlsFile {
   // Attributes
 
   private final Workbook workbook;
-  private final Sheet i18nSheet;
+  private final SheetWrapper i18nSheet;
   private final Sheet kiltInfoSheet;
 
   private final File file;
@@ -124,13 +125,13 @@ public class XlsFile {
   }
 
 
-  private Sheet prepareI18nSheet(final Workbook workbook, final String sheetName) {
+  private SheetWrapper prepareI18nSheet(final Workbook workbook, final String sheetName) {
     final Sheet sheet = workbook.getSheet(sheetName);
     if (sheet != null) {
-      return sheet;
+      return new SheetWrapper(sheet);
     } else {
       LOGGER.log(Level.INFO, "No sheet with name " + sheetName + " found. Creating new sheet.");
-      return workbook.createSheet(sheetName);
+      return new SheetWrapper(workbook.createSheet(sheetName));
     }
   }
 
@@ -246,9 +247,9 @@ public class XlsFile {
 
     // store the indexes of the i18n keys rows for easier access
     for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
-      final String baseBundleName= this.i18nSheet.getRow(i).getCell(0).getStringCellValue(); //FIXME Avoid NPE?
-      final String key= this.i18nSheet.getRow(i).getCell(1).getStringCellValue(); //FIXME Avoid NPE?
-      final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName, key);
+      final Optional<String> baseBundleName= this.i18nSheet.getStringValue(i, 0);
+      final Optional<String> key= this.i18nSheet.getStringValue(i, 1);
+      final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName.orElse(""), key.orElse(""));
 
       LOGGER.log(Level.DEBUG, "Found bundle key {}->{} at row {}", baseBundleName, key, i);
 
@@ -354,9 +355,9 @@ public class XlsFile {
 
     for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
       final Row row= this.i18nSheet.getRow(i);
-      final String baseBundleName= this.i18nSheet.getRow(i).getCell(0).getStringCellValue(); //FIXME Avoid NPE?
-      final String key= this.i18nSheet.getRow(i).getCell(1).getStringCellValue(); //FIXME Avoid NPE?
-      final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName, key);
+      final Optional<String> baseBundleName= this.i18nSheet.getStringValue(i, 0);
+      final Optional<String> key= this.i18nSheet.getStringValue(i, 1);
+      final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName.orElse(""), key.orElse(""));
 
       for (final Map.Entry<Language, Integer> entry : this.languageColumnMap.entrySet()) {
         final Language language = entry.getKey();
