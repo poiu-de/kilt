@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.internal;
 
+import de.poiu.kilt.util.FileFilter;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.ApronOptions;
 import java.io.File;
@@ -125,7 +126,7 @@ public class XlsImExporter {
 
 
   public static void exportXls(final Path propertiesRootDirectory,
-                               final Set<File> resourceBundleFiles,
+                               final FileFilter fileFilter,
                                final Charset propertyFileEncoding,
                                final Path xlsFilePath) {
     final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
