@@ -16,7 +16,7 @@
 package de.poiu.kilt.internal;
 
 import de.poiu.apron.MissingKeyAction;
-import de.poiu.apron.Options;
+import de.poiu.apron.ApronOptions;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.Collection;
@@ -69,7 +69,7 @@ public class XlsImExporter {
     Objects.requireNonNull(propertiesRootDirectory);
     Objects.requireNonNull(xlsFile);
 
-    final Options apronOptions= Options.create()
+    final ApronOptions apronOptions= ApronOptions.create()
       .with(propertyFileEncoding != null ? propertyFileEncoding : UTF_8)
       .with(missingKeyAction);
 
