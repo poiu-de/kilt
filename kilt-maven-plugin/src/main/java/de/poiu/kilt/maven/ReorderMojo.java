@@ -15,16 +15,12 @@
  */
 package de.poiu.kilt.maven;
 
-import com.google.common.collect.ImmutableList;
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.PathUtils;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -33,7 +29,6 @@ import org.apache.maven.plugins.annotations.Execute;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.plexus.util.DirectoryScanner;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

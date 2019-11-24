@@ -18,7 +18,6 @@ package de.poiu.kilt.util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Set;
 import org.junit.Ignore;

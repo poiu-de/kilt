@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -37,7 +36,6 @@ import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;

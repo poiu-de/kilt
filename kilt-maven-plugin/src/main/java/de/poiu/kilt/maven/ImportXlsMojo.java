@@ -15,21 +15,16 @@
  */
 package de.poiu.kilt.maven;
 
-import com.google.common.collect.ImmutableSet;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.internal.XlsImExporter;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.util.LinkedHashSet;
-import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.codehaus.plexus.util.DirectoryScanner;
 
 
 /**
