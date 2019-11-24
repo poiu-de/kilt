@@ -115,7 +115,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
-      final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+      final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
       this.getLog().info("Creating facade for the following files: "+propertyFileSet);
 
       try {

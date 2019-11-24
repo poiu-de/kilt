@@ -108,7 +108,7 @@ public class CreateFacadeTask extends Task {
 
     this.log("Create Java source code facade file from property files.");
 
-    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
+    final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
 
     try {
       final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(Paths.get(propertiesRootDirectory));

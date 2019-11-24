@@ -47,7 +47,7 @@ our link:pom.xml[].
         <version>${project.version}</version>
         <configuration>
           <!-- Specify which files we want to cover with Kilt -->
-          <i18nIncludes>i18n/**.properties</i18nIncludes>             <!--1-->
+          <i18nIncludes>i18n/**/*.properties</i18nIncludes>           <!--1-->
           <i18nExcludes>i18n/nongenerated*.properties</i18nExcludes>  <!--2-->
           <!-- even though we use Java 8 we store our .properties files in
                UTF-8 format -->

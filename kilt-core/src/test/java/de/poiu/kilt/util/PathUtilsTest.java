@@ -19,8 +19,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -56,14 +56,14 @@ public class PathUtilsTest {
 
     final Path root= FileSystems.getDefault().getPath(this.tmpFolder.getRoot().getPath(), "root/");
     final String[] includes= {
-      "i18n/**.properties",
+      "i18n/**/*.properties",
     };
     final String[] excludes= {
     };
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -95,14 +95,14 @@ public class PathUtilsTest {
 
     final Path root= FileSystems.getDefault().getPath(this.tmpFolder.getRoot().getPath(), "root/");
     final String[] includes= {
-      this.tmpFolder.getRoot().getPath() + "/root/" + "i18n/**.properties",
+      this.tmpFolder.getRoot().getPath() + "/root/" + "i18n/**/*.properties",
     };
     final String[] excludes= {
     };
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -116,10 +116,6 @@ public class PathUtilsTest {
     );
   }
 
-  @Ignore(value = "The globbing of PathMatcher is quite useless. "
-    + "It doesn't correctly handles different ways to access the same path. "
-    + "For example /root/../root/ doesn't match /root/. "
-    + "Apparently it just converts the given glob string into a regex, which of course doesn't work.")
   @Test
   public void testGetIncludedPropertyFiles_IncludeIncludingDifferentRootPath() {
     // - preparation
@@ -138,14 +134,14 @@ public class PathUtilsTest {
 
     final Path root= FileSystems.getDefault().getPath(this.tmpFolder.getRoot().getPath(), "root/");
     final String[] includes= {
-      this.tmpFolder.getRoot().getPath() + "/root/../root/" + "i18n/**.properties",
+      this.tmpFolder.getRoot().getPath() + "/root/../root/" + "i18n/**/*.properties",
     };
     final String[] excludes= {
     };
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -177,15 +173,15 @@ public class PathUtilsTest {
 
     final Path root= FileSystems.getDefault().getPath(this.tmpFolder.getRoot().getPath(), "root/");
     final String[] includes= {
-      "i18n/**.properties",
+      "i18n/**/*.properties",
     };
     final String[] excludes= {
-      "i18n/**_en.properties"
+      "i18n/**/*_en.properties"
     };
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -223,7 +219,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -257,12 +253,162 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= PathUtils.getIncludedPropertyFiles(root, includes, excludes);
+    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
     assertThat(result).containsExactlyInAnyOrder(
     );
+  }
+
+
+  @Test
+  public void testMatches_canonicalizePaths() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "sub/my.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my//root//sub//my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/../root/sub/my.properties"))).isTrue();
+  }
+
+
+  @Test
+  public void testMatches_excludePath() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "sub/*.properties"
+    };
+    final String[] excludes= {
+      "sub/ex.properties"
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/ex.properties"))).isFalse();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/other.properties"))).isTrue();
+  }
+
+
+  @Test
+  public void testMatches_singleCharGlob() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "f?o.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/foo.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/froo.properties"))).isFalse();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/fro.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/aro.properties"))).isFalse();
+  }
+
+
+  @Test
+  public void testMatches_multiCharGlob() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "f*o.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/foo.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/froo.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/fro.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/aro.properties"))).isFalse();
+  }
+
+
+
+
+
+  @Test
+  public void testMatches_singleAndMultiCharGlob() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "f?o*m.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/foom.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/froom.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/froouam.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/from.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/arom.properties"))).isFalse();
+  }
+
+  @Test
+  public void testMatches_GlobInDir() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "sub/f*/my.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/my.properties"))).isFalse();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/my.properties"))).isFalse();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/foo/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/f/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/fantasy/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/pants/my.properties"))).isFalse();
+  }
+
+
+  @Test
+  public void testMatches_recursiveInclusion() {
+    // - preparation
+
+    final Path root= Paths.get("/my/root/");
+    final String[] includes= {
+      "**/*.properties"
+    };
+    final String[] excludes= {
+    };
+    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+
+    // - execution && verification
+
+    assertThat(fileMatcher.matches(Paths.get("/my/root/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/my.properties"))).isTrue();
+    assertThat(fileMatcher.matches(Paths.get("/my/root/sub/sub/my.properties"))).isTrue();
   }
 
 

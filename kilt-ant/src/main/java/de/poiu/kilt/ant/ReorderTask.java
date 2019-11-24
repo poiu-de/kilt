@@ -91,7 +91,7 @@ public class ReorderTask extends Task {
     }
 
     this.log("Reorder key-value pairs in .properties files.");
-    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
+    final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {

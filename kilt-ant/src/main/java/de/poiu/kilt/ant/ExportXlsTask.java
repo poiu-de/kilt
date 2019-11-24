@@ -87,7 +87,7 @@ public class ExportXlsTask extends Task {
     } else {
       this.log("Create XLS file from property files...");
 
-      final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
+      final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
       final File file = new File(this.xlsFile);
 
       XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),

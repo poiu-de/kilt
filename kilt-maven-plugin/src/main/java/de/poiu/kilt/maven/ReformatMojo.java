@@ -71,7 +71,7 @@ public class ReformatMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    final Set<File> propertyFiles = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+    final Set<File> propertyFiles = new PathUtils(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
     this.getLog().info("Reformatting entries in the following files: "+propertyFiles);
 
 

@@ -64,7 +64,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("Exporting properties to XLS.");
 
-    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
     this.getLog().info("Exporting the following files to XLS: "+propertyFileSet);
 
 

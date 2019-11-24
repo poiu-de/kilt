@@ -88,7 +88,7 @@ public class ReorderMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
     this.getLog().info("Reordering entries in the following files: "+propertyFileSet);
 
 

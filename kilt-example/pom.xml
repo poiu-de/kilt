@@ -59,7 +59,7 @@
         <version>${project.version}</version>
         <configuration>
           <!-- Specify which files we want to cover with kilt -->
-          <i18nIncludes>i18n/**.properties</i18nIncludes>
+          <i18nIncludes>i18n/**/*.properties</i18nIncludes>
           <i18nExcludes>i18n/nongenerated*.properties</i18nExcludes>
           <!-- even though we use Java 8 we store our .properties files
                in UTF-8 format -->
@@ -105,7 +105,7 @@
                    We do this here by specifying a different set of files
                    to include, which also includes the
                    src/main/resources/config.properties file. -->
-              <i18nIncludes>**.properties</i18nIncludes>
+              <i18nIncludes>**/*.properties</i18nIncludes>
             </configuration>
           </execution>
         </executions>
