@@ -21,6 +21,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +52,14 @@ public class ImportXlsTask extends Task {
    */
   private String propertiesRootDirectory= "i18n";
 
+  private List<String> i18nIncludes= new ArrayList<>();
+
+  private List<String> i18nExcludes= new ArrayList<>();
+
   private boolean verbose= false;
 
   private Charset propertyFileEncoding;
-
-  private final List<FileSet> fileSetList = new ArrayList<>();
-
+  
   private String xlsFile= null;
 
   private MissingKeyAction missingKeyAction= MissingKeyAction.NOTHING;
@@ -99,62 +102,6 @@ public class ImportXlsTask extends Task {
   }
 
 
-  /**
-   * @see #resolveFilesFromFileSet(FileSet)
-   * @param fileSetList
-   * @return
-   */
-  protected Set<File> resolveFilesFromFileSetList(List<FileSet> fileSetList) {
-    Set<File> retset = new HashSet<>();
-
-    if (fileSetList != null) {
-      fileSetList.forEach((fileSet) -> {
-        retset.addAll(this.resolveFilesFromFileSet(fileSet));
-      });
-    }
-
-    return retset;
-  }
-
-
-  /**
-   * @see #resolveFilesFromFileSetList(List)
-   * @param fileSet
-   * @return
-   */
-  protected List<File> resolveFilesFromFileSet(FileSet fileSet) {
-    List<File> retlist = new ArrayList<>();
-
-    if (fileSet != null) {
-      DirectoryScanner directoryScanner = fileSet.getDirectoryScanner();
-      String[] includedFileNames = directoryScanner.getIncludedFiles();
-
-      if (includedFileNames != null) {
-        File basedir = directoryScanner.getBasedir();
-
-        for (String fileNameUnnormalized : includedFileNames) {
-          String fileName = fileNameUnnormalized.replaceAll(Pattern.quote("\\"), "/");
-
-          File file = new File(basedir, fileName);
-          if (file.exists()) {
-            retlist.add(file);
-          }
-        }
-      }
-
-    }
-
-    return retlist;
-  }
-
-
-  public void addFileset(FileSet fileset) {
-    if (fileset != null) {
-      this.fileSetList.add(fileset);
-    }
-  }
-
-
   public String getXlsFile() {
     return this.xlsFile;
   }
@@ -182,6 +129,16 @@ public class ImportXlsTask extends Task {
   }
 
 
+  public void setI18nIncludes(final String i18nIncludes) {
+    this.i18nIncludes= Arrays.asList(i18nIncludes.split("\\s+"));
+  }
+
+
+  public void setI18nExcludes(final String i18nExcludes) {
+    this.i18nExcludes= Arrays.asList(i18nExcludes.split("\\s+"));
+  }
+
+
   public void setPropertyFileEncoding(String propertyFileEncoding) {
     if (propertyFileEncoding != null) {
       this.propertyFileEncoding= Charset.forName(propertyFileEncoding);
@@ -201,7 +158,8 @@ public class ImportXlsTask extends Task {
 
     sb.append("verbose                 = ").append(this.verbose).append("\n");
     sb.append("propertiesRootDirectory = ").append(this.propertiesRootDirectory).append("\n");
-    sb.append("i18nIncludes            = ").append(this.fileSetList).append("\n");
+    sb.append("i18nIncludes            = ").append(this.i18nIncludes).append("\n");
+    sb.append("i18nExcludes            = ").append(this.i18nExcludes).append("\n");
     sb.append("propertyFileEncoding    = ").append(this.propertyFileEncoding).append("\n");
     sb.append("xlsFile                 = ").append(this.xlsFile).append("\n");
     sb.append("missingKeyAction        = ").append(this.missingKeyAction).append("\n");

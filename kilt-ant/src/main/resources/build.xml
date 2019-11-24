@@ -18,122 +18,112 @@
 -->
 <project name="kilt" basedir=".">
 
-	<taskdef name="exportXls" classname="de.poiu.kilt.ant.ExportXlsTask">
-		<classpath>
+  <taskdef name="exportXls" classname="de.poiu.kilt.ant.ExportXlsTask">
+    <classpath>
       <fileset dir="lib">
         <include name="*.jar" />
       </fileset>
-		</classpath>
-	</taskdef>
+    </classpath>
+  </taskdef>
 
-	<taskdef name="importXls" classname="de.poiu.kilt.ant.ImportXlsTask">
-		<classpath>
+  <taskdef name="importXls" classname="de.poiu.kilt.ant.ImportXlsTask">
+    <classpath>
       <fileset dir="lib">
         <include name="*.jar" />
       </fileset>
-		</classpath>
-	</taskdef>
+    </classpath>
+  </taskdef>
 
-	<taskdef name="createFacade" classname="de.poiu.kilt.ant.CreateFacadeTask">
-		<classpath>
+  <taskdef name="createFacade" classname="de.poiu.kilt.ant.CreateFacadeTask">
+    <classpath>
       <fileset dir="lib">
         <include name="*.jar" />
       </fileset>
-		</classpath>
-	</taskdef>
+    </classpath>
+  </taskdef>
 
-	<taskdef name="reformat" classname="de.poiu.kilt.ant.ReformatTask">
-		<classpath>
+  <taskdef name="reformat" classname="de.poiu.kilt.ant.ReformatTask">
+    <classpath>
       <fileset dir="lib">
         <include name="*.jar" />
       </fileset>
-		</classpath>
-	</taskdef>
+    </classpath>
+  </taskdef>
 
-	<taskdef name="reorder" classname="de.poiu.kilt.ant.ReorderTask">
-		<classpath>
+  <taskdef name="reorder" classname="de.poiu.kilt.ant.ReorderTask">
+    <classpath>
       <fileset dir="lib">
         <include name="*.jar" />
       </fileset>
-		</classpath>
-	</taskdef>
+    </classpath>
+  </taskdef>
 
-	<!-- INITIALIZE -->
-	<property file="kilt.properties" />
+  <!-- INITIALIZE -->
+  <property file="kilt.properties" />
 
-	<!-- TARGETS -->
+  <!-- TARGETS -->
   <target name="clean">
     <delete dir="${facadeGenerationDir}"/>
   </target>
 
   <target name="export-xls" description="Exports the translations in the resource bundle files into an XLS file.">
     <exportXls
-      xlsfilename="${xlsFilename}"
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      i18nIncludes="${i18nIncludes}"
+      i18nExcludes="${i18nExcludes}"
+      xlsFile="${xlsFile}"
       propertyFileEncoding="${propertyFileEncoding}"
       verbose="${verbose}"
-    >
+    />
+  </target>
 
-			<fileset dir="${propertiesRootDirectory}">
-				<include name="**/*.properties" />
-			</fileset>
-		</exportXls>
-	</target>
-
-	<target name="import-xls" description="Imports the translations from an XLS file back into the resource bundle files.">
-		<importXls
-      xlsFileName="${xlsFilename}"
+  <target name="import-xls" description="Imports the translations from an XLS file back into the resource bundle files.">
+    <importXls
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      i18nIncludes="${i18nIncludes}"
+      i18nExcludes="${i18nExcludes}"
+      xlsFile="${xlsFile}"
       propertyFileEncoding="${propertyFileEncoding}"
-      deleteEmptyProperties="${deleteEmptyProperties}"
       verbose="${verbose}"
-     />
-	</target>
+    />
+  </target>
 
-	<target name="create-facade" description="Creates the I18n enum facades for type safe access to localized messages.">
+  <target name="create-facade" description="Creates the I18n enum facades for type safe access to localized messages.">
     <createFacade
       propertiesRootDirectory="${propertiesRootDirectory}"
+      i18nIncludes="${i18nIncludes}"
+      i18nExcludes="${i18nExcludes}"
       generatedPackage="${generatedPackage}"
       copyFacadeAccessorClasses="${copyFacadeAccessorClasses}"
       facadeAccessorClassName="${facadeAccessorClassName}"
       facadeGenerationDir="${facadeGenerationDir}"
       propertyFileEncoding="${propertyFileEncoding}"
       verbose="${verbose}"
-    >
+    />
+  </target>
 
-      <fileset dir="${propertiesRootDirectory}">
-        <include name="${i18nIncludes}" />
-        <exclude name="${i18nExcludes}" />
-      </fileset>
-    </createFacade>
-	</target>
-
-	<target name="reformat" description="Reformats the key-value pairs a set of java i18n .properties files.">
-		<reformat
+  <target name="reformat" description="Reformats the key-value pairs a set of java i18n .properties files.">
+    <reformat
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      i18nIncludes="${i18nIncludes}"
+      i18nExcludes="${i18nExcludes}"
       propertyFileEncoding="${propertyFileEncoding}"
       format="${format}"
       reformatKeysAndValues="${reformatKeysAndValues}"
       verbose="${verbose}"
-     >
+    />
+  </target>
 
-      <fileset dir="${propertiesRootDirectory}">
-        <include name="${i18nIncludes}" />
-        <exclude name="${i18nExcludes}" />
-      </fileset>
-   </reformat>
-	</target>
-
-	<target name="reorder" description="Reorders the key-value pairs in a set of java i18n .properties files.">
-		<reorder
+  <target name="reorder" description="Reorders the key-value pairs in a set of java i18n .properties files.">
+    <reorder
+      propertiesRootDirectory="${propertiesRootDirectory}"
+      i18nIncludes="${i18nIncludes}"
+      i18nExcludes="${i18nExcludes}"
       propertyFileEncoding="${propertyFileEncoding}"
       byKey="${byKey}"
       template="${template}"
       attachCommentsTo="${attachCommentsTo}"
       verbose="${verbose}"
-     >
-
-      <fileset dir="${propertiesRootDirectory}">
-        <include name="${i18nIncludes}" />
-        <exclude name="${i18nExcludes}" />
-      </fileset>
-   </reorder>
-	</target>
+    />
+  </target>
 </project>
