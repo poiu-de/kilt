@@ -88,19 +88,16 @@ public class ReorderMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
-    this.getLog().info("Reordering entries in the following files: "+propertyFileSet);
-
-
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(propertyFileSet,
+      reformatter.reorderByKey(fileMatcher,
                                attachCommentsTo,
                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     } else {
       reformatter.reorderByTemplate(this.template,
-                                    propertyFileSet,
+                                    fileMatcher,
                                     this.attachCommentsTo,
                                     this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     }

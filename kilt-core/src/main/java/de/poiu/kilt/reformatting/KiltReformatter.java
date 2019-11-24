@@ -25,6 +25,7 @@ import de.poiu.apron.reformatting.ReformatOptions;
 import de.poiu.apron.reformatting.Reformatter;
 import de.poiu.fez.Require;
 import de.poiu.kilt.bundlecontent.RememberingPropertyFile;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Set;
@@ -101,16 +102,19 @@ public class KiltReformatter {
    * The parameter <code>reformatKeyAndValue</code> specifies whether the key and value will be
    * reformatted by removing obsolete whitespace and newline characters.
    *
-   * @param propertyFiles the .properties files whose key-value pairs to reformat
+   * @param fileMatcher fileMatcher for the files to reformat
    * @param formatString the format string specifying how to format the key-value pairs
    * @param reformatKeyAndValue whether to reformat the key and value by stripping away all unnecessary whitespace and linebreaks
    * @param charset the charset to use for reading and writing the .properties files
    * @throws InvalidFormatException if the given format string is invalid
    */
-  public void reformat(final Set<File> propertyFiles, final String formatString, final boolean reformatKeyAndValue, final Charset charset) {
-    Require.nonNull(propertyFiles);
+  public void reformat(final FileMatcher fileMatcher, final String formatString, final boolean reformatKeyAndValue, final Charset charset) {
+    Require.nonNull(fileMatcher);
     Require.nonNull(formatString);
     Require.nonNull(charset);
+
+    final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
+    LOGGER.log(Level.INFO, "Reformatting entries in the following files: {}", propertyFiles);
 
     final Reformatter reformatter= new Reformatter(
       ReformatOptions.create()
@@ -127,12 +131,12 @@ public class KiltReformatter {
   /**
    * Reorders the entries in the given list of .properties files alphabetically the the names of their keys.
    *
-   * @param propertyFiles the .properties files whose entries to reorder
+   * @param fileMatcher fileMatcher for the files to reorder
    * @param attachCommentsTo how to handle BasicEntries (comments and empty lines) when reordering
    * @param charset the charset to use for reading and writing the .properties files
    */
-  public void reorderByKey(final Set<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
-    Require.nonNull(propertyFiles);
+  public void reorderByKey(final FileMatcher fileMatcher, final AttachCommentsTo attachCommentsTo, final Charset charset) {
+    Require.nonNull(fileMatcher);
     Require.nonNull(attachCommentsTo);
     Require.nonNull(charset);
 
@@ -140,6 +144,9 @@ public class KiltReformatter {
       ReformatOptions.create()
         .with(charset)
         .with(attachCommentsTo));
+
+    final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
+    LOGGER.log(Level.INFO, "Reordering entries in the following files: {}", propertyFiles);
 
     propertyFiles.stream().forEach(_f -> {
       final PropertyFile pf= PropertyFile.from(_f, charset);
@@ -153,14 +160,17 @@ public class KiltReformatter {
    * Reorders the entries in the given list of .properties files in the same order as in the given template.
    *
    * @param template the reference for the order of the entries
-   * @param propertyFiles the .properties files whose entries to reorder
+   * @param fileMatcher fileMatcher for the files to reorder
    * @param attachCommentsTo how to handle BasicEntries (comments and empty lines) when reordering
    * @param charset the charset to use for reading and writing the .properties files
    */
-  public void reorderByTemplate(final File template, final Set<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
-    Require.nonNull(propertyFiles);
+  public void reorderByTemplate(final File template, final FileMatcher fileMatcher, final AttachCommentsTo attachCommentsTo, final Charset charset) {
+    Require.nonNull(fileMatcher);
     Require.nonNull(attachCommentsTo);
     Require.nonNull(charset);
+
+    final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
+    LOGGER.log(Level.INFO, "Reordering entries by template {} in the following files: {}", template, propertyFiles);
 
     // create a PropertyFile instance for each file
     final PropertyFile reference= PropertyFile.from(template, charset);

@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.importexport;
 
-import de.poiu.kilt.importexport.XlsImExporter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
@@ -24,6 +23,7 @@ import de.poiu.apron.PropertyFile;
 import de.poiu.kilt.bundlecontent.Translation;
 import de.poiu.kilt.importexport.xls.I18nBundleKey;
 import de.poiu.kilt.importexport.xls.XlsFile;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,7 +34,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.junit.Ignore;
@@ -70,12 +73,14 @@ public class XlsImExporterTest {
       propertiesRootDirectory.resolve("i18n/messages.properties").toFile(),
       propertiesRootDirectory.resolve("i18n/messages_de.properties").toFile());
 
+    final FileMatcher fileMatcher= this.createFileMatcher(propertiesRootDirectory, resourceBundleFiles);
+
     final File xlsFile= this.tmpFolder.newFile("i18n.xlsx");
     xlsFile.delete();
 
     // - test
 
-    XlsImExporter.exportXls(propertiesRootDirectory, resourceBundleFiles, UTF_8, xlsFile);
+    XlsImExporter.exportXls(fileMatcher, UTF_8, xlsFile);
 
     // - verification
 
@@ -101,11 +106,13 @@ public class XlsImExporterTest {
 
     final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     final File xlsFile= new File(Resources.getResource("i18n_expected.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -128,11 +135,13 @@ public class XlsImExporterTest {
 
     final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     final File xlsFile= new File(Resources.getResource("i18n_added_fr.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -161,11 +170,13 @@ public class XlsImExporterTest {
       copyResourceToTmp("i18n/messages.properties"),
       copyResourceToTmp("i18n/messages_de.properties"));
 
+    final FileMatcher fileMatcher= this.createFileMatcher(propertiesRootDirectory, resourceBundleFiles);
+
     final File xlsFile= new File(Resources.getResource("i18n_line_deleted.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.DELETE);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.DELETE);
 
     // - verification
 
@@ -195,11 +206,13 @@ public class XlsImExporterTest {
       copyResourceToTmp("i18n/messages.properties"),
       copyResourceToTmp("i18n/messages_de.properties"));
 
+    final FileMatcher fileMatcher= this.createFileMatcher(propertiesRootDirectory, resourceBundleFiles);
+
     final File xlsFile= new File(Resources.getResource("i18n_line_deleted.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.COMMENT);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.COMMENT);
 
     // - verification
 
@@ -231,11 +244,13 @@ public class XlsImExporterTest {
       copyResourceToTmp("i18n/messages.properties"),
       copyResourceToTmp("i18n/messages_de.properties"));
 
+    final FileMatcher fileMatcher= this.createFileMatcher(propertiesRootDirectory, resourceBundleFiles);
+
     final File xlsFile= new File(Resources.getResource("i18n_line_deleted.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -268,11 +283,13 @@ public class XlsImExporterTest {
 
     final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     final File xlsFile= new File(Resources.getResource("libreoffice_nullValues.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -309,11 +326,13 @@ public class XlsImExporterTest {
 
     final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     final File xlsFile= new File(Resources.getResource("libreoffice_emptyStrings.xlsx").toURI());
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -348,6 +367,8 @@ public class XlsImExporterTest {
 
     final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     final File xlsFile= new File(Resources.getResource("libreoffice_emptyStrings.xlsx").toURI());
 
     final Path buttons_fr= this.createFile(propertiesRootDirectory.resolve("buttons_fr.properties"),
@@ -359,7 +380,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.importXls(propertiesRootDirectory, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
 
     // - verification
 
@@ -420,5 +441,15 @@ public class XlsImExporterTest {
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
+  }
+
+
+  private FileMatcher createFileMatcher(Path propertiesRootDirectory, Set<File> resourceBundleFiles) {
+    final List<String> includes= new ArrayList<>(resourceBundleFiles.size());
+    for (final File f : resourceBundleFiles) {
+      includes.add(f.getPath());
+    }
+
+    return new FileMatcher(propertiesRootDirectory, includes, Collections.EMPTY_LIST);
   }
 }

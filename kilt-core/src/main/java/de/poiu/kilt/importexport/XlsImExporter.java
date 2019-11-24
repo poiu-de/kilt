@@ -26,6 +26,7 @@ import de.poiu.kilt.bundlecontent.ResourceBundleContentHelper;
 import de.poiu.kilt.bundlecontent.Translation;
 import de.poiu.kilt.importexport.xls.I18nBundleKey;
 import de.poiu.kilt.importexport.xls.XlsFile;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -33,6 +34,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,11 +58,11 @@ public class XlsImExporter {
   //
   // Methods
 
-  public static void importXls(final Path propertiesRootDirectory,
-                                 final File xlsFile,
-                                 final Charset propertyFileEncoding,
-                                 final MissingKeyAction missingKeyAction) {
-    Require.nonNull(propertiesRootDirectory);
+  public static void importXls(final FileMatcher fileMatcher,
+                               final File xlsFile,
+                               final Charset propertyFileEncoding,
+                               final MissingKeyAction missingKeyAction) {
+    Require.nonNull(fileMatcher);
     Require.nonNull(xlsFile);
 
     final ApronOptions apronOptions= ApronOptions.create()
@@ -88,7 +90,7 @@ public class XlsImExporter {
         }
 
         if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
-          final File fileForBundle= getFileForBundle(propertiesRootDirectory.toFile(), bundleBasename, translation.getLang());
+          final File fileForBundle= getFileForBundle(fileMatcher.getRoot().toFile(), bundleBasename, translation.getLang());
           //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
           final PropertyFile propertyFile= new PropertyFile();
           bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
@@ -115,12 +117,14 @@ public class XlsImExporter {
   }
 
 
-  public static void exportXls(final Path propertiesRootDirectory,
-                               final Set<File> resourceBundleFiles,
+  public static void exportXls(final FileMatcher fileMatcher,
                                final Charset propertyFileEncoding,
                                final File xlsFile) {
-    final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
-    final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
+    final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
+    LOGGER.log(Level.INFO, "Exporting the following files to XLS(X): {}", propertyFiles);
+
+    final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(fileMatcher.getRoot());
+    final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(propertyFiles);
 
     final XlsFile xlsFileObject= new XlsFile(xlsFile);
 

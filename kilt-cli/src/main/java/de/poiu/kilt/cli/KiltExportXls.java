@@ -80,14 +80,12 @@ public class KiltExportXls extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
-    LOGGER.log(Level.INFO, "Exporting the following files to XLS: "+propertyFileSet);
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes);
 
     try {
       Files.createDirectories(this.xlsFile.toAbsolutePath().getParent());
 
-      XlsImExporter.exportXls(this.propertiesRootDirectory,
-                              propertyFileSet,
+      XlsImExporter.exportXls(fileMatcher,
                               this.propertyFileEncoding,
                               this.xlsFile.toFile());
     } catch (IOException e) {

@@ -64,16 +64,12 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("Exporting properties to XLS.");
 
-    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
-    this.getLog().info("Exporting the following files to XLS: "+propertyFileSet);
-
-
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes);
 
     try {
       Files.createDirectories(this.xlsFile.getAbsoluteFile().getParentFile().toPath());
 
-      XlsImExporter.exportXls(this.propertiesRootDirectory.toPath(),
-                              propertyFileSet,
+      XlsImExporter.exportXls(fileMatcher,
                               this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
                               this.xlsFile);
     } catch (IOException e) {

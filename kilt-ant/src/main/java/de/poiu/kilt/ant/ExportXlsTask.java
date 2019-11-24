@@ -87,13 +87,12 @@ public class ExportXlsTask extends Task {
     } else {
       this.log("Create XLS file from property files...");
 
-      final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+      final FileMatcher fileMatcher= new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
       final File file = new File(this.xlsFile);
 
-      XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),
-                                 propertyFileSet,
-                                 this.propertyFileEncoding,
-                                 file);
+      XlsImExporter.exportXls(fileMatcher,
+                              this.propertyFileEncoding,
+                              file);
 
       this.log("...done");
     }

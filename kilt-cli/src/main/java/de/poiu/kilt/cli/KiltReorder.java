@@ -90,14 +90,13 @@ public class KiltReorder extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
-    LOGGER.log(Level.INFO, "Reordering entries in the following files: "+propertyFileSet);
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(propertyFileSet, this.attachCommentsTo, super.propertyFileEncoding);
+      reformatter.reorderByKey(fileMatcher, this.attachCommentsTo, super.propertyFileEncoding);
     } else {
-      reformatter.reorderByTemplate(this.template, propertyFileSet, this.attachCommentsTo, super.propertyFileEncoding);
+      reformatter.reorderByTemplate(this.template, fileMatcher, this.attachCommentsTo, super.propertyFileEncoding);
     }
   }
 

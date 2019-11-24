@@ -17,6 +17,7 @@ package de.poiu.kilt.maven;
 
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.importexport.XlsImExporter;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import org.apache.logging.log4j.Level;
@@ -56,6 +57,7 @@ public class ImportXlsMojo extends AbstractKiltMojo {
    *  <li>DELETE: Delete the missing key-value-pairs</li>
    *  <li>COMMENT: Comment out the missing key-value-pairs</li>
    * </ul>
+   *
    */
   @Parameter(property = "missingKeyAction", defaultValue = "NOTHING")
   private MissingKeyAction missingKeyAction;
@@ -82,9 +84,9 @@ public class ImportXlsMojo extends AbstractKiltMojo {
       throw new RuntimeException("XLS file "+this.xlsFile.getAbsolutePath()+" does not exist.");
     }
 
-    //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes);
 
-    XlsImExporter.importXls(propertiesRootDirectory.toPath(),
+    XlsImExporter.importXls(fileMatcher,
                             this.xlsFile,
                             this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
                             this.missingKeyAction);

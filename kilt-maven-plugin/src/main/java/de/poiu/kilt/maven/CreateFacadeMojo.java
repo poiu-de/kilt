@@ -115,13 +115,14 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
-      final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
-      this.getLog().info("Creating facade for the following files: "+propertyFileSet);
+      final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+      final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
+      this.getLog().info("Creating facade for the following files: "+propertyFiles);
 
       try {
         // generate the the enum facade(s)
-        final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(propertiesRootDirectory);
-        final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFileSet);
+        final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(fileMatcher.getRoot());
+        final Map<String, Map<Language, File>> bundleNameToFilesMap = fbcHelper.toBundleNameToFilesMap(propertyFiles);
 
         final FacadeCreator facadeCreator = new FacadeCreator();
         for (final Map.Entry<String, Map<Language, File>> entry : bundleNameToFilesMap.entrySet()) {

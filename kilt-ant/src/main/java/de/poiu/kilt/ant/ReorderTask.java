@@ -91,16 +91,16 @@ public class ReorderTask extends Task {
     }
 
     this.log("Reorder key-value pairs in .properties files.");
-    final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+    final FileMatcher fileMatcher= new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(propertyFileSet,
+      reformatter.reorderByKey(fileMatcher,
                                attachCommentsTo,
                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     } else {
       reformatter.reorderByTemplate(this.template,
-                                    propertyFileSet,
+                                    fileMatcher,
                                     this.attachCommentsTo,
                                     this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     }

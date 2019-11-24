@@ -17,6 +17,7 @@ package de.poiu.kilt.ant;
 
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.importexport.XlsImExporter;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -59,7 +60,7 @@ public class ImportXlsTask extends Task {
   private boolean verbose= false;
 
   private Charset propertyFileEncoding;
-  
+
   private String xlsFile= null;
 
   private MissingKeyAction missingKeyAction= MissingKeyAction.NOTHING;
@@ -89,12 +90,14 @@ public class ImportXlsTask extends Task {
     } else {
       this.log("Write properties from XLS file back to property files...");
 
-      File file = new File(this.xlsFile);
+      final FileMatcher fileMatcher= new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
+      final File file = new File(this.xlsFile);
+
       if (file.exists()) {
-        XlsImExporter.importXls(Paths.get(propertiesRootDirectory),
-                                 file,
-                                 this.propertyFileEncoding,
-                                 this.missingKeyAction);
+        XlsImExporter.importXls(fileMatcher,
+                                file,
+                                this.propertyFileEncoding,
+                                this.missingKeyAction);
       }
 
       this.log("...done");

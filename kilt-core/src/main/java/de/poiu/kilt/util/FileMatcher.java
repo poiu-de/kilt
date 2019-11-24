@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.util;
 
+import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
@@ -115,9 +116,9 @@ public class FileMatcher {
    */
   public FileMatcher(final Path root, final List<String> i18nIncludes, final List<String> i18nExcludes) {
     this.root= root.toAbsolutePath().normalize();
-    this.i18nIncludes= new ArrayList<>(i18nIncludes);
+    this.i18nIncludes= ImmutableList.copyOf(i18nIncludes);
     this.i18nIncludePatterns= this.toMatchPatterns(i18nIncludes);
-    this.i18nExcludes= new ArrayList<>(i18nExcludes);
+    this.i18nExcludes= ImmutableList.copyOf(i18nExcludes);
     this.i18nExcludePatterns= this.toMatchPatterns(i18nExcludes);
   }
 
@@ -208,4 +209,21 @@ public class FileMatcher {
       throw new RuntimeException("Error finding included files in root directory '"+root.toString()+"'.", ex);
     }
   }
+
+
+  public Path getRoot() {
+    return root;
+  }
+
+
+  public List<String> getI18nIncludes() {
+    return i18nIncludes;
+  }
+
+
+  public List<String> getI18nExcludes() {
+    return i18nExcludes;
+  }
+
+
 }

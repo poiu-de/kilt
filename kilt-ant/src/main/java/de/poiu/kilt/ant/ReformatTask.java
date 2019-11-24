@@ -87,10 +87,10 @@ public class ReformatTask extends Task {
     }
 
     this.log("Reformat key-value pairs in .properties files.");
-    final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+    final FileMatcher fileMatcher= new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(propertyFileSet,
+    reformatter.reformat(fileMatcher,
                          format,
                          reformatKeysAndValues,
                          this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);

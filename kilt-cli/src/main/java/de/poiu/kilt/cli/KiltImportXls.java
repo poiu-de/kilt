@@ -19,6 +19,7 @@ import com.google.common.base.Joiner;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.cli.config.KiltProperty;
 import de.poiu.kilt.importexport.XlsImExporter;
+import de.poiu.kilt.util.FileMatcher;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.Level;
@@ -87,12 +88,14 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
       throw new RuntimeException("XLS(X) file "+this.xlsFile.toAbsolutePath()+" does not exist.");
     }
 
-    //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
 
-    XlsImExporter.importXls(propertiesRootDirectory,
-                                this.xlsFile.toFile(),
-                                this.propertyFileEncoding,
-                                this.missingKeyAction);
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes);
+
+
+    XlsImExporter.importXls(fileMatcher,
+                            this.xlsFile.toFile(),
+                            this.propertyFileEncoding,
+                            this.missingKeyAction);
   }
 
 

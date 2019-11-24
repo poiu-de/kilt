@@ -18,12 +18,14 @@ package de.poiu.kilt.reformatting;
 import com.google.common.collect.ImmutableSet;
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.apron.reformatting.InvalidFormatException;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import org.junit.Ignore;
@@ -63,10 +65,12 @@ public class KiltReformatterTest {
       + " key2 :   value2\r"
       + "\tkey3    value3\r\n");
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reformat(new HashSet<>(Arrays.asList(f1, f2)), "<key>\\t=\\t<value>\\n", false, UTF_8);
+      .reformat(fileMatcher, "<key>\\t=\\t<value>\\n", false, UTF_8);
 
     // - verification
 
@@ -96,12 +100,14 @@ public class KiltReformatterTest {
       + " key2 :   value2\r"
       + "\tkey3    value3\r\n");
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
     // - verification
 
     assertThatExceptionOfType(InvalidFormatException.class)
       .isThrownBy(() -> {
-        new KiltReformatter().reformat(new HashSet<>(Arrays.asList(f1, f2)), "<key> = <valueismissing>\\n", false, UTF_8);});
+        new KiltReformatter().reformat(fileMatcher, "<key> = <valueismissing>\\n", false, UTF_8);});
 
   }
 
@@ -123,10 +129,12 @@ public class KiltReformatterTest {
       + "    2\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reformat(new HashSet<>(Arrays.asList(f1)), "<key> = <value>\\n", false, UTF_8);
+      .reformat(fileMatcher, "<key> = <value>\\n", false, UTF_8);
 
     // - verification
 
@@ -160,10 +168,12 @@ public class KiltReformatterTest {
       + "    2\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reformat(new HashSet<>(Arrays.asList(f1)), "<key> = <value>\\n", true, UTF_8);
+      .reformat(fileMatcher, "<key> = <value>\\n", true, UTF_8);
 
     // - verification
 
@@ -186,10 +196,12 @@ public class KiltReformatterTest {
 
     // - preparation
 
+    final FileMatcher fileMatcher= new FileMatcher(Paths.get(""), new String[]{""}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(ImmutableSet.of(), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     //TODO: Verify that warning message gets logged?
 
@@ -218,10 +230,12 @@ public class KiltReformatterTest {
       + "keyA = valueA\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -274,10 +288,12 @@ public class KiltReformatterTest {
       + "keyZ = valueZ\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -336,12 +352,14 @@ public class KiltReformatterTest {
       + "keyZ = valueZ\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
     new KiltReformatter()
-      .reorderByTemplate(f2, new HashSet<>(Arrays.asList(f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f2, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -392,10 +410,12 @@ public class KiltReformatterTest {
       + "keyA = valueA\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -435,10 +455,12 @@ public class KiltReformatterTest {
       + "keyX = valueX\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -478,10 +500,12 @@ public class KiltReformatterTest {
       + "keyA = valueA\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -519,10 +543,12 @@ public class KiltReformatterTest {
       + "key_A = A\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -556,10 +582,12 @@ public class KiltReformatterTest {
       + "key_A = A\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.PREV_PROPERTY, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.PREV_PROPERTY, UTF_8);
 
     // - verification
 
@@ -593,10 +621,12 @@ public class KiltReformatterTest {
       + "key_A = A\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.ORIG_LINE, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.ORIG_LINE, UTF_8);
 
     // - verification
 
@@ -636,10 +666,12 @@ public class KiltReformatterTest {
       + "    3\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.ORIG_LINE, UTF_8);
+      .reorderByKey(fileMatcher, AttachCommentsTo.ORIG_LINE, UTF_8);
 
     // - verification
 
@@ -679,10 +711,13 @@ public class KiltReformatterTest {
       + "key_A = A\n"
     );
 
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{""});
+
     // - execution
+
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(new HashSet<>(Arrays.asList(f1)), "\\t<key> : <value>\\r\\n", false, UTF_8);
-    reformatter.reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+    reformatter.reformat(fileMatcher, "\\t<key> : <value>\\r\\n", false, UTF_8);
+    reformatter.reorderByKey(fileMatcher, AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 

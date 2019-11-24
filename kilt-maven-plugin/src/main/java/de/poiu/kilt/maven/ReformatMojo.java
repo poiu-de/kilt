@@ -71,13 +71,10 @@ public class ReformatMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    final Set<File> propertyFiles = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
-    this.getLog().info("Reformatting entries in the following files: "+propertyFiles);
-
-
+    final FileMatcher fileMatcher = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(propertyFiles,
+    reformatter.reformat(fileMatcher,
                          format,
                          reformatKeysAndValues,
                          this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);

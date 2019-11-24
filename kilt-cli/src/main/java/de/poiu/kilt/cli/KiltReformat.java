@@ -80,11 +80,10 @@ public class KiltReformat extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
-    LOGGER.log(Level.INFO, "Reformatting entries in the following files: "+propertyFileSet);
+    final FileMatcher fileMatcher= new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes);
 
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(propertyFileSet, this.format, this.reformatKeysAndValues, super.propertyFileEncoding);
+    reformatter.reformat(fileMatcher, this.format, this.reformatKeysAndValues, super.propertyFileEncoding);
   }
 
 
