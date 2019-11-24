@@ -45,13 +45,13 @@ public class ReformatMojo extends AbstractKiltMojo {
   // Attributes
 
   /** The format string to use for formatting the key-value pairs. */
-  @Parameter(property="format", defaultValue = "<key> = <value>\\n", required = true)
+  @Parameter(property="format", defaultValue = "<key> = <value>\\n")
   private String format;
 
   /**
    * Whether to reformat the keys and values themselves by removing insignificant whitespace and linebreaks.
    */
-  @Parameter(property="reformatKeysAndValues", defaultValue= "false", required = true)
+  @Parameter(property="reformatKeysAndValues", defaultValue= "false")
   private boolean reformatKeysAndValues= false;
 
 
