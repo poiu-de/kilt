@@ -89,7 +89,7 @@ public class ExportXlsTask extends Task {
       XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),
                                  propertyFileSet,
                                  this.propertyFileEncoding,
-                                 file.toPath());
+                                 file);
 
       this.log("...done");
     }

@@ -73,7 +73,7 @@ public class XlsImExporterTest {
 
     // - test
 
-    XlsImExporter.exportXls(propertiesRootDirectory, resourceBundleFiles, UTF_8, xlsFile.toPath());
+    XlsImExporter.exportXls(propertiesRootDirectory, resourceBundleFiles, UTF_8, xlsFile);
 
     // - verification
 

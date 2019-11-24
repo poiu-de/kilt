@@ -113,11 +113,11 @@ public class XlsImExporter {
   public static void exportXls(final Path propertiesRootDirectory,
                                final Set<File> resourceBundleFiles,
                                final Charset propertyFileEncoding,
-                               final Path xlsFilePath) {
+                               final File xlsFile) {
     final ResourceBundleContentHelper fbcHelper= new ResourceBundleContentHelper(propertiesRootDirectory);
     final Map<String, Map<Language, File>> bundleNameToFilesMap= fbcHelper.toBundleNameToFilesMap(resourceBundleFiles);
 
-    final XlsFile xlsFile= new XlsFile(xlsFilePath.toFile());
+    final XlsFile xlsFileObject= new XlsFile(xlsFile);
 
     bundleNameToFilesMap.entrySet().forEach((entry) -> {
       final String bundleName= entry.getKey();
@@ -130,11 +130,11 @@ public class XlsImExporter {
         final String propertyKey= e.getKey();
         final Collection<Translation> translations= e.getValue();
 
-        xlsFile.setValue(new I18nBundleKey(bundleName, propertyKey), translations);
+        xlsFileObject.setValue(new I18nBundleKey(bundleName, propertyKey), translations);
       });
     });
 
-    xlsFile.save();
+    xlsFileObject.save();
   }
 
 

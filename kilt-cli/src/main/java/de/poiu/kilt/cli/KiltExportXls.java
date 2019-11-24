@@ -88,7 +88,7 @@ public class KiltExportXls extends AbstractKiltCommand implements Runnable {
       XlsImExporter.exportXls(this.propertiesRootDirectory,
                               propertyFileSet,
                               this.propertyFileEncoding,
-                              this.xlsFile);
+                              this.xlsFile.toFile());
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);
     }
