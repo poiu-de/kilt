@@ -79,10 +79,12 @@ public class FacadeCreator {
 
     // build an enum class for the resource bundle
     final TypeSpec.Builder bundleEnumBuilder= TypeSpec.enumBuilder(enumName)
-            .addJavadoc("@Generated(\n"
+            .addJavadoc("<pre>\n"
+              + "{@literal @Generated}(\n"
               + "\tvalue = $S\n"
               + "\tdate = $S\n"
-              + ")\n",
+              + ")\n"
+              + "</pre>\n",
               new Object[]{this.getClass().getName(), ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)})
 //            .addAnnotation(AnnotationSpec.builder(Generated.class)
 //              .addMember("value", "$S", this.getClass().getName())
