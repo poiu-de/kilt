@@ -31,7 +31,7 @@ It can help by
 
  - Converting i18n resource bundles to and from XLS(X) sheets for easier
    translation by a small translation team.
- - Providing a Facade to access the entries in a i18n resource bundle
+ - Providing a facade to access the entries in a i18n resource bundle
    statically in a type safe way.
  - Reformatting and reordering entries in resource bundles to maintain a
    constant style and order.
@@ -173,7 +173,7 @@ The accessor class can even be used for resource bundles without a
 generated facade.
 
 
-==== Usage of the Java Facade
+==== Usage of the Java facade
 
 Kilt provides the class `I18n` for accessing the resource bundles keys of
 the generated enum facades as well as keys of resource bundles without a
@@ -243,7 +243,7 @@ the maven coordinates:
       </dependency>
     </dependencies>
 ----
-// I18n in combination with enum Facades
+// I18n in combination with enum facades
 
 
 [[reformat]]

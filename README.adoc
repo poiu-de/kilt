@@ -28,7 +28,7 @@ It can help by
 
  - Converting i18n resource bundles to and from XLS(X) sheets for easier
    translation by a small translation team.
- - Providing a Facade to access the entries in a i18n resource bundle
+ - Providing a facade to access the entries in a i18n resource bundle
    statically in a type safe way.
  - Reformat and reorder entries in resource bundles to maintain a constant
    style and order.
