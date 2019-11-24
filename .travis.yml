@@ -4,6 +4,10 @@ dist: trusty
 
 jdk:
   - oraclejdk8
+  - oraclejdk11
+  - oraclejdk-ea
   - openjdk8
   - openjdk11
   - openjdk12
+  - openjdk13
+  - openjdk-ea
