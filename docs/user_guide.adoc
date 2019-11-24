@@ -5,7 +5,7 @@ Marco Herrn <marco@mherrn.de>
 :toc: left
 :toclevels: 4
 :y: ✔
-:n: 
+:n:
 :c: icon:file-text-o[role="blue"]
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
@@ -13,7 +13,7 @@ Marco Herrn <marco@mherrn.de>
 :license-link: ../LICENSE.txt
 :kilt-version: 0.3.0
 
-User Guide for Kilt (**K**een **I**18n **L**10n and **I**9n) 
+User Guide for Kilt (**K**een **I**18n **L**10n and **I**9n)
 
 Create an XLS(X) sheet from Java localization resource bundles and vice versa.
 
@@ -29,8 +29,8 @@ the translation resources in type-safe manner.
 
 Kilt is available as:
 
- * a standalone application 
- * an ant task to be integrated with an ant-based application 
+ * a standalone application
+ * an ant task to be integrated with an ant-based application
  * a maven plugin to be integrated with a maven-based application
 
 
@@ -40,7 +40,7 @@ Kilt supports the translation workflow inside a company by providing the
 translation resources (Java i18n resource bundles) as a more
 translator-friendly XLS(X) sheet. The translation team can then do their
 translations directly inside the XLS(X) sheet. The translated sheet can then
-be imported back into the actual resource bundles used by the application. 
+be imported back into the actual resource bundles used by the application.
 
 .Common translation workflow with Kilt
 image::workflow.svg[Common translation workflow with Kilt]
@@ -56,14 +56,14 @@ they are.
 
 === Type-safe access to i18n resources
 
-Since the usual approach of accessing translated resources in Java uses
-strings it is quite error-prone, since typos are common and the software
-developer needs to know the exact name of the resource bundle keys.
+The usual approach of accessing translated resources in Java uses strings
+and is therefore quite error-prone. Typos are common and the the software
+developer needs to know the exact name of the resource bundle key.
 
 Kilt eases the usage of translated resoures by allowing to generate enum
 facades for resource bundles to allow type-safe access to these resources.
 This approach not only shows problems with localization at compile time,
-but it is also easy for the developers to find the necessary resources by 
+but it is also easy for the developers to find the necessary resources by
 utilizing the code completion of modern IDEs.
 
 The generated enum facades even contain the actual translated values in the
@@ -125,7 +125,7 @@ reorder the resource bundle files (although translated keys that are
 missing in the resources bundles will be added to the end of the file).
 
 Kilt also allows removing keys from the resource bundles that are missing
-from the translated XLS(X), but does not do so by default. (TBD)
+in the translated XLS(X), but does not do so by default.
 
 
 === Creating a Java facade for type safe access to localized messages
@@ -162,7 +162,7 @@ final String valueFromOtherBundle= I18n.get("otherBundle", "otherKey");
 
 //TODO: Sollte das noch irgendwo in der Einleitung beschrieben werden?
 The accessor class allows marking missing translations instead of throwing
-a MissingResourceException. This allow to easily spot missing translations
+a MissingResourceException. This allows to easily spot missing translations
 without breaking the functionality of the application.
 
 //.Example screenshot of a marked missing translation
@@ -215,7 +215,7 @@ the maven coordinates:
 Usage
 -----
 
-Kilt can be used in three different ways. 
+Kilt can be used in three different ways.
 
  * As a standalone application
  * As an ant task
@@ -226,7 +226,7 @@ Kilt can be used in three different ways.
 To use Kilt as a standalone tool, download and unpack the kilt-cli package
 from the {download-page}[Download] page.
 
-It contains a shell script for Linux and a batch file for windows and a
+It contains a shell script for Linux, a batch file for Windows and a
 kilt.properties file for the configuration.
 
 To execute the tool run
@@ -235,7 +235,7 @@ To execute the tool run
 ./kilt.sh <command>
 ----
 
-on Linux or 
+on Linux or
 
 ----
 kilt.bat <command>
@@ -251,20 +251,26 @@ create an XLS(X) sheet only for the english language run
 ./kilt.sh create-xls --i18nIncludes=**/*_en*.properties
 ----
 
-See <<Commands>> for a list of the available commands and <<Parameters>>
+See <<Commands,Commands>> for a list of the available commands and <<Parameters,Parameters>>
 for a detailed description of the available configuration parameters.
 
-To show the usage help of the tool call with the parameter `-h` or `--help`
+To show the usage help of the tool call it with the parameter `-h` or `--help`:
 
 ----
 ./kilt.sh --help
 ----
 
 To show the usage help of a specific command use the command `help`
-followed by the required command
+followed by the required command:
 
 ----
 ./kilt.sh help export-xls
+----
+
+or specify the `-h` or `--help` flag after that command:
+
+----
+./kilt.sh export-xls --help
 ----
 
 // TODO: Autocompletion?
@@ -275,7 +281,7 @@ followed by the required command
 To use Kilt as an ant task, download and unpack the kilt-ant package from
 the {download-page}[Download] page.
 
-It contains a build.xml file and kilt.properties file to be used
+It contains a build.xml file and a kilt.properties file to be used
 standalone (but still requires ant to be run) or as a sample to be
 integrated into the build script of another application.
 
@@ -285,7 +291,7 @@ To execute a command run
 ant <command>
 ----
 
-See <<Commands>> for a list of the available commands and <<Parameters>>
+See <<Commands, Commands>> for a list of the available commands and <<Parameters, Parameters>>
 for a detailed description of the available configuration parameters.
 
 
@@ -302,7 +308,7 @@ build, therefore the corresponding maven goal is not bound to any maven
 lifecycle phase by default.
 
 To integrate the kilt-maven-plugin into your application include the
-following plugin section in the pom or your project:                 
+following plugin section in the pom or your project:
 [source,xml,subs="verbatim,attributes"]
 ----
   <build>
@@ -323,10 +329,10 @@ following plugin section in the pom or your project:
 //TODO: Da oben sollte man eine Beispielkonfiguration angeben
 
 //FIXME: Diese Datei gibt es nicht.
-See <<maven-plugin.adoc#exportXls,the Kilt Maven Plugin description>> for a 
+See <<maven-plugin.adoc#exportXls,the Kilt Maven Plugin description>> for a
 detailed description of the available configuration parameters.
 
-To execute a goal run 
+To execute a goal run
 
 ----
 mvn kilt:<command>
@@ -344,7 +350,7 @@ mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
 Commands
 --------
 
-Kilt provides three commands. These names of these commands is the same for
+Kilt provides three commands. The names of these commands are the same for
 the commands in the stanalone tool, the ant tasks and the maven goals.
 
 export-xls:: Exports the translations in Java i18n resource bundle files into an
@@ -364,7 +370,7 @@ Kilt supports the following parameters that can be set in the configuration
 files for the standalone tool and the ant tasks and in the plugin
 configuration of the maven plugin.
 
-All parameters can additionally be given on command line parameters to
+All parameters can additionally be given as command line parameters to
 override the configuration for the standalone tool and the maven plugin.
 The parameters of the ant task can not be overridden.
 
@@ -376,28 +382,28 @@ they apply.
 |===
 | Parameter                  | Description                                    3+| Applies to
 
-| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade 
-| propertiesRootDirectory    | The directory below which the i18n resource      
-                               bundle files reside.                             | {y}         |  {y}        | {y}           
-| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}           
+| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade
+| propertiesRootDirectory    | The directory below which the i18n resource
+                               bundle files reside.                             | {y}         |  {y}        | {y}
+| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}
 | i18nIncludes               | The Java i18n resource bundles to include in the
-                               processing.                                      | {y}         |  {y}        | {y}           
-| i18nExcludes               | The Java i18n resource bundles to exclude from 
-                               the processing.                                  | {y}         |  {y}        | {y}           
+                               processing.                                      | {y}         |  {y}        | {y}
+| i18nExcludes               | The Java i18n resource bundles to exclude from
+                               the processing.                                  | {y}         |  {y}        | {y}
 | propertyFileEncoding       | The encoding of the Java i18n resource bundle
                                files. Prior to Java 9 the default encoding in
-                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}           
+                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}
 | xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}
-| missingKeyAction           | What to to if the target file contains key-value
-                               pairs that do not exist in the input file.   
+| missingKeyAction           | What to do if the target file contains key-value
+                               pairs that do not exist in the input file.
                                Possible values: DELETE, COMMENT, NOTHING        | {n}         |  {y}        | {n}
-| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}           
+| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}
 | generatedPackage           | The package name into which to generate the
-                               Java enum facade classes.                        | {n}         |  {n}        | {y}           
-| copyFacadeAccessorClasses  | Whether to copy the Facade accessor classes into
-                               the generated output.                            | {n}         |  {n}        | {y}           
-| facadeAccessorClassName    | The class name to use when copying the facade   
-                               accessor classes.                                | {n}         |  {n}        | {y}           
+                               Java enum facade classes.                        | {n}         |  {n}        | {y}
+| copyFacadeAccessorClasses  | Whether to copy the facade accessor classes into
+                               the generated output.                            | {n}         |  {n}        | {y}
+| facadeAccessorClassName    | The class name to use when copying the facade
+                               accessor classes.                                | {n}         |  {n}        | {y}
 
 
 |===
