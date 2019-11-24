@@ -378,34 +378,44 @@ The following list describes the available parameters and to which commands
 they apply.
 
 .Kilt parameters
-[width="100%",cols="1s,2d,1d,1d,1d"]
+[width="100%"]
 |===
-| Parameter                  | Description                                    3+| Applies to
+| Parameter                  | Description                                    5+| Applies to
 
-| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade
+| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade m| reformat m| reorder
 | propertiesRootDirectory    | The directory below which the i18n resource
-                               bundle files reside.                             | {y}         |  {y}        | {y}
-| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}
+                               bundle files reside.                             | {y}         |  {y}        | {y}            | {y}       | {y}
+| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}            | {y}       | {y}
 | i18nIncludes               | The Java i18n resource bundles to include in the
-                               processing.                                      | {y}         |  {y}        | {y}
+                               processing.                                      | {y}         |  {y}        | {y}            | {y}       | {y}
 | i18nExcludes               | The Java i18n resource bundles to exclude from
-                               the processing.                                  | {y}         |  {y}        | {y}
+                               the processing.                                  | {y}         |  {y}        | {y}            | {y}       | {y}
 | propertyFileEncoding       | The encoding of the Java i18n resource bundle
                                files. Prior to Java 9 the default encoding in
-                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}
-| xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}
+                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}            | {y}       | {y}
+| xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}            | {n}       | {n}
 | missingKeyAction           | What to do if the target file contains key-value
                                pairs that do not exist in the input file.
-                               Possible values: DELETE, COMMENT, NOTHING        | {n}         |  {y}        | {n}
-| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}
+                               Possible values: DELETE, COMMENT, NOTHING        | {n}         |  {y}        | {n}            | {n}       | {n}
+| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}            | {n}       | {n}
 | generatedPackage           | The package name into which to generate the
-                               Java enum facade classes.                        | {n}         |  {n}        | {y}
+                               Java enum facade classes.                        | {n}         |  {n}        | {y}            | {n}       | {n}
 | copyFacadeAccessorClasses  | Whether to copy the facade accessor classes into
-                               the generated output.                            | {n}         |  {n}        | {y}
+                               the generated output.                            | {n}         |  {n}        | {y}            | {n}       | {n}
 | facadeAccessorClassName    | The class name to use when copying the facade
-                               accessor classes.                                | {n}         |  {n}        | {y}
-
-
+                               accessor classes.                                | {n}         |  {n}        | {y}            | {n}       | {n}
+| format                     | The format to use for formatting the entries
+                               in the resource bundles.                         | {n}         |  {n}        | {n}            | {y}       | {n}
+| reformatKeyAndValue        | Whether to reformat the keys and values
+                               themselves by removing insignificant whitespace
+                               and linebreaks.                                  | {n}         |  {n}        | {n}            | {y}       | {n}
+| byKey                      | Reorder the entries alphabetically by
+                               the name of their keys.                          | {n}         |  {n}        | {n}            | {n}       | {y}
+| byTemplate                 | Reorder the entries in the same order as
+                               the key-value pairs in this template file.       | {n}         |  {n}        | {n}            | {n}       | {y}
+| attachCommentsTo           | How to handle comment lines and empty lines.
+                               Possible values:
+                               NEXT_PROPERTY, PREV_PROPERTY, ORIG_LINE          | {n}         |  {n}        | {n}            | {n}       | {y}
 |===
 
 License
