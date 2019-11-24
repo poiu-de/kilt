@@ -16,12 +16,12 @@
 package de.poiu.kilt.internal;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
 import de.poiu.apron.PropertyFile;
 import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
+import de.poiu.kilt.facade.creation.TranslationComparator;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -51,6 +51,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public class ResourceBundleContent {
 
 
+
   /////////////////////////////////////////////////////////////////////////////
   //
   // Attributes
@@ -59,7 +60,11 @@ public class ResourceBundleContent {
   private final String bundlBaseName;
 
   /** All keys of this bundle and their available translations. */
-  private final Multimap<String, Translation> content= LinkedListMultimap.create();
+  private final Multimap<String, Translation> content=
+    MultimapBuilder
+      .linkedHashKeys()
+      .treeSetValues(TranslationComparator.INSTANCE)
+      .build();
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -74,7 +79,6 @@ public class ResourceBundleContent {
    */
   private ResourceBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
     this.bundlBaseName= bundleBaseName;
-    //FIXME: Sollte das irgendwie sortiert sein? Alphabetisch? Oder nach der gelesenen Reihenfolge?
     this.content.putAll(content);
   }
 
