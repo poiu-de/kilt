@@ -1,11 +1,42 @@
 Kilt changelog
 ==============
 
-Version 0.4.0 - 2018-11-09
+
+Version 1.0.0 - 2019-11-24
 --------------------------
 
- - Provide new commands to reformat and reorder resource bundles
+[base]
+ - Provide new commands to reformat and reorder resource bundles (#2)
+ - Write a few more log messages
+ - Provide example application to show usage of Kilt
+
+[xls-import / xls-export]
  - Avoid error on values without key
+ - Avoid errors when reading XLS(X) files with `null` values (#3)
+ - Do not create create empty files on xls-import (#4)
+ - Maintain order of entries on xls-export
+ - xls-import now respects i18nInclude and i18nExclude properties
+
+[create-facade]
+ - I18n facade now provides #contains() method (#1)
+ - I18n facade now provides #getOrDefault() method
+ - Generated enum facades don't have a @Generated annotation anymore
+ - Package of generated enum facades is now `de.poiu.kilt.facade`
+ - Sort translations in javadoc of generated enum facade
+
+[cli]
+ - Show valid missingKeyActions in CLI help
+ - Refined messages of CLI application
+
+[maven-plugin]
+ - Combine `xlsFileName` and `xlsOutputDirectory` parameters to `xlsFile`
+   in maven-plugin
+
+
+Version 0.3.1 - 2019-03-05
+--------------------------
+
+ - Upgrade Apron library to 2.0.1 to benefit from bugfixes
 
 
 Version 0.3.0 - 2018-09-27
