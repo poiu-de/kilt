@@ -51,7 +51,7 @@ public class ManifestVersionProvider implements IVersionProvider {
 
   private boolean isApplicableManifest(Manifest manifest) {
     Attributes attributes = manifest.getMainAttributes();
-    return "de.poiu.kilt.Kilt".equals(get(attributes, "Main-Class"));
+    return "de.poiu.kilt.cli.Kilt".equals(get(attributes, "Main-Class"));
   }
 
 

@@ -20,12 +20,12 @@ import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.PathUtils;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Help.Ansi;
 import picocli.CommandLine.Option;
 
 
@@ -123,15 +123,11 @@ public class KiltReorder extends AbstractKiltCommand implements Runnable {
    */
   private void validateParameters() {
     if (this.byKey && this.template != null) {
-      System.err.println("The options --byKey and --byTemplate may not be given at the same time.");
-      CommandLine.usage(this, System.out);
-      System.exit(1);
+      throw new ValidationException("The options --byKey and --byTemplate may not be given at the same time.");
     }
 
     if (!this.byKey && this.template == null) {
-      System.err.println("One of --byKey or--byTemplate must be given.");
-      CommandLine.usage(this, System.out);
-      System.exit(1);
+      throw new ValidationException("One of --byKey or--byTemplate must be given.");
     }
   }
 }

@@ -62,6 +62,11 @@ public class Kilt implements Runnable {
   }
 
   public static void main(String[] args) {
-    CommandLine.run(new Kilt(), System.out, args);
+    final int exitCode= new CommandLine(new Kilt())
+      .setUsageHelpAutoWidth(true)
+      .setExecutionExceptionHandler(new ExecutionExceptionHandler())
+      .execute(args);
+
+    System.exit(exitCode);
   }
 }
