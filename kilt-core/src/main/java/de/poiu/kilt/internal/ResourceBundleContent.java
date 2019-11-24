@@ -25,6 +25,9 @@ import java.util.Map;
 import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
 import de.poiu.apron.PropertyFile;
 import java.nio.charset.Charset;
+import java.util.Collection;
+import java.util.Set;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
@@ -148,7 +151,7 @@ public class ResourceBundleContent {
    * @throws InconsistentBundleBaseNameException if the given files don't share a common basename
    */
   public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles, final Charset charset) {
-    final SetMultimap<String, Translation> translations= MultimapBuilder.hashKeys().linkedHashSetValues().build();
+    final SetMultimap<String, Translation> translations= MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
 
     for (final Map.Entry<Language, File> entry : bundleFiles.entrySet()) {
       final Language lang = entry.getKey();
