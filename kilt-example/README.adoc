@@ -7,7 +7,7 @@ Marco Herrn <marco@mherrn.de>
 :kilt-homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
 :license-link: ./LICENSE.txt
-:kilt-version: 0.3.0
+:kilt-version: 1.0.0
 :source-highlighter: prettify
 
 Example application demonstrating the usage of the {kilt-homepage}[Kilt toolset] for

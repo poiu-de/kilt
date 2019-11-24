@@ -13,7 +13,7 @@ Marco Herrn <marco@mherrn.de>
 :javadoc-url: https://somewhere.else
 :apron: https://github.com/hupfdule/apron
 :license-link: ../LICENSE.txt
-:kilt-version: 0.3.0
+:kilt-version: 1.0.0
 
 User Guide for Kilt (**K**ilt **I**18n **L**10n and **I**9n)
 

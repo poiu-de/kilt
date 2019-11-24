@@ -7,7 +7,7 @@ Marco Herrn <marco@mherrn.de>
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
 :license-link: ./LICENSE.txt
-:kilt-version: 0.3.0
+:kilt-version: 1.0.0
 
 [.float-group]
 --
