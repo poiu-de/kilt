@@ -182,7 +182,7 @@ everything in our pom.xml.
 
 ////
 //FIXME: This does not work! Only the 'verbose' and 'propertiesRootDirectory'
-can be set via cmdline. All properties defined in subclasses don't work.
+//       can be set via cmdline. All properties defined in subclasses don't work.
 
 However, we can override those settings on the command line.
 Issue the following to get a list of all available parameters to the goal.

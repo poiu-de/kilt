@@ -104,8 +104,6 @@ Kilt functions
 Kilt provides the following commands:
 
 
-// FIXME: Link from here?
-
 <<export-xls, export-xls>>:: Exports the translations in Java i18n resource bundle files into an
 XLS(X) file.
 
@@ -388,7 +386,6 @@ following plugin section in the pom or your project:
 ----
 //TODO: Da oben sollte man eine Beispielkonfiguration angeben
 
-//FIXME: Diese Datei gibt es nicht.
 See <<Parameters,Parameters>> for a
 detailed description of the available configuration parameters.
 
