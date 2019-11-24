@@ -130,7 +130,7 @@ Usage
 
 // Hier was schnelles hinschreiben?
 
-See <<docs/user_guide.adoc#,the main user guide>> for a detailed usage
+See link:docs/user_guide.adoc[the main user guide] for a detailed usage
 description of Kilt.
 
 
