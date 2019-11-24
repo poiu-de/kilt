@@ -355,6 +355,10 @@ public class XlsFile {
 
     for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
       final Row row= this.i18nSheet.getRow(i);
+      //LibreOffice sometimes creates sheets that are broken and return a larget last row that really exists
+      if (row == null) {
+        continue;
+      }
       final Optional<String> baseBundleName= this.i18nSheet.getStringValue(i, 0);
       final Optional<String> key= this.i18nSheet.getStringValue(i, 1);
       final I18nBundleKey i18nKey= new I18nBundleKey(baseBundleName.orElse(""), key.orElse(""));
