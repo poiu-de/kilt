@@ -13,14 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal;
+package de.poiu.kilt.importexport;
 
 import de.poiu.apron.ApronOptions;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.PropertyFile;
 import de.poiu.fez.Require;
-import de.poiu.kilt.internal.xls.I18nBundleKey;
-import de.poiu.kilt.internal.xls.XlsFile;
+import de.poiu.kilt.bundlecontent.Language;
+import de.poiu.kilt.bundlecontent.RememberingPropertyFile;
+import de.poiu.kilt.bundlecontent.ResourceBundleContent;
+import de.poiu.kilt.bundlecontent.ResourceBundleContentHelper;
+import de.poiu.kilt.bundlecontent.Translation;
+import de.poiu.kilt.importexport.xls.I18nBundleKey;
+import de.poiu.kilt.importexport.xls.XlsFile;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Path;

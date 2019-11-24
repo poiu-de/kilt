@@ -16,7 +16,7 @@
 package de.poiu.kilt.maven;
 
 import de.poiu.apron.MissingKeyAction;
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.importexport.XlsImExporter;
 import java.io.File;
 import java.nio.charset.Charset;
 import org.apache.logging.log4j.Level;

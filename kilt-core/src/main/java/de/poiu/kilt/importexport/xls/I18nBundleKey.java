@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal.xls;
+package de.poiu.kilt.importexport.xls;
 
 import de.poiu.fez.Require;
 import java.util.Objects;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal.xls;
+package de.poiu.kilt.importexport.xls;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.BiMap;
@@ -22,9 +22,9 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import de.poiu.fez.Require;
-import de.poiu.kilt.internal.Language;
-import de.poiu.kilt.internal.Translation;
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.bundlecontent.Language;
+import de.poiu.kilt.bundlecontent.Translation;
+import de.poiu.kilt.importexport.XlsImExporter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

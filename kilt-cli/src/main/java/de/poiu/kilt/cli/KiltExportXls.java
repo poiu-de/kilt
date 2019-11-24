@@ -17,7 +17,7 @@ package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
 import de.poiu.kilt.cli.config.KiltProperty;
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.importexport.XlsImExporter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;

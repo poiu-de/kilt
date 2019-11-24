@@ -15,8 +15,8 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import de.poiu.kilt.internal.Language;
-import de.poiu.kilt.internal.Translation;
+import de.poiu.kilt.bundlecontent.Language;
+import de.poiu.kilt.bundlecontent.Translation;
 import java.util.Comparator;
 
 

@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal;
+package de.poiu.kilt.bundlecontent;
 
+import de.poiu.kilt.bundlecontent.ResourceBundleContentHelper;
+import de.poiu.kilt.bundlecontent.Language;
 import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.nio.file.Path;

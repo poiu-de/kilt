@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal;
+package de.poiu.kilt.bundlecontent;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;

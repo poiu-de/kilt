@@ -16,7 +16,7 @@
 package de.poiu.kilt.ant;
 
 import de.poiu.apron.MissingKeyAction;
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.importexport.XlsImExporter;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;

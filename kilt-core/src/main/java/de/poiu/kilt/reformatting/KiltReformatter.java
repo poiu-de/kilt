@@ -24,7 +24,7 @@ import de.poiu.apron.reformatting.InvalidFormatException;
 import de.poiu.apron.reformatting.ReformatOptions;
 import de.poiu.apron.reformatting.Reformatter;
 import de.poiu.fez.Require;
-import de.poiu.kilt.internal.RememberingPropertyFile;
+import de.poiu.kilt.bundlecontent.RememberingPropertyFile;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Set;

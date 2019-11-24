@@ -15,7 +15,7 @@
  */
 package de.poiu.kilt.ant;
 
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.importexport.XlsImExporter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;

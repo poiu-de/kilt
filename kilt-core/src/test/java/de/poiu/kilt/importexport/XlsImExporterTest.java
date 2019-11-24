@@ -13,15 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal;
+package de.poiu.kilt.importexport;
 
+import de.poiu.kilt.importexport.XlsImExporter;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.PropertyFile;
-import de.poiu.kilt.internal.xls.I18nBundleKey;
-import de.poiu.kilt.internal.xls.XlsFile;
+import de.poiu.kilt.bundlecontent.Translation;
+import de.poiu.kilt.importexport.xls.I18nBundleKey;
+import de.poiu.kilt.importexport.xls.XlsFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

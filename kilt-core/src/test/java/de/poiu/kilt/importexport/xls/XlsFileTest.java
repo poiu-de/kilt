@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.poiu.kilt.internal.xls;
+package de.poiu.kilt.importexport.xls;
 
+import de.poiu.kilt.importexport.xls.XlsFile;
+import de.poiu.kilt.importexport.xls.I18nBundleKey;
 import com.google.common.io.Resources;
-import de.poiu.kilt.internal.Language;
-import de.poiu.kilt.internal.Translation;
+import de.poiu.kilt.bundlecontent.Language;
+import de.poiu.kilt.bundlecontent.Translation;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;

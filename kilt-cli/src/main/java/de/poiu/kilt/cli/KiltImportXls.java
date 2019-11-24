@@ -18,7 +18,7 @@ package de.poiu.kilt.cli;
 import com.google.common.base.Joiner;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.cli.config.KiltProperty;
-import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.importexport.XlsImExporter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.Level;
