@@ -20,6 +20,7 @@ import de.poiu.apron.MissingKeyAction;
 import de.poiu.kilt.internal.XlsImExporter;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.logging.log4j.Level;
@@ -43,14 +44,11 @@ public class ImportXlsMojo extends AbstractKiltMojo {
   // Attributes
 
   /**
-   * Location of the output directory root.
+   * The XLS(X) file to import from.
    */
-  @Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}", required = true)
-  private File xlsOutputDirectory;
+  @Parameter(property = "xlsFile", required= true, defaultValue = "${project.build.directory}/i18n.xlsx")
+  private File xlsFile;
 
-
-  @Parameter(property = "xlsFileName", required= true, defaultValue = "i18n.xlsx")
-  private String xlsFileName;
 
 
   /**
@@ -83,19 +81,16 @@ public class ImportXlsMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    System.out.println("MIKIAK: "+this.missingKeyAction);
-
     this.getLog().info("Importing translated properties from XLS.");
 
-    final File file = new File(this.xlsOutputDirectory, this.xlsFileName);
-    if (!file.exists()) {
-      throw new RuntimeException("XLS file "+file.getAbsolutePath()+" does not exist.");
+    if (!this.xlsFile.exists()) {
+      throw new RuntimeException("XLS file "+this.xlsFile.getAbsolutePath()+" does not exist.");
     }
 
     //TODO: Hier müsste ich einschränken können, welche Ressourcen importiert werden sollen
 
     XlsImExporter.importXls(propertiesRootDirectory.toPath(),
-                            file,
+                            this.xlsFile,
                             this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
                             this.missingKeyAction);
 
