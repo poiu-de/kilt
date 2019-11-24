@@ -30,6 +30,8 @@ It can help by
    translation by a small translation team.
  - Providing a Facade to access the entries in a i18n resource bundle
    statically in a type safe way.
+ - Reformat and reorder entries in resource bundles to maintain a constant
+   style and order.
 
 Kilt is available as
 
@@ -144,7 +146,7 @@ To use Kilt as a standalone tool download the kilt-cli package from the
 Usage
 -----
 
-// Hier was schnelles hinschreiben?
+// TODO: Hier was schnelles hinschreiben?
 
 See link:docs/user_guide.adoc[the main user guide] for a detailled usage
 description of Kilt.

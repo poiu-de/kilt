@@ -10,6 +10,7 @@ Marco Herrn <marco@mherrn.de>
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
 :javadoc-url: https://somewhere.else
+:apron: https://github.com/hupfdule/apron
 :license-link: ../LICENSE.txt
 :kilt-version: 0.3.0
 
@@ -23,9 +24,17 @@ image::kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n, width=100]
 Introduction
 ------------
 
-Kilt is a set of small tools to convert Java i18n resource bundles to
-XLS(X) and vice versa. It also contains a generator for a facade to access
-the translation resources in type-safe manner.
+Kilt is a set of small tools to ease the handling of Java i18n resource
+bundles.
+
+It can help by
+
+ - Converting i18n resource bundles to and from XLS(X) sheets for easier
+   translation by a small translation team.
+ - Providing a Facade to access the entries in a i18n resource bundle
+   statically in a type safe way.
+ - Reformatting and reordering entries in resource bundles to maintain a
+   constant style and order.
 
 Kilt is available as:
 
@@ -34,7 +43,7 @@ Kilt is available as:
  * a maven plugin to be integrated with a maven-based application
 
 
-=== Supports translation workflow
+=== Translation workflow support
 
 Kilt supports the translation workflow inside a company by providing the
 translation resources (Java i18n resource bundles) as a more
@@ -45,9 +54,10 @@ be imported back into the actual resource bundles used by the application.
 .Common translation workflow with Kilt
 image::workflow.svg[Common translation workflow with Kilt]
 
-The import of the XLS(X) file into the Java i18n resource bundles is
-minimally invasive. It does not change the order of the entries in the
-resource bundles and all comments and empty lines are preserverd.
+By utilizing the {apron}[Apron] library the import of the XLS(X) file into the
+Java i18n resource bundles is minimally invasive. It does not change the order
+of the entries in the resource bundles and all comments and empty lines are
+preserved.
 
 The same is true for the export to XLS(X). No reordering is done to entries
 that already exist in the sheet and all cell sizes, colors etc. remain as
@@ -75,27 +85,49 @@ purpose.
 image::code_completion.png[Netbeans editor window with code completion]
 
 
+=== Reformatting and Reordering
+
+The formatting and the order of the entries in the resource bundles may
+deviate over time when different developers are working on it. While this
+is more of a cosmetic problem, it still reduces the readability and
+comparability of the resource bundles.
+
+Kilt uses the {apron}[Apron] library to provide commands for reformatting
+and reordering the entries in the resource bundles to reintroduce
+consistency.
+
+
 Kilt functions
 --------------
 
-Kilt provides three commands
+Kilt provides the following commands:
 
-export-xls:: Exports the translations in Java i18n resource bundle files into an
+
+// FIXME: Link from here?
+
+<<export-xls, export-xls>>:: Exports the translations in Java i18n resource bundle files into an
 XLS(X) file.
 
-import-xls:: Imports the translations from an XLS(X) file back into the Java
+<<import-xls, import-xls>>:: Imports the translations from an XLS(X) file back into the Java
 i18n resource bundle files.
 
-create-facade:: Creates the I18n enum facades for type safe access to
+<<create-facade, create-facade>>:: Creates the I18n enum facades for type safe access to
 localized messages.
+
+<<reformat, reformat>>:: Reformat resource bundle files (and actually any `.properties`
+files) to a defined format.
+
+<<reorder, reorder>>:: Reorder the entries in resource bundle files (and actually any
+`.properties` files) by a certain criterion.
 
 Those commands are described in more detail in the following sections.
 
 
-=== Export Java i18n resource bundles to XLS(X)
+[[export-xls]]
+=== `export-xls` – Export Java i18n resource bundles to XLS(X)
 
-Kilt can generates Excel sheets as either XLS or XLSX and is able to modify
-both of them. To do this kilt reads the given Java i18n resource bundles
+Kilt can generate Excel sheets as either XLS or XLSX and is able to modify
+both of them. To do this Kilt reads the given Java i18n resource bundles
 and writes their contents to an existing XLS(X) file or creates a new one.
 Each row in the generated XLS(X) sheet corresponds to a key in a resource
 bundle. The actual translations are added as columns to that rows.
@@ -111,11 +143,12 @@ steps.
 
 The generation of an XLS(X) sheet for Java i18n resource bundles works closely
 together with the reimport of that sheet to provide a common translation
-workflow. Please see the next section of how to import the translation
+workflow. Please see the next section on how to import the translation
 sheet back into the Java i18n resource bundles.
 
 
-=== Import translations from XLS(X) back into Java i18n resource bundles
+[[import-xls]]
+=== `import-xsl` – Import translations from XLS(X) back into Java i18n resource bundles
 
 An XLS(X) file with updated translations can be reimported back into the
 Java i18n resource bundles with Kilt.
@@ -128,7 +161,8 @@ Kilt also allows removing keys from the resource bundles that are missing
 in the translated XLS(X), but does not do so by default.
 
 
-=== Creating a Java facade for type safe access to localized messages
+[[create-facade]]
+=== `create-facade` – Creating a Java facade for type safe access to localized messages
 
 Kilt allows the generation of a Java facade for accessing the available
 resource bundle entries in a type safe manner. It provides an additional
@@ -212,6 +246,30 @@ the maven coordinates:
 // I18n in combination with enum Facades
 
 
+[[reformat]]
+=== `reformat` – Reformat resource bundles
+
+Kilt allows reformatting the entries in resource bundles and other
+`.properties` files to a specified format. By default it uses the format
+`<key> = <value>\n`. The format allow specifying possible leading
+whitespace, the separator char, whitespace around the separator char and
+the character(s) to use for line breaks (separating the entries).
+
+By default, the actual keys and values are not modified at all. By giving
+the parameter `reformatKeyAndWhitespace` keys and values will also be
+reformatted by removing insignificant whitespace, newline and escape
+characters.
+
+
+[[reorder]]
+=== `reorder` – Reorder entries in resource bundles
+
+Kilt allow reordering the entries in resource bundles and other
+`.properties` files either alphabetically or by the order given in the
+specified template file. The handling of comments and empty lines can be
+specified via parameter `attachCommentsTo`.
+
+
 Usage
 -----
 
@@ -220,6 +278,7 @@ Kilt can be used in three different ways.
  * As a standalone application
  * As an ant task
  * As a maven plugin
+
 
 === Standalone tool
 
@@ -345,22 +404,6 @@ the english language run
 ----
 mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
 ----
-
-
-Commands
---------
-
-Kilt provides three commands. The names of these commands are the same for
-the commands in the stanalone tool, the ant tasks and the maven goals.
-
-export-xls:: Exports the translations in Java i18n resource bundle files into an
-XLS(X) file.
-
-import-xls:: Imports the translations from an XLS(X) file back into the Java
-i18n resource bundle files.
-
-create-facade:: Creates the I18n enum facades for type safe access to
-localized messages.
 
 
 Parameters
