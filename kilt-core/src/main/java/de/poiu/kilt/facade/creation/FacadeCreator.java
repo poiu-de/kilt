@@ -91,7 +91,7 @@ public class FacadeCreator {
 //              .addMember("date", "$S", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
 //              .build())
             .addModifiers(Modifier.PUBLIC)
-            .addSuperinterface(ClassName.get("de.poiu.kilt.internal.facade", "KiltEnumFacade"))
+            .addSuperinterface(ClassName.get("de.poiu.kilt.facade", "KiltEnumFacade"))
             // BASENAME of the bundle as static const
             .addField(FieldSpec.builder(String.class, "BASENAME", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                     .initializer("$S", bundleBaseName)
@@ -234,8 +234,8 @@ public class FacadeCreator {
       String line;
       while ((line= reader.readLine()) != null) {
         // replace the package name
-        if (line.trim().equals("package de.poiu.kilt.internal.facade;")) {
-          line= line.replace("de.poiu.kilt.internal.facade", packageName);
+        if (line.trim().equals("package de.poiu.kilt.facade;")) {
+          line= line.replace("de.poiu.kilt.facade", packageName);
         }
 
         writer.println(line);
@@ -253,8 +253,8 @@ public class FacadeCreator {
       String line;
       while ((line= reader.readLine()) != null) {
         // replace the package name
-        if (line.trim().equals("package de.poiu.kilt.internal.facade;")) {
-          line= line.replace("de.poiu.kilt.internal.facade", packageName);
+        if (line.trim().equals("package de.poiu.kilt.facade;")) {
+          line= line.replace("de.poiu.kilt.facade", packageName);
         }
 
         // replace the class name
