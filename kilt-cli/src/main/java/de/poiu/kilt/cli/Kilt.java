@@ -29,7 +29,7 @@ import picocli.CommandLine.HelpCommand;
 @Command(name = "kilt",
          mixinStandardHelpOptions = true,
          versionProvider = ManifestVersionProvider.class,
-         description= "@|bold K|@lever @|bold I|@18n @|bold L|@10n @|bold T|@9n",
+         description= "@|bold K|@ilt @|bold I|@18n @|bold L|@10n @|bold T|@9n",
          subcommands = {
            HelpCommand.class,
            KiltExportXls.class,

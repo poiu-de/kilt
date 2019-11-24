@@ -10,9 +10,9 @@ Marco Herrn <marco@mherrn.de>
 
 [.float-group]
 --
-image:docs/kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
+image:docs/kilt-icon.svg[Kilt - **K**ilt **I**18n, **L**10n and **T**9n,
 role="right", width="75"]
-**K**een **I**18n **L**10n and **T**9n
+**K**ilt **I**18n **L**10n and **T**9n
 
 Easier handling of Java i18n resource bundles.
 --
