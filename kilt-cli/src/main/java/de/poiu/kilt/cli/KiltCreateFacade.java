@@ -16,23 +16,22 @@
 package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
+import de.poiu.kilt.util.PathUtils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import org.apache.logging.log4j.Level;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -110,7 +109,8 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory, this.i18nIncludes, this.i18nExcludes);
+    LOGGER.log(Level.INFO, "Creating facade for the following files: "+propertyFileSet);
 
     try {
       final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(propertiesRootDirectory);
@@ -133,37 +133,6 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
     } catch (IOException e) {
       throw new RuntimeException("Could not write Java facade to file", e);
     }
-  }
-
-
-  //FIXME: This is a duplication of code from the maven mojo. That should be avoided
-  private Set<File> getIncludedPropertyFiles(final Path propertiesRootDirectory) {
-    if (!propertiesRootDirectory.toFile().exists()) {
-      LOGGER.warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No enum facades will be generated.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles= new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner= new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory.toFile());
-    directoryScanner.scan();
-
-    final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        LOGGER.info("Including in facade: " + fileName);
-      }
-      matchingFiles.add(propertiesRootDirectory.resolve(fileName).toFile());
-    }
-
-    if (matchingFiles.isEmpty()) {
-      LOGGER.warn("No resource bundles found. No enum facades will be generated.");
-    }
-
-    return matchingFiles;
   }
 
 

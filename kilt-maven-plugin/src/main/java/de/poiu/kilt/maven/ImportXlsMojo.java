@@ -102,36 +102,4 @@ public class ImportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("...done");
   }
-
-
-  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
-    //FIXME: Hier d[rfte es keine Warnungen geben. Das wird halt alles erstellt.
-    //       Doch! Warnung, wenn matchingFiles is empty. Aber das weiß ich doch erst _nach_ der Bearbeitung!
-    if (!propertiesRootDirectory.exists()) {
-      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No resources will be imported.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles= new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner = new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory);
-    directoryScanner.scan();
-
-    final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        this.getLog().info("Including in facade: " + fileName);
-      }
-      matchingFiles.add(new File(propertiesRootDirectory, fileName));
-    }
-
-    if (matchingFiles.isEmpty()) {
-      this.getLog().warn("No resource bundles found. No resources will be imported.");
-    }
-
-    return matchingFiles;
-  }
 }

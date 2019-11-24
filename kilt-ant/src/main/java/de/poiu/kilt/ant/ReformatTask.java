@@ -85,7 +85,7 @@ public class ReformatTask extends Task {
     final Set<File> propertyFileSet = this.resolveFilesFromFileSetList(this.fileSetList);
 
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(new ArrayList<>(propertyFileSet),
+    reformatter.reformat(propertyFileSet,
                          format,
                          reformatKeysAndValues,
                          this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);

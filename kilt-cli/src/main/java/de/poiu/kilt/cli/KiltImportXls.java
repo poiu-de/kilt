@@ -95,8 +95,6 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
   }
 
 
-
-
   private void printProperties(){
     final StringBuilder sb= new StringBuilder();
 

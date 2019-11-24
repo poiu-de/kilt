@@ -15,7 +15,7 @@
  */
 package de.poiu.kilt.reformatting;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.apron.reformatting.InvalidFormatException;
 
@@ -32,7 +32,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Properties;
+import java.util.HashSet;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -68,7 +68,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reformat(Arrays.asList(f1, f2), "<key>\\t=\\t<value>\\n", false, UTF_8);
+      .reformat(new HashSet<>(Arrays.asList(f1, f2)), "<key>\\t=\\t<value>\\n", false, UTF_8);
 
     // - verification
 
@@ -103,7 +103,7 @@ public class KiltReformatterTest {
 
     assertThatExceptionOfType(InvalidFormatException.class)
       .isThrownBy(() -> {
-        new KiltReformatter().reformat(Arrays.asList(f1, f2), "<key> = <valueismissing>\\n", false, UTF_8);});
+        new KiltReformatter().reformat(new HashSet<>(Arrays.asList(f1, f2)), "<key> = <valueismissing>\\n", false, UTF_8);});
 
   }
 
@@ -128,7 +128,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reformat(Arrays.asList(f1), "<key> = <value>\\n", false, UTF_8);
+      .reformat(new HashSet<>(Arrays.asList(f1)), "<key> = <value>\\n", false, UTF_8);
 
     // - verification
 
@@ -165,7 +165,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reformat(Arrays.asList(f1), "<key> = <value>\\n", true, UTF_8);
+      .reformat(new HashSet<>(Arrays.asList(f1)), "<key> = <value>\\n", true, UTF_8);
 
     // - verification
 
@@ -191,7 +191,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(ImmutableList.of(), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(ImmutableSet.of(), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     //TODO: Verify that warning message gets logged?
 
@@ -223,7 +223,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, Arrays.asList(f1, f2), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -279,7 +279,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, Arrays.asList(f1, f2, f3), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -341,9 +341,9 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, Arrays.asList(f1, f2, f3), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
     new KiltReformatter()
-      .reorderByTemplate(f2, Arrays.asList(f3), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f2, new HashSet<>(Arrays.asList(f3)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -397,7 +397,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, Arrays.asList(f1, f2, f1), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2, f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -440,7 +440,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByTemplate(f1, Arrays.asList(f1, f2), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByTemplate(f1, new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -483,7 +483,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(Arrays.asList(f1, f2), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(new HashSet<>(Arrays.asList(f1, f2)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -524,7 +524,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(Arrays.asList(f1), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 
@@ -561,7 +561,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(Arrays.asList(f1), AttachCommentsTo.PREV_PROPERTY, UTF_8);
+      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.PREV_PROPERTY, UTF_8);
 
     // - verification
 
@@ -598,7 +598,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(Arrays.asList(f1), AttachCommentsTo.ORIG_LINE, UTF_8);
+      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.ORIG_LINE, UTF_8);
 
     // - verification
 
@@ -641,7 +641,7 @@ public class KiltReformatterTest {
     // - execution
 
     new KiltReformatter()
-      .reorderByKey(Arrays.asList(f1), AttachCommentsTo.ORIG_LINE, UTF_8);
+      .reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.ORIG_LINE, UTF_8);
 
     // - verification
 
@@ -683,8 +683,8 @@ public class KiltReformatterTest {
 
     // - execution
     final KiltReformatter reformatter= new KiltReformatter();
-    reformatter.reformat(Arrays.asList(f1), "\\t<key> : <value>\\r\\n", false, UTF_8);
-    reformatter.reorderByKey(Arrays.asList(f1), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
+    reformatter.reformat(new HashSet<>(Arrays.asList(f1)), "\\t<key> : <value>\\r\\n", false, UTF_8);
+    reformatter.reorderByKey(new HashSet<>(Arrays.asList(f1)), AttachCommentsTo.NEXT_PROPERTY, UTF_8);
 
     // - verification
 

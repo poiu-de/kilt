@@ -18,6 +18,7 @@ package de.poiu.kilt.maven;
 import com.google.common.collect.ImmutableSet;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
+import de.poiu.kilt.util.PathUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -118,8 +119,8 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
-      this.getLog().info("Create Java source code facade file from property files.");
-      final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+      final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+      this.getLog().info("Creating facade for the following files: "+propertyFileSet);
 
       try {
         // generate the the enum facade(s)
@@ -151,35 +152,5 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
 
       this.getLog().info("...done");
     }
-  }
-
-
-  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
-    if (!propertiesRootDirectory.exists()) {
-      this.getLog().warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No enum facades will be generated.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles= new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner = new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory);
-    directoryScanner.scan();
-
-    final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        this.getLog().info("Including in facade: " + fileName);
-      }
-      matchingFiles.add(new File(propertiesRootDirectory, fileName));
-    }
-
-    if (matchingFiles.isEmpty()) {
-      this.getLog().warn("No resource bundles found. No enum facades will be generated.");
-    }
-
-    return matchingFiles;
   }
 }

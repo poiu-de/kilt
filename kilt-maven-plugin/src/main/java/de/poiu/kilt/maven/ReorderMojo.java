@@ -18,10 +18,12 @@ package de.poiu.kilt.maven;
 import com.google.common.collect.ImmutableList;
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.kilt.reformatting.KiltReformatter;
+import de.poiu.kilt.util.PathUtils;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -82,55 +84,24 @@ public class ReorderMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    this.getLog().info("Reorder key-value pairs in .properties files.");
-    final List<File> propertyFiles = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+    this.getLog().info("Reordering entries in the following files: "+propertyFileSet);
+
+
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(propertyFiles,
+      reformatter.reorderByKey(propertyFileSet,
                                attachCommentsTo,
                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     } else {
       reformatter.reorderByTemplate(this.template,
-                                    propertyFiles,
+                                    propertyFileSet,
                                     this.attachCommentsTo,
                                     this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     }
 
     this.getLog().info("...done");
-  }
-
-
-  private List<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
-    if (!propertiesRootDirectory.exists()) {
-      this.getLog().warn("Resource bundle directory "+propertiesRootDirectory+" does not exist. No properties will be reordered.");
-      return ImmutableList.of();
-    }
-
-    final List<File> matchingFiles= new ArrayList<>();
-
-    final DirectoryScanner directoryScanner = new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory);
-    directoryScanner.scan();
-
-    final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        this.getLog().info("Reordering: " + fileName);
-      }
-      matchingFiles.add(new File(propertiesRootDirectory, fileName));
-    }
-
-    if (matchingFiles.isEmpty()) {
-      this.getLog().warn("No properties will be reordered.");
-    }
-
-    return matchingFiles
-      .stream()
-      .distinct()
-      .collect(Collectors.toList());
   }
 
 

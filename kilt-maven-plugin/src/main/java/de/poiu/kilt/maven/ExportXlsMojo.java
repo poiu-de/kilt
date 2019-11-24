@@ -16,6 +16,7 @@
 package de.poiu.kilt.maven;
 
 import com.google.common.collect.ImmutableSet;
+import de.poiu.kilt.util.PathUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -71,7 +72,10 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("Exporting properties to XLS.");
 
-    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes);
+    this.getLog().info("Exporting the following files to XLS: "+propertyFileSet);
+
+
 
     try {
       Files.createDirectories(this.xlsOutputDirectory.toPath());
@@ -87,35 +91,4 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("...done");
   }
-
-
-  private Set<File> getIncludedPropertyFiles(final File propertiesRootDirectory) {
-    if (!propertiesRootDirectory.exists()) {
-      this.getLog().warn("resource bundle directory " + propertiesRootDirectory + " does not exist. Nothing will be exported.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles = new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner = new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory);
-    directoryScanner.scan();
-
-    final String[] fileNames = directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        this.getLog().info("Including in XLS: " + fileName);
-      }
-      matchingFiles.add(new File(propertiesRootDirectory, fileName));
-    }
-
-    if (matchingFiles.isEmpty()) {
-      this.getLog().warn("No resource bundles found. Nothing will be exported.");
-    }
-
-    return matchingFiles;
-  }
-
 }

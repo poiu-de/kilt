@@ -27,7 +27,7 @@ import de.poiu.fez.Require;
 import de.poiu.kilt.internal.RememberingPropertyFile;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -107,7 +107,7 @@ public class KiltReformatter {
    * @param charset the charset to use for reading and writing the .properties files
    * @throws InvalidFormatException if the given format string is invalid
    */
-  public void reformat(final List<File> propertyFiles, final String formatString, final boolean reformatKeyAndValue, final Charset charset) {
+  public void reformat(final Set<File> propertyFiles, final String formatString, final boolean reformatKeyAndValue, final Charset charset) {
     Require.nonNull(propertyFiles);
     Require.nonNull(formatString);
     Require.nonNull(charset);
@@ -131,7 +131,7 @@ public class KiltReformatter {
    * @param attachCommentsTo how to handle BasicEntries (comments and empty lines) when reordering
    * @param charset the charset to use for reading and writing the .properties files
    */
-  public void reorderByKey(final List<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
+  public void reorderByKey(final Set<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
     Require.nonNull(propertyFiles);
     Require.nonNull(attachCommentsTo);
     Require.nonNull(charset);
@@ -157,14 +157,14 @@ public class KiltReformatter {
    * @param attachCommentsTo how to handle BasicEntries (comments and empty lines) when reordering
    * @param charset the charset to use for reading and writing the .properties files
    */
-  public void reorderByTemplate(final File template, final List<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
+  public void reorderByTemplate(final File template, final Set<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
     Require.nonNull(propertyFiles);
     Require.nonNull(attachCommentsTo);
     Require.nonNull(charset);
 
     // create a PropertyFile instance for each file
     final PropertyFile reference= PropertyFile.from(template, charset);
-    final List<RememberingPropertyFile> pfs= propertyFiles.stream()
+    final Set<RememberingPropertyFile> pfs= propertyFiles.stream()
       .filter(_f -> {
         if (_f.getAbsolutePath().equals(template.getAbsolutePath())) {
           LOGGER.log(Level.DEBUG, "Ignoring property file "+_f.getAbsolutePath()+" because it is the same as the reference template.");
@@ -176,7 +176,7 @@ public class KiltReformatter {
       .map(_f -> {
         return RememberingPropertyFile.from(_f, charset);
       })
-      .collect(Collectors.toList());
+      .collect(Collectors.toSet());
 
 //    // and reorder in the given order
 //    for (int i= 1; i < pfs.size(); i++) {

@@ -17,16 +17,14 @@ package de.poiu.kilt.cli;
 
 import de.poiu.kilt.cli.config.KiltProperty;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.internal.XlsImExporter;
+import de.poiu.kilt.util.PathUtils;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.apache.logging.log4j.Level;
@@ -81,7 +79,7 @@ public class KiltExportXls extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory, this.i18nIncludes, this.i18nExcludes);
     LOGGER.log(Level.INFO, "Exporting the following files to XLS: "+propertyFileSet);
 
     try {
@@ -94,37 +92,6 @@ public class KiltExportXls extends AbstractKiltCommand implements Runnable {
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);
     }
-  }
-
-
-  //FIXME: This is a duplication of code from the maven mojo. That should be avoided
-  private Set<File> getIncludedPropertyFiles(final Path propertiesRootDirectory) {
-    if (!propertiesRootDirectory.toFile().exists()) {
-      LOGGER.warn("resource bundle directory " + propertiesRootDirectory + " does not exist. Nothing will be exported.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles = new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner = new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory.toFile());
-    directoryScanner.scan();
-
-    final String[] fileNames = directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        LOGGER.info("Including in XLS: " + fileName);
-      }
-      matchingFiles.add(propertiesRootDirectory.resolve(fileName).toFile());
-    }
-
-    if (matchingFiles.isEmpty()) {
-      LOGGER.warn("No resource bundles found. Nothing will be exported.");
-    }
-
-    return matchingFiles;
   }
 
 

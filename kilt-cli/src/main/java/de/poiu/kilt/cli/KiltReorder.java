@@ -16,17 +16,15 @@
 package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableSet;
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import java.io.File;
-import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.codehaus.plexus.util.DirectoryScanner;
 import de.poiu.kilt.reformatting.KiltReformatter;
-import java.nio.file.Path;
+import de.poiu.kilt.util.PathUtils;
 import java.util.ArrayList;
+import org.apache.logging.log4j.Level;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -93,45 +91,15 @@ public class KiltReorder extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = this.getIncludedPropertyFiles(this.propertiesRootDirectory);
+    final Set<File> propertyFileSet = PathUtils.getIncludedPropertyFiles(this.propertiesRootDirectory, this.i18nIncludes, this.i18nExcludes);
+    LOGGER.log(Level.INFO, "Reordering entries in the following files: "+propertyFileSet);
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(new ArrayList<>(propertyFileSet), this.attachCommentsTo, super.propertyFileEncoding);
+      reformatter.reorderByKey(propertyFileSet, this.attachCommentsTo, super.propertyFileEncoding);
     } else {
-      reformatter.reorderByTemplate(this.template, new ArrayList<>(propertyFileSet), this.attachCommentsTo, super.propertyFileEncoding);
+      reformatter.reorderByTemplate(this.template, propertyFileSet, this.attachCommentsTo, super.propertyFileEncoding);
     }
-  }
-
-
-  //FIXME: This is a duplication of code from the maven mojo. That should be avoided
-  private Set<File> getIncludedPropertyFiles(final Path propertiesRootDirectory) {
-    if (!propertiesRootDirectory.toFile().exists()) {
-      LOGGER.warn("resource bundle directory "+propertiesRootDirectory+" does not exist. No reordering will be done.");
-      return ImmutableSet.of();
-    }
-
-    final Set<File> matchingFiles= new LinkedHashSet<>();
-
-    final DirectoryScanner directoryScanner= new DirectoryScanner();
-    directoryScanner.setIncludes(this.i18nIncludes);
-    directoryScanner.setExcludes(this.i18nExcludes);
-    directoryScanner.setBasedir(propertiesRootDirectory.toFile());
-    directoryScanner.scan();
-
-    final String[] fileNames= directoryScanner.getIncludedFiles();
-    for (String fileName : fileNames) {
-      if (this.verbose) {
-        LOGGER.info("Reordering: " + fileName);
-      }
-      matchingFiles.add(propertiesRootDirectory.resolve(fileName).toFile());
-    }
-
-    if (matchingFiles.isEmpty()) {
-      LOGGER.warn("No resource bundles found. No reordering will be done.");
-    }
-
-    return matchingFiles;
   }
 
 

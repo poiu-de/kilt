@@ -90,12 +90,12 @@ public class ReorderTask extends Task {
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
-      reformatter.reorderByKey(new ArrayList<>(propertyFileSet),
+      reformatter.reorderByKey(propertyFileSet,
                                attachCommentsTo,
                                this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     } else {
       reformatter.reorderByTemplate(this.template,
-                                    new ArrayList<>(propertyFileSet),
+                                    propertyFileSet,
                                     this.attachCommentsTo,
                                     this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
     }
