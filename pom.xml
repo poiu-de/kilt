@@ -44,6 +44,7 @@
     <module>kilt-ant</module>
     <module>kilt-cli</module>
     <module>kilt-runtime</module>
+    <module>kilt-example</module>
   </modules>
 
 

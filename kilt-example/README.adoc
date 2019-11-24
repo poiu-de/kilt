@@ -1,0 +1,247 @@
+Kilt example application
+========================
+Marco Herrn <marco@mherrn.de>
+2019-11-24
+:toc:
+:icons: font
+:kilt-homepage: https://github.com/hupfdule/kilt
+:download-page: https://github.com/hupfdule/kilt/releases
+:license-link: ./LICENSE.txt
+:kilt-version: 0.3.0
+:source-highlighter: prettify
+
+Example application demonstrating the usage of the {kilt-homepage}[Kilt toolset] for
+
+ - generating and using a facade to access resource bundles in a type-safe
+   way via `create-facade`
+ - using the `export-xls` and `import-xsl` maven goals to write the content
+   of the resource bundles to an XLS(X) sheet and load them back from
+   there
+ - reformatting resource bundles (and actually other `.properties` files) to
+   conform to the same formatting standard via `reformat`
+ - reordering the entries in resource bundles via `reorder`
+
+The example application is using maven and therefore utilizes the
+`kilt-maven-plugin`.
+
+// TODO: Instead of copying content from the POM and the Java file here
+//       we should utilize asciidoctors feature for including parts of a
+//       document. Be aware however, that this does not work on Github (due
+//       to asciidoctor being run in secure mode).
+
+
+Configuration
+-------------
+
+To utilize Kilt we specify the `kilt-maven-plugin` in the build section of
+our link:pom.xml[].
+
+[source,xml]
+----
+<project>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>de.poiu.kilt</groupId>
+        <artifactId>kilt-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <configuration>
+          <!-- Specify which files we want to cover with Kilt -->
+          <i18nIncludes>i18n/**.properties</i18nIncludes>             <!--1-->
+          <i18nExcludes>i18n/nongenerated*.properties</i18nExcludes>  <!--2-->
+          <!-- even though we use Java 8 we store our .properties files in
+               UTF-8 format -->
+          <propertyFileEncoding>UTF-8</propertyFileEncoding>          <!--3-->
+          <!-- Specify the location and name of the XLS(X) file.
+               Only used for the import-xls and export-xls goals -->
+          <xlsFile>./i18n.xlsx</xlsFile>
+
+          <!-- When reformatting, always use the following format.
+               The angle brackets need to be escaped here to not be
+               interpreted as XML tags. This is not necessary when
+               giving them on the commandline. -->
+          <format>&lt;KEY&gt;\t: &lt;VALUE&gt;\n</format>
+
+          <!-- There are more configuration options. Consult the
+               user guide for a list of the available parameters
+               and the goals they can be used in. -->
+        </configuration>
+        <executions>
+          <!-- This execution builds the I18n facade in the
+               code-generation phase. -->
+          <execution>                                                 <!--6-->
+            <id>i18n-facade-generation</id>
+            <goals>
+              <goal>create-facade</goal>
+            </goals>
+          </execution>
+
+          <!-- We do not trust or developers to maintain a consistent
+               style in the resource bundles.
+               Therefore we reformat them in the process-resources phase.
+               -->
+          <execution>                                                 <!--7-->
+            <id>properties-reformatting</id>
+            <goals>
+              <goal>reformat</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <!-- We can "abuse" Kilt to not only reformat resource bundles,
+                   but all Java .properties files.
+                   We do this here by specifying a different set of files
+                   to include, which also includes the
+                   src/main/resources/config.properties file. -->
+              <i18nIncludes>**.properties</i18nIncludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+----
+<1> Include all files in all subdirectories of `(src/main/resources/)i18n` ending in `.properties`.
+<2> But exclude the files from  the `nongenerated` resource bundle.
+<3> We store our `.properties` files in UTF-8 format, since this is the only sane format for storing different languages.
+<4> We already have an XLS(X) file in the root directory of the project we want to use for importing and exporting.
+    This one is only used in the `import-xls` and `export-xls` goals.
+<5> We specify a specific format for our `.properties` files.
+    This one is only used in the `reformat` goal.
+<6> Prepare an execution to generate a i18n facade on each build.
+<7> Prepare an execution to reformat all `.properties` files on each build.
+
+The above snippet configures our example project for Kilt.
+
+The configuration is valid for all goals of the plugin. However, only the
+facade creation is useful to automatically being executed on each build.
+
+
+Using the generated facade
+--------------------------
+
+To be able to use the generated facade, we need a dependency on the `kilt-runtime`:
+
+[source,xml]
+----
+<dependencies>
+  <!-- This dependency provides the de.poiu.kilt.facade.I18n and
+       de.poiu.kilt.facade.KiltEnumFacade classes at runtime. -->
+  <dependency>
+    <groupId>de.poiu.kilt</groupId>
+    <artifactId>kilt-runtime</artifactId>
+    <version>${project.version}</version>
+  </dependency>
+</dependencies>
+----
+
+The generated facade can be used by instantiating the `I18n` accessor class:
+
+[source,java]
+----
+// Create a default facade accessor.
+private final I18n i18n= new I18n();
+----
+
+And then using that accessor class and the generated enum facade to access
+the localized strings:
+
+[source]
+----
+// Print the greeting in the systems locale
+System.out.println(i18n.get(I18nMessages.GREETING) + ", " + System.getProperty("user.name"));
+----
+
+See the link:src/main/java/de/poiu/kilt/example/ExampleApp.java[full code]
+for more examples.
+
+Run the application to see the actual result of the localization:
+
+[source]
+----
+mvn exec:java
+----
+
+
+Export translated resources to XLS(X)
+-------------------------------------
+
+The example application already comes with link:i18n.xlsx[an XLS(X) sheet]
+containing the translations for the included resource bundles.
+
+To update this XLS(X) sheet with the current content of our resource
+bundles we call the corresponding maven goal
+
+[source]
+----
+mvn kilt:export-xls
+----
+
+We don't need to specify any parameters, since we have configured
+everything in our pom.xml.
+
+////
+//FIXME: This does not work! Only the 'verbose' and 'propertiesRootDirectory'
+can be set via cmdline. All properties defined in subclasses don't work.
+
+However, we can override those settings on the command line.
+Issue the following to get a list of all available parameters to the goal.
+
+[source]
+----
+mvn kilt:help -Ddetail=true -Dgoal=import-xls
+----
+////
+
+
+Import translated resources from XLS(X)
+---------------------------------------
+
+To reimport the content in the XLS(X) file into our resource bundles, we
+call
+
+[source]
+----
+mvn kilt:import-xls
+----
+
+
+Reformat resource bundles
+-------------------------
+
+The example application configures kilt to reformat all `.properties` files
+in the `process-resources` phase. Therefore a simple run of
+
+[source]
+----
+mvn clean compile
+----
+
+will reformat the `.properties` files according to the format given in the
+pom.xml.
+
+////
+// TODO: See above. Doesn't work at the moment
+Of course this format can be overridden by specifying it on the command
+line
+
+[source]
+----
+mvn kilt:reformat -Dformat="<KEY> = <VALUE>\n"
+----
+////
+
+
+Reordering resource bundles
+---------------------------
+
+To reorder the entries in the resource bundles, call
+
+[source]
+----
+mvn kilt:reorder -Dtemplate=src/main/resources/i18n/messages.properties
+-Di18nIncludes="i18n/messages_*.properties"
+----
+
+This will sort all the locale-specific `messages` resource bundles to
+conform to the order in the fallback resource bundle.

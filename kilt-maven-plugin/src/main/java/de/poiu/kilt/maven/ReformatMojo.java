@@ -56,7 +56,7 @@ public class ReformatMojo extends AbstractKiltMojo {
   /**
    * Whether to reformat the keys and values themselves by removing insignificant whitespace and linebreaks.
    */
-  @Parameter(property="reformatKeyAndValue", defaultValue= "false", required = true)
+  @Parameter(property="reformatKeysAndValues", defaultValue= "false", required = true)
   private boolean reformatKeysAndValues= false;
 
 

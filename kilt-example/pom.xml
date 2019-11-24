@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>de.poiu.kilt</groupId>
+    <artifactId>kilt</artifactId>
+    <version>0.4.0-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>kilt-example</artifactId>
+  <description>Example application for using Kilt</description>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <properties>
+    <mainClass>de.poiu.kilt.example.ExampleApp</mainClass>
+  </properties>
+
+  <dependencies>
+    <!-- This dependency provides the de.poiu.kilt.facade.I18n and
+         de.poiu.kilt.facade.KiltEnumFacade classes at runtime. -->
+    <dependency>
+      <groupId>de.poiu.kilt</groupId>
+      <artifactId>kilt-runtime</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${mainClass}</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <configuration>
+          <mainClass>${mainClass}</mainClass>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>de.poiu.kilt</groupId>
+        <artifactId>kilt-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <configuration>
+          <!-- Specify which files we want to cover with kilt -->
+          <i18nIncludes>i18n/**.properties</i18nIncludes>
+          <i18nExcludes>i18n/nongenerated*.properties</i18nExcludes>
+          <!-- even though we use Java 8 we store our .properties files
+               in UTF-8 format -->
+          <propertyFileEncoding>UTF-8</propertyFileEncoding>
+
+          <!-- Specify the location and name of the XLS(X) file.
+               Only used for the import-xls and export-xls goals -->
+          <xlsFile>./i18n.xlsx</xlsFile>
+
+          <!-- When reformatting, always use the following format.
+               The angle brackets need to be escaped here to not be
+               interpreted as XML tags. This is not necessary when
+               giving them on the commandline. -->
+          <format>&lt;key&gt;\t: &lt;value&gt;\n</format>
+
+          <!-- There are more configuration options. Consult the
+               user guide for a list of the available parameters
+               and the goals they can be used in. -->
+
+        </configuration>
+        <executions>
+          <!-- This execution builds the I18n facade in the
+               code-generation phase. -->
+          <execution>
+            <id>i18n-facade-generation</id>
+            <goals>
+              <goal>create-facade</goal>
+            </goals>
+          </execution>
+
+          <!-- We do not trust or developers to maintain a consistent
+               style in the resource bundles.
+               Therefore we reformat them in the process-resources phase. -->
+          <execution>
+            <id>properties-reformatting</id>
+            <goals>
+              <goal>reformat</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <!-- We can "abuse" Kilt to not only reformat resource bundles,
+                   but all Java .properties files.
+                   We do this here by specifying a different set of files
+                   to include, which also includes the
+                   src/main/resources/config.properties file. -->
+              <i18nIncludes>**.properties</i18nIncludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

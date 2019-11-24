@@ -66,6 +66,14 @@ The benefits of Kilt are in short form:
  - Type safe access to translation resources via facade
 
 
+Usage example
+-------------
+
+The functionality described above can best be demonstrated by a concrete
+example. See the link:kilt-example[Example application] for a commented minimal
+application using Kilts functionality.
+
+
 Prerequisites
 -------------
 
@@ -78,7 +86,7 @@ Prerequisites
  - Apache ant 1.8.1 or higher
 
 === To be integrated into a maven build
- 
+
  - Apache maven 3.0.3 or higher
 
 
@@ -92,9 +100,9 @@ the pom or your project:
 
 [source,xml,subs="verbatim,attributes"]
 ----
-  <build>  
+  <build>
     <plugins>
-      ... 
+      ...
       <plugin>
         <groupId>de.poiu.kilt</groupId>
         <artifactId>kilt-maven-plugin</artifactId>
@@ -113,10 +121,10 @@ the pom or your project:
       </plugin>
       ...
     <plugins>
-  <build>  
+  <build>
 ----
 
-See link:docs/user_guide.adoc[the Kilt User Guide] for a 
+See link:docs/user_guide.adoc[the Kilt User Guide] for a
 detailled description of the available goals and configuration parameters.
 
 === Ant task
