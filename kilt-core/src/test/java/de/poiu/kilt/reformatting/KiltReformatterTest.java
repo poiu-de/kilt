@@ -25,7 +25,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Properties;
+import java.util.HashSet;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
