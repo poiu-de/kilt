@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.*;
  *
  * @author mherrn
  */
-public class PathUtilsTest {
+public class FileMatcherTest {
 
   @Rule
   public TemporaryFolder tmpFolder= new TemporaryFolder();
@@ -63,7 +63,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -102,7 +102,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -141,7 +141,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -181,7 +181,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -219,7 +219,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -253,7 +253,7 @@ public class PathUtilsTest {
 
     // - execution
 
-    final Set<File> result= new PathUtils(root, includes, excludes).findMatchingFiles();
+    final Set<File> result= new FileMatcher(root, includes, excludes).findMatchingFiles();
 
     // - verification
 
@@ -272,7 +272,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -293,7 +293,7 @@ public class PathUtilsTest {
     final String[] excludes= {
       "sub/ex.properties"
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -313,7 +313,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -334,7 +334,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -358,7 +358,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -379,7 +379,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 
@@ -402,7 +402,7 @@ public class PathUtilsTest {
     };
     final String[] excludes= {
     };
-    final PathUtils fileMatcher= new PathUtils(root, includes, excludes);
+    final FileMatcher fileMatcher= new FileMatcher(root, includes, excludes);
 
     // - execution && verification
 

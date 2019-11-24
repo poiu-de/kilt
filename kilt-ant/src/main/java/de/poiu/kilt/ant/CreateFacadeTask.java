@@ -22,7 +22,7 @@ import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -108,7 +108,7 @@ public class CreateFacadeTask extends Task {
 
     this.log("Create Java source code facade file from property files.");
 
-    final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
 
     try {
       final ResourceBundleContentHelper fbcHelper = new ResourceBundleContentHelper(Paths.get(propertiesRootDirectory));

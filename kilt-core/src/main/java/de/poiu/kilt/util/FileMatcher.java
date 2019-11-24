@@ -34,10 +34,19 @@ import org.codehaus.plexus.util.MatchPattern;
 
 
 /**
+ * Helper class for finding resource bundles matching the specified include/exclude patterns.
+ * <p>
+ * It allows the typlical ant-style globbing for patterns:
+ * <p>
+ * <ul>
+ *  <li><code>?</code> matching a single character</li>
+ *  <li><code>*</code> matching a zero or more characters</li>
+ *  <li><code>**</code> matching zero or more subdirectories</li>
+ * </ul>
  *
  * @author mherrn
  */
-public class PathUtils {
+public class FileMatcher {
   private static final Logger LOGGER= LogManager.getLogger();
 
 
@@ -45,10 +54,15 @@ public class PathUtils {
   //
   // Attributes
 
+  /** The path all to which all patterns are relative to. */
   private final Path         root;
+  /** The user specified include patterns. */
   private final List<String> i18nIncludes;
+  /** The "compiled" include patterns. */
   private final List<MatchPattern> i18nIncludePatterns;
+  /** The user specified include patterns. */
   private final List<String> i18nExcludes;
+  /** The "compiled" include patterns. */
   private final List<MatchPattern> i18nExcludePatterns;
 
 
@@ -56,22 +70,50 @@ public class PathUtils {
   //
   // Constructors
 
-  public PathUtils(final Path root, final String[] i18nIncludes) {
+  /**
+   * Creates a new FileMatcher with the given root path and include patterns, but without any
+   * exclude patterns.
+   *
+   * @param root the root patch below which all resource bundles must reside
+   * @param i18nIncludes the pattern specifying which resource to include
+   */
+  public FileMatcher(final Path root, final String[] i18nIncludes) {
     this(root, Arrays.asList(i18nIncludes));
   }
 
 
-  public PathUtils(final Path root, final List<String> i18nIncludes) {
+  /**
+   * Creates a new FileMatcher with the given root path and include patterns, but without any
+   * exclude patterns.
+   *
+   * @param root the root patch below which all resource bundles must reside
+   * @param i18nIncludes the pattern specifying which resources to include
+   */
+  public FileMatcher(final Path root, final List<String> i18nIncludes) {
     this(root, i18nIncludes, Collections.EMPTY_LIST);
   }
 
 
-  public PathUtils(final Path root, final String[] i18nIncludes, final String[] i18nExcludes) {
+  /**
+   * Creates a new FileMatcher with the given root path and include and exclude patterns.
+   *
+   * @param root the root patch below which all resource bundles must reside
+   * @param i18nIncludes the pattern specifying which resource to include
+   * @param i18nExcludes the pattern specifying which resources to exclude
+   */
+  public FileMatcher(final Path root, final String[] i18nIncludes, final String[] i18nExcludes) {
     this(root, Arrays.asList(i18nIncludes), Arrays.asList(i18nExcludes));
   }
 
 
-  public PathUtils(final Path root, final List<String> i18nIncludes, final List<String> i18nExcludes) {
+  /**
+   * Creates a new FileMatcher with the given root path and include and exclude patterns.
+   *
+   * @param root the root patch below which all resource bundles must reside
+   * @param i18nIncludes the pattern specifying which resource to include
+   * @param i18nExcludes the pattern specifying which resources to exclude
+   */
+  public FileMatcher(final Path root, final List<String> i18nIncludes, final List<String> i18nExcludes) {
     this.root= root.toAbsolutePath().normalize();
     this.i18nIncludes= new ArrayList<>(i18nIncludes);
     this.i18nIncludePatterns= this.toMatchPatterns(i18nIncludes);
@@ -84,6 +126,14 @@ public class PathUtils {
   //
   // Methods
 
+  /**
+   * Converts a list of pattern strings into a list of actual MatchPattern objects.
+   * <p>
+   * The patterns are normalized to an absolute path relative to the configured root path.
+   *
+   * @param filePatterns the pattern strings to convert
+   * @return the MatchPatterns corresponding to the given pattern strings
+   */
   private List<MatchPattern> toMatchPatterns(final List<String> filePatterns) {
     final List<MatchPattern> matchPatterns= new ArrayList<>(filePatterns.size());
 
@@ -100,6 +150,13 @@ public class PathUtils {
   }
 
 
+  /**
+   * Checks whether the given path maches the configured include and exclude patterns of this
+   * FileMatcher.
+   *
+   * @param path the path to check
+   * @return whether the given path matches the configured include and exclude patterns
+   */
   public boolean matches(final Path path) {
     final Path canonicalPath= this.root.resolve(path).toAbsolutePath().normalize();
 
@@ -124,6 +181,12 @@ public class PathUtils {
   }
 
 
+  /**
+   * Finds and returns all files below the configured root path that match the configured include
+   * and exclude patterns.
+   *
+   * @return the files matching the configured patterns
+   */
   public Set<File> findMatchingFiles() {
     if (!root.toFile().isDirectory()) {
       LOGGER.log(Level.INFO, "Property root directory {} does not exist.", root);

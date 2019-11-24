@@ -22,7 +22,7 @@ import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -110,7 +110,7 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
     LOGGER.log(Level.INFO, "Creating facade for the following files: "+propertyFileSet);
 
     try {

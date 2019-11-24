@@ -21,7 +21,7 @@ import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.internal.Language;
 import de.poiu.kilt.internal.ResourceBundleContent;
 import de.poiu.kilt.internal.ResourceBundleContentHelper;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -115,7 +115,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
     if (this.skipFacadeGeneration) {
       this.getLog().info("Skipping to create the i18n Java facade as requested in the configuration");
     } else {
-      final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
+      final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
       this.getLog().info("Creating facade for the following files: "+propertyFileSet);
 
       try {

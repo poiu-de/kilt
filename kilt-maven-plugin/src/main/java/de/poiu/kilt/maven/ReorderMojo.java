@@ -17,7 +17,7 @@ package de.poiu.kilt.maven;
 
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.kilt.reformatting.KiltReformatter;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Set;
@@ -88,7 +88,7 @@ public class ReorderMojo extends AbstractKiltMojo {
       Configurator.setLevel(LogManager.getLogger("de.poiu.kilt").getName(), Level.DEBUG);
     }
 
-    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(), this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
     this.getLog().info("Reordering entries in the following files: "+propertyFileSet);
 
 

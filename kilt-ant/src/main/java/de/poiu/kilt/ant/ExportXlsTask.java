@@ -16,7 +16,7 @@
 package de.poiu.kilt.ant;
 
 import de.poiu.kilt.internal.XlsImExporter;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -87,7 +87,7 @@ public class ExportXlsTask extends Task {
     } else {
       this.log("Create XLS file from property files...");
 
-      final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+      final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
       final File file = new File(this.xlsFile);
 
       XlsImExporter.exportXls(Paths.get(this.propertiesRootDirectory),

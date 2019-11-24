@@ -16,7 +16,7 @@
 package de.poiu.kilt.maven;
 
 import de.poiu.kilt.internal.XlsImExporter;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -64,7 +64,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
 
     this.getLog().info("Exporting properties to XLS.");
 
-    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory.toPath(),this.i18nIncludes, this.i18nExcludes).findMatchingFiles();
     this.getLog().info("Exporting the following files to XLS: "+propertyFileSet);
 
 

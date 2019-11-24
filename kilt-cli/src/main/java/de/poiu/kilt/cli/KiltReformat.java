@@ -17,7 +17,7 @@ package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
 import de.poiu.kilt.reformatting.KiltReformatter;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.util.Set;
 import org.apache.logging.log4j.Level;
@@ -80,7 +80,7 @@ public class KiltReformat extends AbstractKiltCommand implements Runnable {
       printProperties();
     }
 
-    final Set<File> propertyFileSet = new PathUtils(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(this.propertiesRootDirectory, i18nIncludes, i18nExcludes).findMatchingFiles();
     LOGGER.log(Level.INFO, "Reformatting entries in the following files: "+propertyFileSet);
 
     final KiltReformatter reformatter= new KiltReformatter();

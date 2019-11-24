@@ -17,7 +17,7 @@ package de.poiu.kilt.ant;
 
 import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.kilt.reformatting.KiltReformatter;
-import de.poiu.kilt.util.PathUtils;
+import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Paths;
@@ -91,7 +91,7 @@ public class ReorderTask extends Task {
     }
 
     this.log("Reorder key-value pairs in .properties files.");
-    final Set<File> propertyFileSet = new PathUtils(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
+    final Set<File> propertyFileSet = new FileMatcher(Paths.get(this.propertiesRootDirectory), i18nIncludes, i18nExcludes).findMatchingFiles();
 
     final KiltReformatter reformatter= new KiltReformatter();
     if (this.byKey) {
