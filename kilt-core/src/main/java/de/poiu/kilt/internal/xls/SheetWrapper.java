@@ -16,11 +16,14 @@
 package de.poiu.kilt.internal.xls;
 
 import de.poiu.fez.Require;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import org.apache.poi.hssf.util.PaneInformation;
+import org.apache.poi.ss.util.PaneInformation;
 import org.apache.poi.ss.usermodel.AutoFilter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellRange;
@@ -31,11 +34,13 @@ import org.apache.poi.ss.usermodel.DataValidationHelper;
 import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.ss.usermodel.Header;
+import org.apache.poi.ss.usermodel.Hyperlink;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.SheetConditionalFormatting;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 
@@ -351,8 +356,8 @@ public class SheetWrapper {
   }
 
 
-  public void setZoom(int numerator, int denominator) {
-    wrapped.setZoom(numerator, denominator);
+  public void setZoom(int i) {
+    wrapped.setZoom(i);
   }
 
 
@@ -516,8 +521,8 @@ public class SheetWrapper {
   }
 
 
-  public Comment getCellComment(int row, int column) {
-    return wrapped.getCellComment(row, column);
+  public Comment getCellComment(CellAddress ref) {
+    return wrapped.getCellComment(ref);
   }
 
 
@@ -538,6 +543,116 @@ public class SheetWrapper {
 
   public boolean isSelected() {
     return wrapped.isSelected();
+  }
+
+
+  public void validateMergedRegions() {
+    wrapped.validateMergedRegions();
+  }
+
+
+  public float getColumnWidthInPixels(int columnIndex) {
+    return wrapped.getColumnWidthInPixels(columnIndex);
+  }
+
+
+  public int addMergedRegionUnsafe(CellRangeAddress region) {
+    return wrapped.addMergedRegionUnsafe(region);
+  }
+
+
+  public void removeMergedRegions(Collection<Integer> indices) {
+    wrapped.removeMergedRegions(indices);
+  }
+
+
+  public List<CellRangeAddress> getMergedRegions() {
+    return wrapped.getMergedRegions();
+  }
+
+
+  public boolean isPrintRowAndColumnHeadings() {
+    return wrapped.isPrintRowAndColumnHeadings();
+  }
+
+
+  public void setPrintRowAndColumnHeadings(boolean show) {
+    wrapped.setPrintRowAndColumnHeadings(show);
+  }
+
+
+  public void showInPane(int toprow, int leftcol) {
+    wrapped.showInPane(toprow, leftcol);
+  }
+
+
+  public void shiftColumns(int startColumn, int endColumn, int n) {
+    wrapped.shiftColumns(startColumn, endColumn, n);
+  }
+
+
+  public Map<CellAddress, ? extends Comment> getCellComments() {
+    return wrapped.getCellComments();
+  }
+
+
+  public Drawing<?> getDrawingPatriarch() {
+    return wrapped.getDrawingPatriarch();
+  }
+
+
+  public List<? extends DataValidation> getDataValidations() {
+    return wrapped.getDataValidations();
+  }
+
+
+  public CellRangeAddress getRepeatingRows() {
+    return wrapped.getRepeatingRows();
+  }
+
+
+  public CellRangeAddress getRepeatingColumns() {
+    return wrapped.getRepeatingColumns();
+  }
+
+
+  public void setRepeatingRows(CellRangeAddress rowRangeRef) {
+    wrapped.setRepeatingRows(rowRangeRef);
+  }
+
+
+  public void setRepeatingColumns(CellRangeAddress columnRangeRef) {
+    wrapped.setRepeatingColumns(columnRangeRef);
+  }
+
+
+  public int getColumnOutlineLevel(int columnIndex) {
+    return wrapped.getColumnOutlineLevel(columnIndex);
+  }
+
+
+  public Hyperlink getHyperlink(int row, int column) {
+    return wrapped.getHyperlink(row, column);
+  }
+
+
+  public Hyperlink getHyperlink(CellAddress addr) {
+    return wrapped.getHyperlink(addr);
+  }
+
+
+  public List<? extends Hyperlink> getHyperlinkList() {
+    return wrapped.getHyperlinkList();
+  }
+
+
+  public CellAddress getActiveCell() {
+    return wrapped.getActiveCell();
+  }
+
+
+  public void setActiveCell(CellAddress address) {
+    wrapped.setActiveCell(address);
   }
 
 

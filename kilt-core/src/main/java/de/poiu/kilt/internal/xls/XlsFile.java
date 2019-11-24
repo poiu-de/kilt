@@ -107,7 +107,7 @@ public class XlsFile {
       LOGGER.log(Level.INFO, "Loading contents from file " + inputFile.getAbsolutePath());
       try (final FileInputStream fis= new FileInputStream(inputFile)) {
         workbook= WorkbookFactory.create(fis);
-      } catch (IOException | InvalidFormatException ex) {
+      } catch (IOException ex) {
         throw new RuntimeException("Error reading XLS data from file " + inputFile.getAbsolutePath(), ex);
       }
     } else {
