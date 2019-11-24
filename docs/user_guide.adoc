@@ -329,7 +329,7 @@ following plugin section in the pom or your project:
 //TODO: Da oben sollte man eine Beispielkonfiguration angeben
 
 //FIXME: Diese Datei gibt es nicht.
-See <<maven-plugin.adoc#exportXls,the Kilt Maven Plugin description>> for a
+See <<Parameters,Parameters>> for a
 detailed description of the available configuration parameters.
 
 To execute a goal run
