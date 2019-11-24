@@ -104,7 +104,7 @@ public class XlsFile {
     final Workbook workbook;
 
     if (inputFile.exists()) {
-      LOGGER.log(Level.INFO, "Loading contents from file " + inputFile.getAbsolutePath());
+      LOGGER.log(Level.INFO, "Using XLS(X) file " + inputFile.getAbsolutePath());
       try (final FileInputStream fis= new FileInputStream(inputFile)) {
         workbook= WorkbookFactory.create(fis);
       } catch (IOException ex) {

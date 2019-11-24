@@ -138,7 +138,7 @@ public class ${ACCESSOR_CLASS_NAME} {
    *
    * @param bundle the bundle in which to search for the translated key
    * @param key the key for which to return the translation
-   * @return the translation for the key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING</code>
+   * @return the translation for the key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING:</code>
    *          if no translation can be found
    */
   private String getStringOrPlaceholder(final ResourceBundle bundle, final String key){
@@ -159,7 +159,7 @@ public class ${ACCESSOR_CLASS_NAME} {
    * Otherwise the key itself will be returned surrounded by <code>:MISSING:</code>.
    *
    * @param bundleKey the bundle key for which to return the translation
-   * @return the translation for the bundle key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING</code>
+   * @return the translation for the bundle key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING:</code>
    *          if no translation can be found and {@link #markMissingTranslations} is set
    * @throws MissingResourceException if no translation can be found and {@link #markMissingTranslations} is not set
    */
@@ -184,7 +184,7 @@ public class ${ACCESSOR_CLASS_NAME} {
    *
    * @param bundleName the bundle in which to search for the translated key
    * @param key the key for which to return the translation
-   * @return the translation for the bundle key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING</code>
+   * @return the translation for the bundle key or <code>:MISSING:&lt;bundle&gt;#&lt;key&gt;:MISSING:</code>
    *          if no translation can be found and {@link #markMissingTranslations} is set
    * @throws MissingResourceException if no translation can be found and {@link #markMissingTranslations} is not set
    */
@@ -198,7 +198,7 @@ public class ${ACCESSOR_CLASS_NAME} {
       if (bundle.containsKey(key)) {
         return bundle.getString(key);
       } else {
-        return ":MISSING:"+bundleName+"#"+key+":MISSING";
+        return ":MISSING:"+bundleName+"#"+key+":MISSING:";
       }
     } else {
       return bundle.getString(key);
