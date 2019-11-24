@@ -23,11 +23,11 @@ import de.poiu.apron.reformatting.AttachCommentsTo;
 import de.poiu.apron.reformatting.InvalidFormatException;
 import de.poiu.apron.reformatting.ReformatOptions;
 import de.poiu.apron.reformatting.Reformatter;
+import de.poiu.fez.Require;
 import de.poiu.kilt.internal.RememberingPropertyFile;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -108,9 +108,9 @@ public class KiltReformatter {
    * @throws InvalidFormatException if the given format string is invalid
    */
   public void reformat(final List<File> propertyFiles, final String formatString, final boolean reformatKeyAndValue, final Charset charset) {
-    Objects.requireNonNull(propertyFiles);
-    Objects.requireNonNull(formatString);
-    Objects.requireNonNull(charset);
+    Require.nonNull(propertyFiles);
+    Require.nonNull(formatString);
+    Require.nonNull(charset);
 
     final Reformatter reformatter= new Reformatter(
       ReformatOptions.create()
@@ -132,9 +132,9 @@ public class KiltReformatter {
    * @param charset the charset to use for reading and writing the .properties files
    */
   public void reorderByKey(final List<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
-    Objects.requireNonNull(propertyFiles);
-    Objects.requireNonNull(attachCommentsTo);
-    Objects.requireNonNull(charset);
+    Require.nonNull(propertyFiles);
+    Require.nonNull(attachCommentsTo);
+    Require.nonNull(charset);
 
     final Reformatter reformatter= new Reformatter(
       ReformatOptions.create()
@@ -158,9 +158,9 @@ public class KiltReformatter {
    * @param charset the charset to use for reading and writing the .properties files
    */
   public void reorderByTemplate(final File template, final List<File> propertyFiles, final AttachCommentsTo attachCommentsTo, final Charset charset) {
-    Objects.requireNonNull(propertyFiles);
-    Objects.requireNonNull(attachCommentsTo);
-    Objects.requireNonNull(charset);
+    Require.nonNull(propertyFiles);
+    Require.nonNull(attachCommentsTo);
+    Require.nonNull(charset);
 
     // create a PropertyFile instance for each file
     final PropertyFile reference= PropertyFile.from(template, charset);

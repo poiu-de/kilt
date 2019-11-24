@@ -213,7 +213,7 @@ public class FacadeCreator {
   public void copyFacadeAccessorTemplates(final String accessorClassName, final String packageName, final Path targetSourcePath) {
     Require.nonWhitespace(accessorClassName);
     Require.nonWhitespace(packageName);
-    java.util.Objects.requireNonNull(targetSourcePath);
+    Require.nonNull(targetSourcePath);
 
     // first create the necessary directory structure
     final String packageDirStructure= packageName.replaceAll("\\.", "/");

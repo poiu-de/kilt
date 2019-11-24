@@ -16,11 +16,10 @@
 package de.poiu.kilt.facade.creation;
 
 import com.google.common.collect.ImmutableMap;
+import de.poiu.fez.Require;
 import java.text.Normalizer;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import java.util.logging.*;
-import de.poiu.fez.Require;
 
 /**
  * Normalizes key and bundle names to valid strings to be used as class
@@ -70,7 +69,7 @@ public class BundleNormalizer {
    * @return the converted string
    */
   public static String toClassName(String s) {
-    requireNonNull(s, "parameter s may not be null or empty.");
+    Require.nonNull(s, "parameter s may not be null or empty.");
     Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
@@ -114,7 +113,7 @@ public class BundleNormalizer {
    * @return the converted string
    */
   public static String toFieldName(String s) {
-    requireNonNull(s, "parameter s may not be null or empty.");
+    Require.nonNull(s, "parameter s may not be null or empty.");
     Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
@@ -158,7 +157,7 @@ public class BundleNormalizer {
    * @return the converted string
    */
   public static String toConstName(String s) {
-    requireNonNull(s, "parameter s may not be null or empty.");
+    Require.nonNull(s, "parameter s may not be null or empty.");
     Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     s= normalize(s);
@@ -188,7 +187,7 @@ public class BundleNormalizer {
    * @return the converted string
    */
   public static String toBundleName(String s) {
-    requireNonNull(s, "parameter s may not be null or empty.");
+    Require.nonNull(s, "parameter s may not be null or empty.");
     Require.nonWhitespace(s, "parameter s may not be null or empty.");
 
     return s.replaceAll("\\/", ".");
@@ -211,7 +210,7 @@ public class BundleNormalizer {
    * @return the normalized string
    */
   protected static String normalize(String s) {
-    requireNonNull(s, "parameter s may not be null or empty.");
+    Require.nonNull(s, "parameter s may not be null or empty.");
 
     // first replace umlauts with two-characters
     s= replaceUmlauts(s);

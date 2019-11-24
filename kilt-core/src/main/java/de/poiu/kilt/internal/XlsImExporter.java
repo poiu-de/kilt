@@ -28,11 +28,11 @@ import org.apache.logging.log4j.Logger;
 import de.poiu.kilt.internal.xls.I18nBundleKey;
 import de.poiu.kilt.internal.xls.XlsFile;
 import de.poiu.apron.PropertyFile;
+import de.poiu.fez.Require;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import java.util.Objects;
 
 
 public class XlsImExporter {
@@ -55,8 +55,8 @@ public class XlsImExporter {
                                  final File xlsFile,
                                  final Charset propertyFileEncoding,
                                  final MissingKeyAction missingKeyAction) {
-    Objects.requireNonNull(propertiesRootDirectory);
-    Objects.requireNonNull(xlsFile);
+    Require.nonNull(propertiesRootDirectory);
+    Require.nonNull(xlsFile);
 
     final ApronOptions apronOptions= ApronOptions.create()
       .with(propertyFileEncoding != null ? propertyFileEncoding : UTF_8)

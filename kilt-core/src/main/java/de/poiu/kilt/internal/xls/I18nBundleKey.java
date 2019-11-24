@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.internal.xls;
 
+import de.poiu.fez.Require;
 import java.util.Objects;
 
 
@@ -29,8 +30,8 @@ public class I18nBundleKey {
 
 
   public I18nBundleKey(String bundleBaseName, String key) {
-    Objects.requireNonNull(bundleBaseName);
-    Objects.requireNonNull(key);
+    Require.nonNull(bundleBaseName);
+    Require.nonNull(key);
     this.bundleBaseName = bundleBaseName;
     this.key = key;
   }

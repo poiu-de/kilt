@@ -21,13 +21,13 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
+import de.poiu.fez.Require;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,7 +82,7 @@ public class XlsFile {
 
   public XlsFile(final File file) {
     //FIXME: Support file to be null?
-    Objects.requireNonNull(file);
+    Require.nonNull(file);
 
     this.file= file;
 

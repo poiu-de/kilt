@@ -17,6 +17,7 @@ package de.poiu.kilt.internal;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import de.poiu.fez.Require;
 import java.util.Objects;
 import javax.annotation.concurrent.Immutable;
 
@@ -37,7 +38,7 @@ public class Language implements Comparable<Language> {
    * @param lang the language string for this Language
    */
   public Language(final String lang) {
-    Objects.requireNonNull(lang);
+    Require.nonNull(lang);
     this.lang= lang;
   }
 
@@ -47,7 +48,7 @@ public class Language implements Comparable<Language> {
    * @return the Language for the given language string
    */
   public static Language of(final String lang) {
-    Objects.requireNonNull(lang);
+    Require.nonNull(lang);
     return new Language(lang);
   }
 

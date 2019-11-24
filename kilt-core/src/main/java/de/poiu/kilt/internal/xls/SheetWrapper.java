@@ -15,8 +15,8 @@
  */
 package de.poiu.kilt.internal.xls;
 
+import de.poiu.fez.Require;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Spliterator;
 import java.util.function.Consumer;
@@ -55,7 +55,7 @@ public class SheetWrapper {
    * Create a new SheetWrapper wrapping the given Sheet.
    */
   public SheetWrapper(final Sheet wrapped) {
-    Objects.requireNonNull(wrapped);
+    Require.nonNull(wrapped);
     this.wrapped= wrapped;
   }
 

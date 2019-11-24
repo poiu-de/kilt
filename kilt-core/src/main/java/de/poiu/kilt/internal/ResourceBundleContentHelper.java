@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.internal;
 
+import de.poiu.fez.Require;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -96,7 +97,7 @@ public class ResourceBundleContentHelper {
    * @param ignorableBasePath the path to ignore when building the bundle name
    */
   public ResourceBundleContentHelper(final File ignorableBasePath) {
-    java.util.Objects.requireNonNull(ignorableBasePath);
+    Require.nonNull(ignorableBasePath);
     this.ignorableBasePath= ignorableBasePath.toPath();
   }
 
@@ -105,7 +106,7 @@ public class ResourceBundleContentHelper {
    * @param ignorableBasePath the path to ignore when building the bundle name
    */
   public ResourceBundleContentHelper(final Path ignorableBasePath) {
-    java.util.Objects.requireNonNull(ignorableBasePath);
+    Require.nonNull(ignorableBasePath);
     this.ignorableBasePath= ignorableBasePath;
   }
 
@@ -130,7 +131,7 @@ public class ResourceBundleContentHelper {
    * @return the map created from the given collection of files
    */
   public Map<String, Map<Language, File>> toBundleNameToFilesMap(final Collection<File> propertyFiles) {
-    java.util.Objects.requireNonNull(propertyFiles);
+    Require.nonNull(propertyFiles);
     final Map<String, Map<Language, File>> result= new LinkedHashMap<>();
 
     for (final File file : propertyFiles) {
@@ -182,7 +183,7 @@ public class ResourceBundleContentHelper {
   protected String getBundlePrefix(final Path path) {
     LOGGER.traceEntry("getBundlePrefix for path: {}", path);
 
-    java.util.Objects.requireNonNull(path);
+    Require.nonNull(path);
     if (!path.toAbsolutePath().startsWith(this.ignorableBasePath.toAbsolutePath())) {
       throw new IllegalArgumentException("All files should live below the ignorable base path "+this.ignorableBasePath.toAbsolutePath().toString()+". Given path is "+path.toAbsolutePath().toString());
     }

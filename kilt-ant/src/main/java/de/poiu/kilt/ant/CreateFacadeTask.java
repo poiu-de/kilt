@@ -17,6 +17,7 @@ package de.poiu.kilt.ant;
 
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
+import de.poiu.fez.Require;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -205,7 +206,7 @@ public class CreateFacadeTask extends Task {
 
 
   public void setGeneratedPackage(String generatedPackage) {
-    de.poiu.kilt.util.Objects.requireNonWhitespace(generatedPackage, "generatedPackage may not be empty");
+    Require.nonWhitespace(generatedPackage, "generatedPackage may not be empty");
     this.generatedPackage = generatedPackage;
   }
 
