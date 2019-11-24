@@ -81,10 +81,15 @@ public class FacadeCreator {
 
     // build an enum class for the resource bundle
     final TypeSpec.Builder bundleEnumBuilder= TypeSpec.enumBuilder(enumName)
-            .addAnnotation(AnnotationSpec.builder(Generated.class)
-              .addMember("value", "$S", this.getClass().getName())
-              .addMember("date", "$S", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
-              .build())
+            .addJavadoc("@Generated(\n"
+              + "\tvalue = $S\n"
+              + "\tdate = $S\n"
+              + ")\n",
+              new Object[]{this.getClass().getName(), ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)})
+//            .addAnnotation(AnnotationSpec.builder(Generated.class)
+//              .addMember("value", "$S", this.getClass().getName())
+//              .addMember("date", "$S", ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+//              .build())
             .addModifiers(Modifier.PUBLIC)
             .addSuperinterface(ClassName.get("de.poiu.kilt.internal.facade", "KiltEnumFacade"))
             // BASENAME of the bundle as static const
