@@ -74,9 +74,6 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
    *   <tr><td>messages*.properties</td><td>messages_de.properties<br/>messages_en.properties</td></tr>
    *   <tr><td>**&#47;messages_en.properties</td><td>messages_en.properties<br/>internal/messages_en.properties</td></tr>
    * </table>
-   * <p>
-   * File separators may be given as forward (/) or backward slash (\). They can be used independently
-   * of the actual filesystem.
    *
    * @see #i18nExcludes
    */
@@ -87,7 +84,7 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
   /**
    * The files to exclude from the list of resources bundles given in {@link #i18nIncludes}.
    * <p>
-   * File globbing supported with the same semantics as for the <code>i18nIncludes</code>
+   * File globbing is supported with the same semantics as for the <code>i18nIncludes</code>
    *
    * @see #i18nIncludes
    */
