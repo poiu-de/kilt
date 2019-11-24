@@ -129,6 +129,58 @@ public class XlsImExporterTest {
 
 
   @Test
+  public void testImportXls_OnlySpecifiedIncluded() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/messages_de.properties"}, new String[]{""});
+
+    final File xlsFile= new File(Resources.getResource("i18n_expected.xlsx").toURI());
+
+    // - test
+
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+
+    // - verification
+
+    final Path[] writtenResourceBundleFiles = Files.list(propertiesRootDirectory.resolve("i18n")).toArray(Path[]::new);
+    assertThat(writtenResourceBundleFiles).containsOnly(
+      propertiesRootDirectory.resolve("i18n/messages_de.properties")
+    );
+    assertThat(propertiesRootDirectory.resolve("i18n").resolve("messages_de.properties").toFile())
+      .hasSameContentAs(propertiesRootDirectory.resolve("i18n").resolve("messages_de.properties").toFile());
+  }
+
+
+  @Test
+  public void testImportXls_WithoutSpecifiedExcluded() throws IOException, URISyntaxException {
+
+    // - preparation
+
+    final Path propertiesRootDirectory= this.tmpFolder.newFolder().toPath();
+
+    final FileMatcher fileMatcher= new FileMatcher(propertiesRootDirectory, new String[]{"**/*.properties"}, new String[]{"**/*_de.properties"});
+
+    final File xlsFile= new File(Resources.getResource("i18n_expected.xlsx").toURI());
+
+    // - test
+
+    XlsImExporter.importXls(fileMatcher, xlsFile, UTF_8, MissingKeyAction.NOTHING);
+
+    // - verification
+
+    final Path[] writtenResourceBundleFiles = Files.list(propertiesRootDirectory.resolve("i18n")).toArray(Path[]::new);
+    assertThat(writtenResourceBundleFiles).containsOnly(
+      propertiesRootDirectory.resolve("i18n/messages.properties")
+    );
+    assertThat(propertiesRootDirectory.resolve("i18n").resolve("messages.properties").toFile())
+      .hasSameContentAs(propertiesRootDirectory.resolve("i18n").resolve("messages.properties").toFile());
+  }
+
+
+  @Test
   public void testImportXls_AddedLanguageColumn() throws IOException, URISyntaxException {
 
     // - preparation

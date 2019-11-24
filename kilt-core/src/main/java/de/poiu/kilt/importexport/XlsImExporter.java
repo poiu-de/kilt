@@ -29,7 +29,6 @@ import de.poiu.kilt.importexport.xls.XlsFile;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -91,7 +90,12 @@ public class XlsImExporter {
 
         if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
           final File fileForBundle= getFileForBundle(fileMatcher.getRoot().toFile(), bundleBasename, translation.getLang());
-          //TODO: Und hier müsste geprüft werden, ob das File in den i18nIncludes enthalten ist oder nicht.
+
+          if (!fileMatcher.matches(fileForBundle.toPath())) {
+            LOGGER.log(Level.DEBUG, "Skipping import to file {} since it does not match inclusion pattern", fileForBundle);
+            continue;
+          }
+
           final PropertyFile propertyFile= new PropertyFile();
           bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
         }
