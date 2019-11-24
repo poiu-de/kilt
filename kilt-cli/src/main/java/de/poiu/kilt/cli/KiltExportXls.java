@@ -38,7 +38,8 @@ import picocli.CommandLine.Option;
  * @author mherrn
  */
 @Command(name = "export-xls",
-         description= "Exports Java i18n resource bundle files to XLS(X)")
+         description= "Exports Java i18n resource bundle files to XLS(X)",
+         sortOptions = false)
 public class KiltExportXls extends AbstractKiltCommand implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();

@@ -110,7 +110,7 @@ public abstract class AbstractKiltCommand {
   /**
    * Whether to give more verbose output.
    */
-  @CommandLine.Option(names= {"-v", "--verbose"}, defaultValue= "false", description= "Whether to give more verbose output.")
+  @CommandLine.Option(names= {"-v", "--verbose"}, defaultValue= "false", description= "Whether to give more verbose output.", order = 100)
   boolean verbose;
 
 

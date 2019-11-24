@@ -41,7 +41,8 @@ import picocli.CommandLine.Option;
  * @author mherrn
  */
 @Command(name = "create-facade",
-         description= "Generates the I18N enum facades to allow type safe access to localized messages.")
+         description= "Generates the I18N enum facades to allow type safe access to localized messages.",
+         sortOptions = false)
 public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();

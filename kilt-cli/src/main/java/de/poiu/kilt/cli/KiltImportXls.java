@@ -34,7 +34,8 @@ import picocli.CommandLine.Option;
  * @author mherrn
  */
 @Command(name = "import-xls",
-         description= "Imports Java i18n resource bundle files back from XLS(X)")
+         description= "Imports Java i18n resource bundle files back from XLS(X)",
+         sortOptions = false)
 public class KiltImportXls extends AbstractKiltCommand implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();

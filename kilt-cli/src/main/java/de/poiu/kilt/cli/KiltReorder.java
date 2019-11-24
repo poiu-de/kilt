@@ -25,7 +25,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine.Command;
-import picocli.CommandLine.Help.Ansi;
 import picocli.CommandLine.Option;
 
 
@@ -34,7 +33,8 @@ import picocli.CommandLine.Option;
  * @author mherrn
  */
 @Command(name = "reorder",
-         description= "Reorders the key-value pairs in Java i18n resource bundle files.")
+         description= "Reorders the key-value pairs in Java i18n resource bundle files.",
+         sortOptions = false)
 public class KiltReorder extends AbstractKiltCommand implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();

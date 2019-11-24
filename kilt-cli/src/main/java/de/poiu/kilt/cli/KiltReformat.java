@@ -32,7 +32,8 @@ import picocli.CommandLine.Option;
  * @author mherrn
  */
 @Command(name = "reformat",
-         description= "Reformats Java i18n resource bundle files to a common format.")
+         description= "Reformats Java i18n resource bundle files to a common format.",
+         sortOptions = false)
 public class KiltReformat extends AbstractKiltCommand implements Runnable {
 
   private static final Logger LOGGER= LogManager.getLogger();
