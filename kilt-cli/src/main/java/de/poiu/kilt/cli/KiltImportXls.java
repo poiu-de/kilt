@@ -47,7 +47,7 @@ public class KiltImportXls extends AbstractKiltCommand implements Runnable {
   private Path xlsFile= Paths.get("i18n.xlsx");
 
 
-  @Option(names = {"-m", "--missingKeyAction"}, description= "What to do with keys that exist in the .properties file, but not in the XLS(X) that is about to be imported. default: ${DEFAULT-VALUE})")
+  @Option(names = {"-m", "--missingKeyAction"}, description= "What to do with keys that exist in the .properties file, but not in the XLS(X) that is about to be imported. Valid values: ${COMPLETION-CANDIDATES}. default: ${DEFAULT-VALUE})")
   private MissingKeyAction missingKeyAction= MissingKeyAction.NOTHING;
 
 
