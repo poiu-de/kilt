@@ -18,6 +18,7 @@ package de.poiu.kilt.util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -79,7 +80,7 @@ public class PathUtils {
     final List<PathMatcher> pathMatchers= toPathMatchers(absRoot, i18nIncludes);
     final List<PathMatcher> pathUnmatchers= toPathMatchers(absRoot, i18nExcludes);
 
-    try (final Stream<Path> paths= Files.walk(root)) {
+    try (final Stream<Path> paths= Files.walk(root, FileVisitOption.FOLLOW_LINKS)) {
       return paths
         // only regular files
         .filter(path -> path.toFile().isFile())
