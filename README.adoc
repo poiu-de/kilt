@@ -85,7 +85,15 @@ Prerequisites
 
 === To be integrated into an ant build script
 
+When using Java 8 to 10:
+
  - Apache ant 1.8.1 or higher
+
+When using Java 11+:
+
+ - Apache ant 1.10.6 or higher footnote:[Older version of ant can be used
+   by exporting the environment variable `ANT_OPTS="-Djdk.util.jar.enableMultiRelease=force"`]
+
 
 === To be integrated into a maven build
 
