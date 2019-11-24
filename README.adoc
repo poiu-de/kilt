@@ -18,17 +18,24 @@ Create an XLS(X) sheet from Java localization resource bundles and vice versa.
 --
 
 
-
 What is Kilt
 ------------
 
-Kilt is a set of small tools to convert Java i18n resource bundles to
-XLS(X) and vice versa. It also contains a generator for a facade to access
-the translation resources in a type-safe manner.
+Kilt is a set of small tools to ease the handling of Java i18n resource
+bundles.
 
-Kilt is available as a standalone application or as ant task
-to be integrated with an ant-based application and also as a maven plugin
-to be integrated with a maven-based application.
+It can help by
+
+ - Converting i18n resource bundles to and from XLS(X) sheets for easier
+   translation by a small translation team.
+ - Providing a Facade to access the entries in a i18n resource bundle
+   statically in a type safe way.
+
+Kilt is available as
+
+ - a standalone CLI application
+ - an ant task to be integrated with an ant-based application
+ - a maven plugin to be integrated with a maven-based application
 
 Why to use Kilt
 ---------------
@@ -42,10 +49,10 @@ translators. The translators can make their changes directly in the XLS(X)
 sheet and send it back to the software engineers who incorporate the
 changes back into the actual Java i18n resource bundles.
 
-Also using Java i18n resource bundles usually involve accessing them by
+Also using Java i18n resource bundles usually involves accessing them by
 string which is not type safe and requires the knowledge of the exact name
 of the key to use. Kilt can create a facade to access the resource bundle
-keys in a type-safe manner. This allows for using code completion in and
+keys in a type-safe manner. This allows for using code completion in an
 IDE to find the available keys. It even lists the available translations in
 the generated Javadoc!
 
@@ -55,6 +62,7 @@ The benefits of Kilt are in short form:
  - Minimal invasive changes on import and export of translations (comments,
    blank lines and order remain intact)
  - Good integration into ant and maven build tools
+ - Standalone CLI tool to be used without a build tool
  - Type safe access to translation resources via facade
 
 
@@ -109,7 +117,7 @@ the pom or your project:
 ----
 
 See link:docs/user_guide.adoc[the Kilt User Guide] for a 
-detailed description of the available goals and configuration parameters.
+detailled description of the available goals and configuration parameters.
 
 === Ant task
 
@@ -130,7 +138,7 @@ Usage
 
 // Hier was schnelles hinschreiben?
 
-See link:docs/user_guide.adoc[the main user guide] for a detailed usage
+See link:docs/user_guide.adoc[the main user guide] for a detailled usage
 description of Kilt.
 
 
