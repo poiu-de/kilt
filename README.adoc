@@ -14,7 +14,7 @@ image:docs/kilt-icon.svg[Kilt - **K**een **I**18n, **L**10n and **T**9n,
 role="right", width="75"]
 **K**een **I**18n **L**10n and **T**9n
 
-Create an XLS(X) sheet from Java localization resource bundles and vice versa.
+Easier handling of Java i18n resource bundles.
 --
 
 
@@ -155,3 +155,23 @@ Kilt is based on https://github.com/alexchiri/i18n-binder[i18n-binder]
 which is apparently orphaned. It started as bugfixes for i18n-binder, but
 soon involved such massive changes that it was forked into a new project
 with the new name *Kilt*.
+
+The current state of Kilt doesn't share much code with the original
+anymore.
+
+It provides the following major improvements:
+
+- The facade generation was recreated from the ground up. The resulting
+  facade is now much simpler, much more concise and easier to use.
+- The commands and parameters are partly renamed (and now extended) to be
+  more concise.
+- XLS(X) files are now updated instead of recreated each time. This allows
+  manual changes to the document (like cell formatting) without losing them
+  after a new export.
+- Empty cells and default resource bundles (without a country code) in the
+  XLS(X) are now supported.
+- An additional command line application was added that does not depend on
+  ant.
+- Another runtime jar was added for using the generated facade in other
+  projects or even have a saner access to resource bundles without any
+  generated facade at all.
