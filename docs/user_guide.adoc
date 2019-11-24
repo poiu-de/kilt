@@ -2,6 +2,7 @@ User Guide
 ==========
 Marco Herrn <marco@mherrn.de>
 2018-08-03
+:compat-mode!:
 :toc: left
 :toclevels: 4
 :y: ✔
@@ -423,43 +424,260 @@ they apply.
 .Kilt parameters
 [width="100%"]
 |===
-| Parameter                  | Description                                    5+| Applies to
+| Parameter                     | Description                                    5+| Applies to
 
-| {empty}                    | {empty}                                         m| export-xls m| import-xls m| create-facade m| reformat m| reorder
-| propertiesRootDirectory    | The directory below which the i18n resource
-                               bundle files reside.                             | {y}         |  {y}        | {y}            | {y}       | {y}
-| verbose                    | Whether to generate more verbose output.         | {y}         |  {y}        | {y}            | {y}       | {y}
-| i18nIncludes               | The Java i18n resource bundles to include in the
-                               processing.                                      | {y}         |  {y}        | {y}            | {y}       | {y}
-| i18nExcludes               | The Java i18n resource bundles to exclude from
-                               the processing.                                  | {y}         |  {y}        | {y}            | {y}       | {y}
-| propertyFileEncoding       | The encoding of the Java i18n resource bundle
-                               files. Prior to Java 9 the default encoding in
-                               Java was ISO-8859-1, since Java 9 it is UTF-8.   | {y}         |  {y}        | {y}            | {y}       | {y}
-| xlsFile                    | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}            | {n}       | {n}
-| missingKeyAction           | What to do if the target file contains key-value
-                               pairs that do not exist in the input file.
-                               Possible values: DELETE, COMMENT, NOTHING        | {n}         |  {y}        | {n}            | {n}       | {n}
-| facadeGenerationDirectory  | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}            | {n}       | {n}
-| generatedPackage           | The package name into which to generate the
-                               Java enum facade classes.                        | {n}         |  {n}        | {y}            | {n}       | {n}
-| copyFacadeAccessorClasses  | Whether to copy the facade accessor classes into
-                               the generated output.                            | {n}         |  {n}        | {y}            | {n}       | {n}
-| facadeAccessorClassName    | The class name to use when copying the facade
-                               accessor classes.                                | {n}         |  {n}        | {y}            | {n}       | {n}
-| format                     | The format to use for formatting the entries
-                               in the resource bundles.                         | {n}         |  {n}        | {n}            | {y}       | {n}
-| reformatKeyAndValue        | Whether to reformat the keys and values
-                               themselves by removing insignificant whitespace
-                               and linebreaks.                                  | {n}         |  {n}        | {n}            | {y}       | {n}
-| byKey                      | Reorder the entries alphabetically by
-                               the name of their keys.                          | {n}         |  {n}        | {n}            | {n}       | {y}
-| byTemplate                 | Reorder the entries in the same order as
-                               the key-value pairs in this template file.       | {n}         |  {n}        | {n}            | {n}       | {y}
-| attachCommentsTo           | How to handle comment lines and empty lines.
-                               Possible values:
-                               NEXT_PROPERTY, PREV_PROPERTY, ORIG_LINE          | {n}         |  {n}        | {n}            | {n}       | {y}
+| {empty}                       | {empty}                                         m| export-xls m| import-xls m| create-facade m| reformat m| reorder
+| <<_verbose>>                  | Whether to generate more verbose output.         | {y}         |  {y}        | {y}            | {y}       | {y}
+| <<propertiesRootDirectory>>   | The directory below which the i18n resource
+                                  bundle files reside.                             | {y}         |  {y}        | {y}            | {y}       | {y}
+| <<i18nIncludes>>              | The Java i18n resource bundles to include in the
+                                  processing.                                      | {y}         |  {y}        | {y}            | {y}       | {y}
+| <<i18nExcludes>>              | The Java i18n resource bundles to exclude from
+                                  the processing.                                  | {y}         |  {y}        | {y}            | {y}       | {y}
+| <<propertyFileEncoding>>      | The encoding of the Java i18n resource bundle
+                                  files.                                           | {y}         |  {y}        | {y}            | {y}       | {y}
+| <<xlsFile>>                   | The XLS(X) file to export to / import from.      | {y}         |  {y}        | {n}            | {n}       | {n}
+| <<missingKeyAction>>          | What to do if the target file contains key-value
+                                  pairs that do not exist in the input file.       | {n}         |  {y}        | {n}            | {n}       | {n}
+| <<facadeGenerationDirectory>> | The directory to write the generated file(s) to. | {n}         |  {n}        | {y}            | {n}       | {n}
+| <<generatedPackage>>          | The package name into which to generate the
+                                  Java enum facade classes.                        | {n}         |  {n}        | {y}            | {n}       | {n}
+| <<copyFacadeAccessorClasses>> | Whether to copy the facade accessor classes into
+                                  the generated output.                            | {n}         |  {n}        | {y}            | {n}       | {n}
+| <<facadeAccessorClassName>>   | The class name to use when copying the facade
+                                  accessor classes.                                | {n}         |  {n}        | {y}            | {n}       | {n}
+| <<_format>>                   | The format to use for formatting the entries
+                                  in the resource bundles.                         | {n}         |  {n}        | {n}            | {y}       | {n}
+| <<reformatKeyAndValue>>       | Whether to reformat the keys and values
+                                  themselves by removing insignificant whitespace
+                                  and linebreaks.                                  | {n}         |  {n}        | {n}            | {y}       | {n}
+| <<byKey>>                     | Reorder the entries alphabetically by
+                                  the name of their keys.                          | {n}         |  {n}        | {n}            | {n}       | {y}
+| <<byTemplate>>                | Reorder the entries in the same order as
+                                  the key-value pairs in this template file.       | {n}         |  {n}        | {n}            | {n}       | {y}
+| <<attachCommentsTo>>          | How to handle comment lines and empty lines on
+                                  reordering.                                      | {n}         |  {n}        | {n}            | {n}       | {y}
 |===
+
+
+verbose
+~~~~~~~
+
+Print more verbose output.
+
+Specifying this options lets Kilt print more informational messages about
+what it is doing.
+
+When using the maven plugin this also requires the option `-X` to let maven
+actually print the additional output.
+
+
+propertiesRootDirectory
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The location of the source i18n resource bundle files.
+
+All resource bundles that are handled by Kilt must reside in this directory
+(or any subdirectory of arbitrary depth).
+
+In a maven application this will usually be `src/main/resources`.
+
+
+i18nIncludes
+~~~~~~~~~~~~
+
+The Java i18n resource bundles to include in the
+processing.
+
+File globbing is supported with the following semantics>
+
+- `?` matches a single character
+
+- `*` matches zero or more characters
+
+- `**` matches zero or more directories
+
+For example if you have the following resource bundles:
+
+- `messages_de.properties`
+- `messages_en.properties`
+- `buttons_de.properties`
+- `buttons_en.properties`
+- `internal/exceptions_de.properties`
+- `internal/exceptions_en.properties`
+- `internal/messages.properties`
+- `internal/messages_en.properties`
+
+these are the results for the following patterns>
+
+|===
+| Pattern | Resulting files
+
+| `+**/*.properties+`           | All properties files
+| `+messages*.properties+`      | messages_de.properties +
+                                  messages_en.properties
+| `+**/messages_en.properties+` | messages_en.properties +
+                                  internal/messages_en.properties
+|===
+
+
+i18nExcludes
+~~~~~~~~~~~~
+
+The files to exclude from the list of resources bundles given in <<i18nIncludes>>.
+
+File globbing is supported with the same semantics as for the `i18nIncludes`.
+
+
+propertyFileEncoding
+~~~~~~~~~~~~~~~~~~~~
+
+The encoding of the Java i18n resource bundle files.
+
+Prior to Java 9 the default encoding in Java was ISO-8859-1, since Java 9
+it is UTF-8.
+
+
+xlsFile
+~~~~~~~
+
+The XLS(X) file to export to / import from.
+
+On export, if the file doesn't exist already it will be created. If it
+already exists it will be updated (retaining formatting and unrelated
+content). It is advisable to let Kilt generate the first version of the
+file before making manual changes, since Kilt expects a certain structure
+of the file.
+
+
+missingKeyAction
+~~~~~~~~~~~~~~~~
+
+How to handle key-value-pairs that exist in the .properties file, but not in the XLS(S) file
+to import.
+
+The following values are valid:
+
+[horizontal]
+ NOTHING:: Leave exising key-value-pairs as they are
+ DELETE:: Delete the missing key-value-pairs
+ COMMENT:: Comment out the missing key-value-pairs
+
+
+facadeGenerationDirectory
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The directory to write the generated Java enum facade classes to.
+
+The default value when using the maven plugin is
+`${project.build.directory}/generated-sources/kilt` otherwise it is
+`generated-sources`.
+
+
+generatedPackage
+~~~~~~~~~~~~~~~~
+
+The package name into which to generate the Java enum facade classes.
+
+
+copyFacadeAccessorClasses
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Whether to copy the facade accessor class and the base interface
+I18nBundleKey to the generation target dir.
+
+This is only useful if it is necessary to avoid a runtime dependency on
+kilt-runtime, which provides these classes.
+
+
+facadeAccessorClassName
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The name of the facade accessor class when copying the facade accessor classes.
+
+This is only meaningful in combination with <<copyFacadeAccessorClasses>>.
+
+
+format
+~~~~~~
+
+The format to use when reformatting entries of resource bundles.
+
+The given format string must conform to the following specification:
+
+ - It may contain some leading whitespace before the key.
+ - It must contain the string `<key>` to indicate the position of the properties key (case doesn't matter)
+ - It must contain a separator char (either a colon or an equals sign) which may be surrounded by some whitespace characters.
+ - It must contain the string `<value>` to indicate the position of the properties value (case doesn't matter)
+ - It must contain the line ending char(s) (either `\n` or `\r` or `\r\n`)
+
+The allowed whitespace characters are
+
+ - the space character
+ - the tab character
+ - the linefeed character.
+
+Therefore a typical format string is
+
+ <key> = <value>\n
+
+for
+
+ - no leading whitespace
+ - an equals sign as separator surrounded by a single whitespace character on each side
+ - `\n` as the line ending char.
+
+But it may as well be
+
+ \t \f<key>\t: <value>\r\n
+
+for a rather strange format with
+
+ - a tab, a whitespace and a linefeed char as leading whitespace
+ - a colon as separator char preceded by a tab and followed a single space character
+ - \r\n as the line ending chars
+
+If the format string is omitted the default value of `<key> = <value>\n` will be used.
+
+
+reformatKeyAndValue
+~~~~~~~~~~~~~~~~~~~
+
+Whether to reformat the keys and values of reformatted entries by
+removing insignificant whitespace  and linebreaks.
+
+
+byKey
+~~~~~
+
+Reorder the entries of resource bundles alphabetically by the name of their
+keys.
+
+This option may not be given at the same time as <<byTemplate>>.
+
+
+byTemplate
+~~~~~~~~~~
+
+Reorder the entries of resource bundles in the same order as the key-value
+pairs in this template file.
+
+This option may not be given at the same time as <<byKey>>.
+
+
+attachCommentsTo
+~~~~~~~~~~~~~~~~
+
+How to handle comment lines and empty lines when reordering the entries of
+resource bundles.
+
+Possible values are:
+
+[horizontal]
+ NEXT_PROPERTY:: Comments and empty lines are attached to the key-value pair _after_ them.
+ PREV_PROPERTY:: Comments and empty lines are attached to the key-value pair _before_ them.
+ ORIG_LINE:: Comments and empty lines remain at their current position.
+
 
 License
 -------

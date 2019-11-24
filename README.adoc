@@ -2,6 +2,7 @@ Kilt
 ====
 Marco Herrn <marco@mherrn.de>
 2018-05-03
+:compat-mode!:
 :toc:
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
