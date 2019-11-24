@@ -64,6 +64,7 @@ public class Kilt implements Runnable {
   public static void main(String[] args) {
     final int exitCode= new CommandLine(new Kilt())
       .setUsageHelpAutoWidth(true)
+      .setParameterExceptionHandler(new ParameterExceptionHandler())
       .setExecutionExceptionHandler(new ExecutionExceptionHandler())
       .execute(args);
 

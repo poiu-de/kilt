@@ -23,8 +23,6 @@ import picocli.CommandLine;
  * to stderr.
  * <p>
  * Additionally the usage help is printed to stderr.
- * <p>
- * This handler will always return a 1 as the exit code.
  *
  * @author mherrn
  */
