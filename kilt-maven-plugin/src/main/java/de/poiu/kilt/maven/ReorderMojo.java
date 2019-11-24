@@ -61,7 +61,16 @@ public class ReorderMojo extends AbstractKiltMojo {
   private File template;
 
 
-  /** How to handle comments and empty lines in the .properties files. */
+  /**
+   * How to handle comments and empty lines in the .properties files.
+   * <p>
+   * The following values are valid:
+   * <ul>
+   *  <li>NEXT_PROPERTY: Comments and empty lines are attached to the key-value pair <i>after</i> them</li>
+   *  <li>PREV_PROPERTY: Comments and empty lines are attached to the key-value pair <i>before</i> them</li>
+   *  <li>ORIG_LINE: Comments and empty lines remain at their current position</li>
+   * </ul>
+   */
   @Parameter(property="attachCommentsTo", defaultValue="NEXT_PROPERTY")
   private AttachCommentsTo attachCommentsTo;
 
