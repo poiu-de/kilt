@@ -53,6 +53,7 @@ public class SheetWrapper {
 
   /**
    * Create a new SheetWrapper wrapping the given Sheet.
+   * @param wrapped the sheet to wrap
    */
   public SheetWrapper(final Sheet wrapped) {
     Require.nonNull(wrapped);
@@ -68,7 +69,7 @@ public class SheetWrapper {
    *
    * @param rowIdx the row index
    * @param colIdx the column index
-   * @return an Optional with the actual cell content as string 
+   * @return an Optional with the actual cell content as string
    */
   public Optional<String> getStringValue(final int rowIdx, final int colIdx) {
     final Row row= this.wrapped.getRow(rowIdx);
@@ -593,7 +594,12 @@ public class SheetWrapper {
 
   @Override
   public boolean equals(Object obj) {
-    return wrapped.equals(obj);
+    if (obj instanceof SheetWrapper) {
+      final SheetWrapper other= (SheetWrapper) obj;
+      return wrapped.equals(other.wrapped);
+    } else {
+      return wrapped.equals(obj);
+    }
   }
 
 

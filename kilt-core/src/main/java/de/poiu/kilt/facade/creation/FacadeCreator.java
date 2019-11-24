@@ -15,18 +15,22 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import de.poiu.fez.Require;
-import de.poiu.kilt.internal.ResourceBundleContent;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
+import de.poiu.fez.Require;
+import de.poiu.kilt.internal.ResourceBundleContent;
+import de.poiu.kilt.internal.Translation;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -35,13 +39,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import javax.annotation.Generated;
 import javax.lang.model.element.Modifier;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import de.poiu.kilt.internal.Translation;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import org.apache.logging.log4j.Level;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -145,12 +145,12 @@ public class FacadeCreator {
    * @param translations the translations of the key
    * @return a code block with the javadoc for the given key
    */
-  public CodeBlock buildJavadoc(final String key, final Collection<Translation> translations) {
+  protected CodeBlock buildJavadoc(final String key, final Collection<Translation> translations) {
     final CodeBlock.Builder javadocBuilder= CodeBlock.builder()
-            .add("Returns the localized value of <code>$L</code>.\n", key)
-            .add("<p>\n")
-            .add("Examples:\n")
-            .add("<ul>\n");
+      .add("Returns the localized value of <code>$L</code>.\n", key)
+      .add("<p>\n")
+      .add("Examples:\n")
+      .add("<ul>\n");
     for (final Translation translation : translations) {
       javadocBuilder.add("  <li>$L = $L</li>\n", translation.getLang(), translation.getValue());
     }
@@ -190,7 +190,7 @@ public class FacadeCreator {
    * @param s the string to convert
    * @return the converted string
    */
-  public String toPackageName(final String s) {
+  protected String toPackageName(final String s) {
     return s.replaceAll("\\/", ".");
   }
 

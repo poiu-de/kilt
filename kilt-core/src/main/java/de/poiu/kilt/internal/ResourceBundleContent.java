@@ -20,13 +20,11 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
-import java.io.File;
-import java.util.Map;
-import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
 import de.poiu.apron.PropertyFile;
+import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
+import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -171,6 +169,5 @@ public class ResourceBundleContent {
   public String toString() {
     return "FacadeBundleContent{" + "bundleName=" + bundlBaseName + "\n\t, content=" + content + '}';
   }
-
 
 }

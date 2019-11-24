@@ -15,8 +15,8 @@
  */
 package de.poiu.kilt.reformatting;
 
-import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.ApronOptions;
+import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.PropertyFile;
 import de.poiu.apron.UnicodeHandling;
 import de.poiu.apron.reformatting.AttachCommentsTo;

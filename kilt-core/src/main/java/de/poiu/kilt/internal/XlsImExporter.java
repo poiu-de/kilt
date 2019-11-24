@@ -15,9 +15,14 @@
  */
 package de.poiu.kilt.internal;
 
-import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.ApronOptions;
+import de.poiu.apron.MissingKeyAction;
+import de.poiu.apron.PropertyFile;
+import de.poiu.fez.Require;
+import de.poiu.kilt.internal.xls.I18nBundleKey;
+import de.poiu.kilt.internal.xls.XlsFile;
 import java.io.File;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -25,11 +30,6 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import de.poiu.kilt.internal.xls.I18nBundleKey;
-import de.poiu.kilt.internal.xls.XlsFile;
-import de.poiu.apron.PropertyFile;
-import de.poiu.fez.Require;
-import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

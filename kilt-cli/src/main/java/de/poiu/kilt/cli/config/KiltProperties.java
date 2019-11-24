@@ -24,7 +24,6 @@ import java.util.Map;
  * @author mherrn
  */
 public class KiltProperties {
-  private Map<KiltProperty, String> properties= new LinkedHashMap<>();
-
+  private final Map<KiltProperty, String> properties= new LinkedHashMap<>();
 
 }
