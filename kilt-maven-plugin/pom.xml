@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.poiu.kilt</groupId>
     <artifactId>kilt</artifactId>
-    <version>1.0.0</version>
+    <version>0.4.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>kilt-maven-plugin</artifactId>

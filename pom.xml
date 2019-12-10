@@ -4,7 +4,7 @@
 
   <groupId>de.poiu.kilt</groupId>
   <artifactId>kilt</artifactId>
-  <version>1.0.0</version>
+  <version>0.4.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>kilt</name>
   <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
@@ -21,7 +21,7 @@
     <url>https://github.com/hupfdule/kilt</url>
     <connection>scm:git:git://github.com/hupfdule/kilt.git</connection>
     <developerConnection>scm:git:git@github.com:hupfdule/kilt.git</developerConnection>
-    <tag>kilt-1.0.0</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
