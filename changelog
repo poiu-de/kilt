@@ -36,7 +36,11 @@ Version 1.0.0 - 2019-11-24
 Version 0.3.1 - 2019-03-05
 --------------------------
 
- - Upgrade Apron library to 2.0.1 to benefit from bugfixes
+ - Upgrade Apron library to 2.0.1 to benefit from bugfixes:
+   - Escape newlines to literal newlines (hupfdule/apron#3)
+   - Updating a PropertyFile updates values even if the unescaped form
+     doesn't differ (hupfdule/apron#4)
+   - An escaped literal newline is replaced with a newline (hupfdule/apron#5)
 
 
 Version 0.3.0 - 2018-09-27
@@ -45,7 +49,7 @@ Version 0.3.0 - 2018-09-27
  - Mark default language column in XLS(X) with "<default>"
  - Get rid of dependency on utils-apl-derived and use PropertyFile from
    apron library instead
- - Implemented functionality to comment out or delete missing keys when 
+ - Implemented functionality to comment out or delete missing keys when
    importing XLS(X) back to .properties files
  - Add an additional info sheet to the written XLS(X) with some infos
    about the generation
