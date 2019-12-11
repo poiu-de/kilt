@@ -24,16 +24,24 @@ git worktree add "$GH_PAGES" gh-pages
 
 # Convert the asciidoc sources to HTML
 asciidoctor \
-  --backend=html5
-  --attribute=nofooter
-#  Unsetting author and email doesn't work
-#  --attribute='!author'                  # do not print the author name
-#  --attribute='!email'                   # do not print the email address
-#  --attribute="revnumber=$KILT_VERSION" # specify the kilt revision
-  --attribute="revdate=$(date -Idate)"  # set the current date
-  --destination-dir="$GH_PAGES"
-  --source-dir=docs
+  --backend=html5 \
+  --attribute=nofooter \
+  --attribute="revdate=$(date -Idate)" \
+  --destination-dir="$GH_PAGES" \
+  --source-dir=docs \
   docs/*.adoc
+#  Unsetting author and email doesn't work \
+#asciidoctor \
+#  --backend=html5 \
+#  --attribute=nofooter \
+#  --attribute='!author'                  # do not print the author name \
+#  --attribute='!email'                   # do not print the email address \
+#  --attribute="revnumber=$KILT_VERSION" # specify the kilt revision \
+#  --attribute="revdate=$(date -Idate)"  # set the current date \
+#  --destination-dir="$GH_PAGES" \
+#  --source-dir=docs \
+#  docs/*.adoc
+
 
 # Copy the additional resources to the target directory
 pushd docs

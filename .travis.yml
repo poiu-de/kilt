@@ -11,3 +11,6 @@ jdk:
   - openjdk12
   - openjdk13
   - openjdk-ea
+
+after_success:
+  - ./build_gh-pages.sh
