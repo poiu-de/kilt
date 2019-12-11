@@ -1,0 +1,10 @@
+Kilt Documentation
+==================
+:compat-mode!:
+:experimental:
+
+The Kilt documentation is available for the following releases:
+
+  - link:latest[Latest release version]
+  - link:devel[Current development version]
+  - link:1.0.0[Release 1.0.0]
