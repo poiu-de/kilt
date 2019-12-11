@@ -6,6 +6,7 @@ Marco Herrn <marco@mherrn.de>
 :toc:
 :homepage: https://github.com/hupfdule/kilt
 :download-page: https://github.com/hupfdule/kilt/releases
+:user_guide: https://hupfdule.github.io/kilt/user_guide.html
 :license-link: ./LICENSE.txt
 :kilt-version: 1.0.0
 
@@ -135,7 +136,7 @@ the pom or your project:
   <build>
 ----
 
-See link:docs/user_guide.adoc[the Kilt User Guide] for a
+See {user_guide}[the Kilt User Guide] for a
 detailled description of the available goals and configuration parameters.
 
 === Ant task
@@ -157,7 +158,7 @@ Usage
 
 // TODO: Hier was schnelles hinschreiben?
 
-See link:docs/user_guide.adoc[the main user guide] for a detailled usage
+See {user_guide}[the main user guide] for a detailled usage
 description of Kilt.
 
 
