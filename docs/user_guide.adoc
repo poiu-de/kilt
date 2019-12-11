@@ -1,7 +1,7 @@
 User Guide
 ==========
-Marco Herrn <marco@mherrn.de>
-2018-08-03
+//Marco Herrn <marco@mherrn.de>
+//2018-08-03
 :compat-mode!:
 :toc: left
 :toclevels: 4
