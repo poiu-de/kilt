@@ -1,6 +1,12 @@
 Kilt changelog
 ==============
 
+Version 1.0.1 - 2020-01-20
+--------------------------
+
+[base]
+ - Fix bundle basename for bundles not in subfolder (#5)
+
 
 Version 1.0.0 - 2019-11-24
 --------------------------
