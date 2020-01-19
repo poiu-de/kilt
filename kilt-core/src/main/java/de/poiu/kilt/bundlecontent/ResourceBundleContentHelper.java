@@ -142,7 +142,12 @@ public class ResourceBundleContentHelper {
         final Language language= Language.of(langCode != null ? langCode : "");
 
         final String bundlePrefix= getBundlePrefix(file);
-        final String fullBundleName= bundlePrefix + "/" + bundleBasename;
+        final String fullBundleName;
+        if (bundlePrefix == null || bundlePrefix.trim().isEmpty()) {
+          fullBundleName= bundleBasename;
+        } else {
+          fullBundleName= bundlePrefix + "/" + bundleBasename;
+        }
 
         if (!result.containsKey(fullBundleName)) {
           result.put(fullBundleName, new LinkedHashMap<>());

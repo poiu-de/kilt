@@ -239,4 +239,34 @@ public class ResourceBundleContentHelperTest {
     assertThat(bundleNameToFilesMap.get("i18n/options").get(Language.of("en_US"))).hasName("options_en_US.properties");
     assertThat(bundleNameToFilesMap.get("i18n/options").get(Language.of("en_GB"))).hasName("options_en_GB.properties");
   }
+
+
+  @Test
+  public void testToBundleNameToFilesMap_IgnoreSubDir() {
+    // preparation
+    final Path ignorableBasePath= Paths.get("/some/path/src/main/resources");
+
+    final List<File> resourceFiles= ImmutableList.of(
+            ignorableBasePath.resolve("messages_de.properties").toFile(),
+            ignorableBasePath.resolve("messages_en.properties").toFile(),
+            ignorableBasePath.resolve("options.properties").toFile(),
+            ignorableBasePath.resolve("options_en_US.properties").toFile(),
+            ignorableBasePath.resolve("options_en_GB.properties").toFile()
+    );
+
+    // execution
+    final ResourceBundleContentHelper helper= new ResourceBundleContentHelper(ignorableBasePath);
+    final Map<String, Map<Language, File>> bundleNameToFilesMap = helper.toBundleNameToFilesMap(resourceFiles);
+
+    System.out.println(bundleNameToFilesMap.keySet());
+    // verification
+    assertThat(bundleNameToFilesMap.keySet()).containsExactly("messages", "options");
+    assertThat(bundleNameToFilesMap.get("messages")).containsKeys(Language.of("de"), Language.of("en"));
+    assertThat(bundleNameToFilesMap.get("messages").get(Language.of("de"))).hasName("messages_de.properties");
+    assertThat(bundleNameToFilesMap.get("messages").get(Language.of("en"))).hasName("messages_en.properties");
+    assertThat(bundleNameToFilesMap.get("options")).containsKeys(Language.of(""), Language.of("en_US"), Language.of("en_GB"));
+    assertThat(bundleNameToFilesMap.get("options").get(Language.of(""))).hasName("options.properties");
+    assertThat(bundleNameToFilesMap.get("options").get(Language.of("en_US"))).hasName("options_en_US.properties");
+    assertThat(bundleNameToFilesMap.get("options").get(Language.of("en_GB"))).hasName("options_en_GB.properties");
+  }
 }
