@@ -13,7 +13,7 @@ User Guide
 :javadoc-url: https://somewhere.else
 :apron: https://github.com/hupfdule/apron
 :license-link: ../LICENSE.txt
-:kilt-version: 1.0.0
+:kilt-version: 1.0.1
 
 [link=https://github.com/hupfdule/kilt]
 image::https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png[Fork me on GitHub,float="right"]
