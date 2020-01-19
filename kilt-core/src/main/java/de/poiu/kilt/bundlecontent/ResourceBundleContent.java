@@ -57,7 +57,7 @@ public class ResourceBundleContent {
   // Attributes
 
   /** The bundleBasename of this bundle. */
-  private final String bundlBaseName;
+  private final String bundleBaseName;
 
   /** All keys of this bundle and their available translations. */
   private final Multimap<String, Translation> content=
@@ -78,7 +78,7 @@ public class ResourceBundleContent {
    * @param content all keys and their translations for this bundle
    */
   private ResourceBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
-    this.bundlBaseName= bundleBaseName;
+    this.bundleBaseName= bundleBaseName;
     this.content.putAll(content);
   }
 
@@ -93,7 +93,7 @@ public class ResourceBundleContent {
    * @return the bundleBasename
    */
   public String getBundleBaseName() {
-    return bundlBaseName;
+    return bundleBaseName;
   }
 
 
@@ -165,13 +165,13 @@ public class ResourceBundleContent {
       });
     }
 
-    return new ResourceBundleContent(this.bundlBaseName, translations);
+    return new ResourceBundleContent(this.bundleBaseName, translations);
   }
 
 
   @Override
   public String toString() {
-    return "FacadeBundleContent{" + "bundleName=" + bundlBaseName + "\n\t, content=" + content + '}';
+    return "FacadeBundleContent{" + "bundleName=" + bundleBaseName + "\n\t, content=" + content + '}';
   }
 
 }
