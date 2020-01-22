@@ -12,5 +12,11 @@ jdk:
   - openjdk13
   - openjdk-ea
 
-after_success:
-  - ./build_gh-pages.sh
+jobs:
+  include:
+    - stage: deploy # generate gh-pages after all builds succeeded
+      install: skip # we don't need the jdks for the generation of gh-pages
+      script:
+        - gem install asciidoctor --version 1.5.8
+        - ./build_gh-pages.sh
+
