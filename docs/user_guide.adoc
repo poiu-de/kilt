@@ -104,8 +104,143 @@ and reordering the entries in the resource bundles to reintroduce
 consistency.
 
 
-Kilt functions
---------------
+Usage
+-----
+
+Kilt can be used in three different ways.
+
+ * As a standalone application
+ * As an ant task
+ * As a maven plugin
+
+
+=== Standalone tool
+
+To use Kilt as a standalone tool, download and unpack the kilt-cli package
+from the {download-page}[Download] page.
+
+It contains a shell script for Linux, a batch file for Windows and a
+kilt.properties file for the configuration.
+
+To execute the tool run
+
+----
+./kilt.sh <command>
+----
+
+on Linux or
+
+----
+kilt.bat <command>
+----
+
+on Windows.
+
+You may override the configuration in the kilt.properties file by
+specifying some properties as parameters to the command. For example to
+create an XLS(X) sheet only for the english language run
+
+----
+./kilt.sh create-xls --i18nIncludes=**/*_en*.properties
+----
+
+See <<Commands,Commands>> for a list of the available commands and <<Parameters,Parameters>>
+for a detailed description of the available configuration parameters.
+
+To show the usage help of the tool call it with the parameter `-h` or `--help`:
+
+----
+./kilt.sh --help
+----
+
+To show the usage help of a specific command use the command `help`
+followed by the required command:
+
+----
+./kilt.sh help export-xls
+----
+
+or specify the `-h` or `--help` flag after that command:
+
+----
+./kilt.sh export-xls --help
+----
+
+// TODO: Autocompletion?
+
+
+=== Ant task
+
+To use Kilt as an ant task, download and unpack the kilt-ant package from
+the {download-page}[Download] page.
+
+It contains a build.xml file and a kilt.properties file to be used
+standalone (but still requires ant to be run) or as a sample to be
+integrated into the build script of another application.
+
+To execute a command run
+
+----
+ant <command>
+----
+
+See <<Commands, Commands>> for a list of the available commands and <<Parameters, Parameters>>
+for a detailed description of the available configuration parameters.
+
+
+=== Maven plugin
+
+You can use the maven plugin to import and export an XLS(X) sheet on the
+fly, but since translations are usually an iterative process and will be
+done more than once, it is much more common to configure the
+kilt-maven-plugin for the project containing the Java i18n resource bundle
+files.
+
+However, usually it is not necessary to generate an XLS(X) sheet with every
+build, therefore the corresponding maven goal is not bound to any maven
+lifecycle phase by default.
+
+To integrate the kilt-maven-plugin into your application include the
+following plugin section in the pom or your project:
+[source,xml,subs="verbatim,attributes"]
+----
+  <build>
+    <plugins>
+      ...
+      <plugin>
+        <groupId>de.poiu.kilt</groupId>
+        <artifactId>kilt-maven-plugin</artifactId>
+        <version>{kilt-version}</version>
+        <configuration>
+          ...
+        </configuration>
+      </plugin>
+      ...
+    <plugins>
+  <build>
+----
+//TODO: Da oben sollte man eine Beispielkonfiguration angeben
+
+See <<Parameters,Parameters>> for a
+detailed description of the available configuration parameters.
+
+To execute a goal run
+
+----
+mvn kilt:<command>
+----
+
+You may override the configuration of the pom by specifying some properties
+as parameters to the command. For example to create an XLS(X) sheet only for
+the english language run
+
+----
+mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
+----
+
+
+Commands
+--------
 
 Kilt provides the following commands:
 
@@ -265,6 +400,8 @@ the parameter `reformatKeyAndWhitespace` keys and values will also be
 reformatted by removing insignificant whitespace, newline and escape
 characters.
 
+// TODO: Provide example for reformatted resource bundle
+
 
 [[reorder]]
 === `reorder` – Reorder entries in resource bundles
@@ -274,140 +411,7 @@ Kilt allow reordering the entries in resource bundles and other
 specified template file. The handling of comments and empty lines can be
 specified via parameter `attachCommentsTo`.
 
-
-Usage
------
-
-Kilt can be used in three different ways.
-
- * As a standalone application
- * As an ant task
- * As a maven plugin
-
-
-=== Standalone tool
-
-To use Kilt as a standalone tool, download and unpack the kilt-cli package
-from the {download-page}[Download] page.
-
-It contains a shell script for Linux, a batch file for Windows and a
-kilt.properties file for the configuration.
-
-To execute the tool run
-
-----
-./kilt.sh <command>
-----
-
-on Linux or
-
-----
-kilt.bat <command>
-----
-
-on Windows.
-
-You may override the configuration in the kilt.properties file by
-specifying some properties as parameters to the command. For example to
-create an XLS(X) sheet only for the english language run
-
-----
-./kilt.sh create-xls --i18nIncludes=**/*_en*.properties
-----
-
-See <<Commands,Commands>> for a list of the available commands and <<Parameters,Parameters>>
-for a detailed description of the available configuration parameters.
-
-To show the usage help of the tool call it with the parameter `-h` or `--help`:
-
-----
-./kilt.sh --help
-----
-
-To show the usage help of a specific command use the command `help`
-followed by the required command:
-
-----
-./kilt.sh help export-xls
-----
-
-or specify the `-h` or `--help` flag after that command:
-
-----
-./kilt.sh export-xls --help
-----
-
-// TODO: Autocompletion?
-
-
-=== Ant task
-
-To use Kilt as an ant task, download and unpack the kilt-ant package from
-the {download-page}[Download] page.
-
-It contains a build.xml file and a kilt.properties file to be used
-standalone (but still requires ant to be run) or as a sample to be
-integrated into the build script of another application.
-
-To execute a command run
-
-----
-ant <command>
-----
-
-See <<Commands, Commands>> for a list of the available commands and <<Parameters, Parameters>>
-for a detailed description of the available configuration parameters.
-
-
-=== Maven plugin
-
-You can use the maven plugin to import and export an XLS(X) sheet on the
-fly, but since translations are usually an iterative process and will be
-done more than once, it is much more common to configure the
-kilt-maven-plugin for the project containing the Java i18n resource bundle
-files.
-
-However, usually it is not necessary to generate an XLS(X) sheet with every
-build, therefore the corresponding maven goal is not bound to any maven
-lifecycle phase by default.
-
-To integrate the kilt-maven-plugin into your application include the
-following plugin section in the pom or your project:
-[source,xml,subs="verbatim,attributes"]
-----
-  <build>
-    <plugins>
-      ...
-      <plugin>
-        <groupId>de.poiu.kilt</groupId>
-        <artifactId>kilt-maven-plugin</artifactId>
-        <version>{kilt-version}</version>
-        <configuration>
-          ...
-        </configuration>
-      </plugin>
-      ...
-    <plugins>
-  <build>
-----
-//TODO: Da oben sollte man eine Beispielkonfiguration angeben
-
-See <<Parameters,Parameters>> for a
-detailed description of the available configuration parameters.
-
-To execute a goal run
-
-----
-mvn kilt:<command>
-----
-
-You may override the configuration of the pom by specifying some properties
-as parameters to the command. For example to create an XLS(X) sheet only for
-the english language run
-
-----
-mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties
-----
+// TODO: Provide example for reordered resource bundle
 
 
 Parameters
