@@ -446,7 +446,14 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_reformatting_and_reordering">Reformatting and Reordering</a></li>
 </ul>
 </li>
-<li><a href="#_kilt_functions">Kilt functions</a>
+<li><a href="#_usage">Usage</a>
+<ul class="sectlevel2">
+<li><a href="#_standalone_tool">Standalone tool</a></li>
+<li><a href="#_ant_task">Ant task</a></li>
+<li><a href="#_maven_plugin">Maven plugin</a></li>
+</ul>
+</li>
+<li><a href="#_commands">Commands</a>
 <ul class="sectlevel2">
 <li><a href="#export-xls"><code>export-xls</code> – Export Java i18n resource bundles to XLS(X)</a></li>
 <li><a href="#import-xls"><code>import-xsl</code> – Import translations from XLS(X) back into Java i18n resource bundles</a></li>
@@ -457,13 +464,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#reformat"><code>reformat</code> – Reformat resource bundles</a></li>
 <li><a href="#reorder"><code>reorder</code> – Reorder entries in resource bundles</a></li>
-</ul>
-</li>
-<li><a href="#_usage">Usage</a>
-<ul class="sectlevel2">
-<li><a href="#_standalone_tool">Standalone tool</a></li>
-<li><a href="#_ant_task">Ant task</a></li>
-<li><a href="#_maven_plugin">Maven plugin</a></li>
 </ul>
 </li>
 <li><a href="#_parameters">Parameters</a>
@@ -625,7 +625,180 @@ consistency.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_kilt_functions">Kilt functions</h2>
+<h2 id="_usage">Usage</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Kilt can be used in three different ways.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>As a standalone application</p>
+</li>
+<li>
+<p>As an ant task</p>
+</li>
+<li>
+<p>As a maven plugin</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_standalone_tool">Standalone tool</h3>
+<div class="paragraph">
+<p>To use Kilt as a standalone tool, download and unpack the kilt-cli package
+from the <a href="https://github.com/hupfdule/kilt/releases">Download</a> page.</p>
+</div>
+<div class="paragraph">
+<p>It contains a shell script for Linux, a batch file for Windows and a
+kilt.properties file for the configuration.</p>
+</div>
+<div class="paragraph">
+<p>To execute the tool run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./kilt.sh &lt;command&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>on Linux or</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>kilt.bat &lt;command&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>on Windows.</p>
+</div>
+<div class="paragraph">
+<p>You may override the configuration in the kilt.properties file by
+specifying some properties as parameters to the command. For example to
+create an XLS(X) sheet only for the english language run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./kilt.sh create-xls --i18nIncludes=**/*_en*.properties</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="#_commands">Commands</a> for a list of the available commands and <a href="#_parameters">Parameters</a>
+for a detailed description of the available configuration parameters.</p>
+</div>
+<div class="paragraph">
+<p>To show the usage help of the tool call it with the parameter <code>-h</code> or <code>--help</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./kilt.sh --help</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To show the usage help of a specific command use the command <code>help</code>
+followed by the required command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./kilt.sh help export-xls</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>or specify the <code>-h</code> or <code>--help</code> flag after that command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>./kilt.sh export-xls --help</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ant_task">Ant task</h3>
+<div class="paragraph">
+<p>To use Kilt as an ant task, download and unpack the kilt-ant package from
+the <a href="https://github.com/hupfdule/kilt/releases">Download</a> page.</p>
+</div>
+<div class="paragraph">
+<p>It contains a build.xml file and a kilt.properties file to be used
+standalone (but still requires ant to be run) or as a sample to be
+integrated into the build script of another application.</p>
+</div>
+<div class="paragraph">
+<p>To execute a command run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>ant &lt;command&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="#_commands">Commands</a> for a list of the available commands and <a href="#_parameters">Parameters</a>
+for a detailed description of the available configuration parameters.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_maven_plugin">Maven plugin</h3>
+<div class="paragraph">
+<p>You can use the maven plugin to import and export an XLS(X) sheet on the
+fly, but since translations are usually an iterative process and will be
+done more than once, it is much more common to configure the
+kilt-maven-plugin for the project containing the Java i18n resource bundle
+files.</p>
+</div>
+<div class="paragraph">
+<p>However, usually it is not necessary to generate an XLS(X) sheet with every
+build, therefore the corresponding maven goal is not bound to any maven
+lifecycle phase by default.</p>
+</div>
+<div class="paragraph">
+<p>To integrate the kilt-maven-plugin into your application include the
+following plugin section in the pom or your project:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">  &lt;build&gt;
+    &lt;plugins&gt;
+      ...
+      &lt;plugin&gt;
+        &lt;groupId&gt;de.poiu.kilt&lt;/groupId&gt;
+        &lt;artifactId&gt;kilt-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;1.0.1&lt;/version&gt;
+        &lt;configuration&gt;
+          ...
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+      ...
+    &lt;plugins&gt;
+  &lt;build&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>See <a href="#_parameters">Parameters</a> for a
+detailed description of the available configuration parameters.</p>
+</div>
+<div class="paragraph">
+<p>To execute a goal run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn kilt:&lt;command&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You may override the configuration of the pom by specifying some properties
+as parameters to the command. For example to create an XLS(X) sheet only for
+the english language run</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_commands">Commands</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Kilt provides the following commands:</p>
@@ -829,179 +1002,6 @@ characters.</p>
 <code>.properties</code> files either alphabetically or by the order given in the
 specified template file. The handling of comments and empty lines can be
 specified via parameter <code>attachCommentsTo</code>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_usage">Usage</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Kilt can be used in three different ways.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>As a standalone application</p>
-</li>
-<li>
-<p>As an ant task</p>
-</li>
-<li>
-<p>As a maven plugin</p>
-</li>
-</ul>
-</div>
-<div class="sect2">
-<h3 id="_standalone_tool">Standalone tool</h3>
-<div class="paragraph">
-<p>To use Kilt as a standalone tool, download and unpack the kilt-cli package
-from the <a href="https://github.com/hupfdule/kilt/releases">Download</a> page.</p>
-</div>
-<div class="paragraph">
-<p>It contains a shell script for Linux, a batch file for Windows and a
-kilt.properties file for the configuration.</p>
-</div>
-<div class="paragraph">
-<p>To execute the tool run</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./kilt.sh &lt;command&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>on Linux or</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>kilt.bat &lt;command&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>on Windows.</p>
-</div>
-<div class="paragraph">
-<p>You may override the configuration in the kilt.properties file by
-specifying some properties as parameters to the command. For example to
-create an XLS(X) sheet only for the english language run</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./kilt.sh create-xls --i18nIncludes=**/*_en*.properties</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="#Commands">Commands</a> for a list of the available commands and <a href="#_parameters">Parameters</a>
-for a detailed description of the available configuration parameters.</p>
-</div>
-<div class="paragraph">
-<p>To show the usage help of the tool call it with the parameter <code>-h</code> or <code>--help</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./kilt.sh --help</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>To show the usage help of a specific command use the command <code>help</code>
-followed by the required command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./kilt.sh help export-xls</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or specify the <code>-h</code> or <code>--help</code> flag after that command:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>./kilt.sh export-xls --help</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_ant_task">Ant task</h3>
-<div class="paragraph">
-<p>To use Kilt as an ant task, download and unpack the kilt-ant package from
-the <a href="https://github.com/hupfdule/kilt/releases">Download</a> page.</p>
-</div>
-<div class="paragraph">
-<p>It contains a build.xml file and a kilt.properties file to be used
-standalone (but still requires ant to be run) or as a sample to be
-integrated into the build script of another application.</p>
-</div>
-<div class="paragraph">
-<p>To execute a command run</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>ant &lt;command&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="#Commands">Commands</a> for a list of the available commands and <a href="#_parameters">Parameters</a>
-for a detailed description of the available configuration parameters.</p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_maven_plugin">Maven plugin</h3>
-<div class="paragraph">
-<p>You can use the maven plugin to import and export an XLS(X) sheet on the
-fly, but since translations are usually an iterative process and will be
-done more than once, it is much more common to configure the
-kilt-maven-plugin for the project containing the Java i18n resource bundle
-files.</p>
-</div>
-<div class="paragraph">
-<p>However, usually it is not necessary to generate an XLS(X) sheet with every
-build, therefore the corresponding maven goal is not bound to any maven
-lifecycle phase by default.</p>
-</div>
-<div class="paragraph">
-<p>To integrate the kilt-maven-plugin into your application include the
-following plugin section in the pom or your project:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">  &lt;build&gt;
-    &lt;plugins&gt;
-      ...
-      &lt;plugin&gt;
-        &lt;groupId&gt;de.poiu.kilt&lt;/groupId&gt;
-        &lt;artifactId&gt;kilt-maven-plugin&lt;/artifactId&gt;
-        &lt;version&gt;1.0.1&lt;/version&gt;
-        &lt;configuration&gt;
-          ...
-        &lt;/configuration&gt;
-      &lt;/plugin&gt;
-      ...
-    &lt;plugins&gt;
-  &lt;build&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>See <a href="#_parameters">Parameters</a> for a
-detailed description of the available configuration parameters.</p>
-</div>
-<div class="paragraph">
-<p>To execute a goal run</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>mvn kilt:&lt;command&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You may override the configuration of the pom by specifying some properties
-as parameters to the command. For example to create an XLS(X) sheet only for
-the english language run</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>mvn kilt:export-xls -Di18nIncludes=**/*_en*.properties</pre>
-</div>
 </div>
 </div>
 </div>
