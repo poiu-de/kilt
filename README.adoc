@@ -63,7 +63,7 @@ the generated Javadoc!
 The benefits of Kilt are in short form:
 
  - Support of a fast and easy translation workflow
- - Minimal invasive changes on import and export of translations (comments,
+ - Minimally invasive changes on import and export of translations (comments,
    blank lines and order remain intact)
  - Good integration into ant and maven build tools
  - Standalone CLI tool to be used without a build tool
@@ -108,7 +108,7 @@ Installation
 === Maven plugin
 
 To use the maven plugin of Kilt include the following plugin section in
-the pom or your project:
+the pom of your project:
 
 [source,xml,subs="verbatim,attributes"]
 ----

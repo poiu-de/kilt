@@ -201,7 +201,7 @@ build, therefore the corresponding maven goal is not bound to any maven
 lifecycle phase by default.
 
 To integrate the kilt-maven-plugin into your application include the
-following plugin section in the pom or your project:
+following plugin section in the pom of your project:
 [source,xml,subs="verbatim,attributes"]
 ----
   <build>
