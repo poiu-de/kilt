@@ -6,9 +6,9 @@ jdk:
   - oraclejdk11
   - oraclejdk-ea
   - openjdk11
-  - openjdk12
-  - openjdk13
-  - openjdk-ea
+    #- openjdk12
+    #- openjdk13
+    #- openjdk-ea
 
 jobs:
   include:
