@@ -34,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException
  *
  * @author mherrn
  */
+@SuppressWarnings("NullAway")
 public class ResourceBundleContentHelperTest {
 
   @Test

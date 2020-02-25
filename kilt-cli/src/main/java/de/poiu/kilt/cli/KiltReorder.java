@@ -17,11 +17,10 @@ package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
 import de.poiu.apron.reformatting.AttachCommentsTo;
+import de.poiu.fez.nullaway.Nullable;
 import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
-import java.util.Set;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import picocli.CommandLine.Command;
@@ -56,6 +55,7 @@ public class KiltReorder extends AbstractKiltCommand implements Runnable {
    */
   @Option(names={"-t", "--byTemplate"},
           description= "Reorder the key-value pairs in the same order as the key-value pairs in this template file.")
+  @Nullable
   private File template;
 
 
@@ -96,6 +96,10 @@ public class KiltReorder extends AbstractKiltCommand implements Runnable {
     if (this.byKey) {
       reformatter.reorderByKey(fileMatcher, this.attachCommentsTo, super.propertyFileEncoding);
     } else {
+      if (this.template == null) {
+        // Should never happen as this is verified via {@link #validateParameters()}
+        throw new RuntimeException("'template' must be given if 'byKey' is not set.");
+      }
       reformatter.reorderByTemplate(this.template, fileMatcher, this.attachCommentsTo, super.propertyFileEncoding);
     }
   }

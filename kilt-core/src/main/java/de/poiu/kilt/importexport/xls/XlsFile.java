@@ -47,6 +47,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import static de.poiu.fez.nullaway.NullawayHelper.castToNonNull;
 
 /**
  * Not thread safe!
@@ -184,7 +185,8 @@ public class XlsFile {
     // print a header row with the columns indexes
     for (int i= 0; i < Collections.max(columnWidths.keySet()) + 1; i++) {
       sb.append("\t");
-      sb.append(Strings.padEnd(String.valueOf(i), columnWidths.get(i) + 2, ' '));
+      final Integer width= columnWidths.computeIfAbsent(i, k -> 20); // if no width was assigned to that column yet, use a default of 20
+      sb.append(Strings.padEnd(String.valueOf(i), width + 2, ' '));
     }
     sb.append("\n");
 
@@ -194,8 +196,9 @@ public class XlsFile {
       sb.append(rowId);
       for (int colId= row.getFirstCellNum(); colId < row.getLastCellNum(); colId++) {
         final Cell cell= row.getCell(colId);
+        final Integer width= columnWidths.computeIfAbsent(colId, k -> 20); // if no width was assigned to that column yet, use a default of 20
         sb.append("\t")
-          .append(Strings.padEnd(cell != null ? "[" + cell.getStringCellValue() + "]" : " _null_ ", columnWidths.get(colId) + 2, ' '))
+          .append(Strings.padEnd(cell != null ? "[" + cell.getStringCellValue() + "]" : " _null_ ", width + 2, ' '))
           .append("");
       }
       sb.append("\n");
@@ -283,7 +286,7 @@ public class XlsFile {
 
     // update or create the cell value
     final Cell cell;
-    final int languageColumnIdx= this.languageColumnMap.get(language);
+    final int languageColumnIdx= castToNonNull(this.languageColumnMap.get(language));
     if (row.getCell(languageColumnIdx) != null) {
       cell= row.getCell(languageColumnIdx);
     } else {

@@ -122,7 +122,7 @@ public class KiltCreateFacade extends AbstractKiltCommand implements Runnable {
         final String bundleName = entry.getKey();
         final Map<Language, File> bundleTranslations = entry.getValue();
 
-        final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+        final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations, this.propertyFileEncoding);
         final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
         final JavaFile javaFile = JavaFile.builder(generatedPackage, resourceBundleEnumTypeSpec).build();
         javaFile.writeTo(outputDirectory);

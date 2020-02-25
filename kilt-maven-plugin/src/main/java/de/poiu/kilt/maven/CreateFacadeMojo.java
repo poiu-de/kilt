@@ -55,6 +55,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
    * The location to which the generated Java files are written.
    */
   @Parameter(property="facadeGenerationDirectory", defaultValue = "${project.build.directory}/generated-sources/kilt", required = true)
+  @SuppressWarnings("NullAway.Init")
   private File facadeGenerationDirectory;
 
 
@@ -62,6 +63,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
    * The package name under which the facade(s) will be generated.
    */
   @Parameter(property="generatedPackage", defaultValue="i18n.generated")
+  @SuppressWarnings("NullAway.Init")
   private String generatedPackage;
 
 
@@ -70,6 +72,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
   // It could be possible to manually write via another charset, but at the moment
   // I don't see any reason to do this
   //@Parameter(property = "javaFileEncoding", defaultValue = "${project.build.sourceEncoding}")
+  @SuppressWarnings("NullAway.Init")
   private String javaFileEncoding;
 
   /**
@@ -78,6 +81,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
    * This is only useful if it is necessary to avoid a runtime dependency on kilt-runtime.
    */
   @Parameter(property="copyFacadeAccessorClasses", defaultValue= "false")
+  @SuppressWarnings("NullAway.Init")
   private boolean copyFacadeAccessorClasses;
 
   /**
@@ -85,6 +89,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
    * This is only meaningful in combination with {@link #copyFacadeAccessorClasses}.
    */
   @Parameter(property="facadeAccessorClassName", defaultValue= "I18n")
+  @SuppressWarnings("NullAway.Init")
   private String facadeAccessorClassName;
 
   /**
@@ -93,6 +98,7 @@ public class CreateFacadeMojo extends AbstractKiltMojo {
    * Set to <code>true</code> to skip the generation.
    */
   @Parameter(property = "skip", defaultValue = "false")
+  @SuppressWarnings("NullAway.Init")
   private boolean skipFacadeGeneration;
 
 

@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.facade.creation;
 
+import de.poiu.fez.nullaway.Nullable;
 import de.poiu.kilt.bundlecontent.Language;
 import de.poiu.kilt.bundlecontent.Translation;
 import java.util.Comparator;
@@ -29,7 +30,7 @@ public class TranslationComparator implements Comparator<Translation> {
   public static final TranslationComparator INSTANCE= new TranslationComparator();
 
   @Override
-  public int compare(final Translation o1, final Translation o2) {
+  public int compare(@Nullable final Translation o1, @Nullable final Translation o2) {
     if (o1 == o2) {
       return 0;
     }

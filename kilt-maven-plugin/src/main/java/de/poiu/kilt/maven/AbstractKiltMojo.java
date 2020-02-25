@@ -35,14 +35,16 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
    * The location of the source i18n resource bundle files.
    */
   @Parameter(property="propertiesRootDirectory", defaultValue="src/main/resources/", required=true)
-  File propertiesRootDirectory;
+  @SuppressWarnings("NullAway.Init")
+  protected File propertiesRootDirectory;
 
 
   /**
    * Whether to give more verbose output.
    */
   @Parameter(property="verbose", defaultValue="false")
-  boolean verbose;
+  @SuppressWarnings("NullAway.Init")
+  protected boolean verbose;
 
 
   /**
@@ -78,7 +80,8 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
    * @see #i18nExcludes
    */
   @Parameter(property="i18nIncludes", defaultValue="**/*.properties")
-  String[] i18nIncludes;
+  @SuppressWarnings("NullAway.Init")
+  protected String[] i18nIncludes;
 
 
   /**
@@ -89,16 +92,19 @@ public abstract class AbstractKiltMojo extends AbstractMojo {
    * @see #i18nIncludes
    */
   @Parameter(property="i18nExcludes")
-  String[] i18nExcludes;
+  @SuppressWarnings("NullAway.Init")
+  protected String[] i18nExcludes;
 
 
   /**
    * The encoding of the properties files.
    */
   @Parameter(property = "propertyFileEncoding")
-  String propertyFileEncoding;
+  @SuppressWarnings("NullAway.Init")
+  protected String propertyFileEncoding= "UTF-8";
 
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
-  MavenProject project;
+  @SuppressWarnings("NullAway.Init")
+  protected MavenProject project;
 }

@@ -165,6 +165,7 @@ public class KiltReformatter {
    * @param charset the charset to use for reading and writing the .properties files
    */
   public void reorderByTemplate(final File template, final FileMatcher fileMatcher, final AttachCommentsTo attachCommentsTo, final Charset charset) {
+    Require.nonNull(template);
     Require.nonNull(fileMatcher);
     Require.nonNull(attachCommentsTo);
     Require.nonNull(charset);

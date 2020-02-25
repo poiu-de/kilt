@@ -29,6 +29,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
 import picocli.CommandLine;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  *
@@ -103,8 +104,8 @@ public abstract class AbstractKiltCommand {
   /**
    * The encoding of the properties files.
    */
-  @CommandLine.Option(names= {"--penc", "--propertyFileEncoding"}, description= "The encoding of the properties files.")
-  Charset propertyFileEncoding;
+  @CommandLine.Option(names= {"--penc", "--propertyFileEncoding"}, description= "The encoding of the properties files. (default: ${DEFAULT-VALUE})")
+  Charset propertyFileEncoding= UTF_8;
 
 
   /**

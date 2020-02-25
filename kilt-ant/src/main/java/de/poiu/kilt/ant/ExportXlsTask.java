@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.ant;
 
+import de.poiu.fez.nullaway.Initializer;
 import de.poiu.kilt.importexport.XlsImExporter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
@@ -22,19 +23,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Exports the translations in the resource bundle files into an XLS file.
@@ -56,9 +53,9 @@ public class ExportXlsTask extends Task {
 
   private boolean verbose= false;
 
-  private Charset propertyFileEncoding;
+  private Charset propertyFileEncoding= UTF_8;
 
-  private String xlsFile= null;
+  private String xlsFile;
 
   private boolean deleteEmptyProperties= false;
 
@@ -104,16 +101,23 @@ public class ExportXlsTask extends Task {
   }
 
 
+  @Initializer
   public void setXlsFile(String xlsFile) {
     this.xlsFile= xlsFile;
   }
 
 
-  public void setPropertyFileEncoding(String fileEncoding) {
-    if (fileEncoding != null) {
-      this.propertyFileEncoding= Charset.forName(fileEncoding);
-    } else {
-      this.propertyFileEncoding= null;
+  public void setPropertyFileEncoding(String propertyFileEncoding) {
+    if (propertyFileEncoding == null) {
+      this.log("propertyFileEncoding may not be null. Using UTF-8 instead.");
+      this.propertyFileEncoding= UTF_8;
+    }
+    try {
+      final Charset charset= Charset.forName(propertyFileEncoding);
+      this.propertyFileEncoding= charset;
+    } catch (IllegalArgumentException ex) {
+      this.log("Invalid propertyFileEncoding: " + propertyFileEncoding + ".", Project.MSG_ERR);
+      throw ex;
     }
   }
 

@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -29,6 +28,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Exports the translations in the resource bundle files into an XLS file.
@@ -44,6 +44,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
    * The XLS(X) file to export to.
    */
   @Parameter(property = "xlsFile", required= true, defaultValue = "${project.build.directory}/i18n.xlsx")
+  @SuppressWarnings("NullAway.Init")
   private File xlsFile;
 
 
@@ -70,7 +71,7 @@ public class ExportXlsMojo extends AbstractKiltMojo {
       Files.createDirectories(this.xlsFile.getAbsoluteFile().getParentFile().toPath());
 
       XlsImExporter.exportXls(fileMatcher,
-                              this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
+                              this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8,
                               this.xlsFile);
     } catch (IOException e) {
       throw new RuntimeException("Error exporting property files to XLS.", e);

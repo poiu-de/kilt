@@ -15,6 +15,7 @@
  */
 package de.poiu.kilt.cli;
 
+import de.poiu.fez.nullaway.Nullable;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -55,6 +56,7 @@ public class ManifestVersionProvider implements IVersionProvider {
   }
 
 
+  @Nullable
   private static Object get(Attributes attributes, String key) {
     return attributes.get(new Attributes.Name(key));
   }

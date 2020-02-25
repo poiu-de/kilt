@@ -17,9 +17,7 @@ package de.poiu.kilt.maven;
 
 import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.FileMatcher;
-import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -46,12 +44,14 @@ public class ReformatMojo extends AbstractKiltMojo {
 
   /** The format string to use for formatting the key-value pairs. */
   @Parameter(property="format", defaultValue = "<key> = <value>\\n")
+  @SuppressWarnings("NullAway.Init")
   private String format;
 
   /**
    * Whether to reformat the keys and values themselves by removing insignificant whitespace and linebreaks.
    */
   @Parameter(property="reformatKeysAndValues", defaultValue= "false")
+  @SuppressWarnings("NullAway.Init")
   private boolean reformatKeysAndValues= false;
 
 

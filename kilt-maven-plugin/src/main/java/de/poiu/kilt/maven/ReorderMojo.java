@@ -20,7 +20,6 @@ import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
@@ -48,11 +47,13 @@ public class ReorderMojo extends AbstractKiltMojo {
 
   /** Reorder the key-value pairs alphabetically by the name of their keys. */
   @Parameter(property="byKey", defaultValue = "false")
+  @SuppressWarnings("NullAway.Init")
   private boolean byKey;
 
 
   /** Reorder the key-value pairs in the same order as the key-value pairs in this template file. */
   @Parameter(property="template")
+  @SuppressWarnings("NullAway.Init")
   private File template;
 
 
@@ -67,6 +68,7 @@ public class ReorderMojo extends AbstractKiltMojo {
    * </ul>
    */
   @Parameter(property="attachCommentsTo", defaultValue="NEXT_PROPERTY")
+  @SuppressWarnings("NullAway.Init")
   private AttachCommentsTo attachCommentsTo;
 
 

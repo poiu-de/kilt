@@ -21,7 +21,7 @@
     <dependency>
       <groupId>de.poiu.fez</groupId>
       <artifactId>fez</artifactId>
-      <version>1.1.0</version>
+      <version>1.1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>de.poiu.apron</groupId>

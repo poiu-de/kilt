@@ -16,6 +16,8 @@
 package de.poiu.kilt.ant;
 
 import de.poiu.apron.reformatting.AttachCommentsTo;
+import de.poiu.fez.nullaway.Initializer;
+import de.poiu.fez.nullaway.Nullable;
 import de.poiu.kilt.reformatting.KiltReformatter;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
@@ -23,17 +25,13 @@ import java.nio.charset.Charset;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -58,13 +56,14 @@ public class ReorderTask extends Task {
 
   private boolean verbose= false;
 
-  private String propertyFileEncoding;
+  private Charset propertyFileEncoding= UTF_8;
 
   /** Reorder the key-value pairs alphabetically by the name of their keys. */
   private boolean byKey= false;
 
   /** Reorder the key-value pairs in the same order as the key-value pairs in this template file. */
-  private File template= null;
+  @Nullable
+  private File template;
 
   /** How to handle comments and empty lines in the .properties files. */
   private AttachCommentsTo attachCommentsTo= AttachCommentsTo.NEXT_PROPERTY;
@@ -97,12 +96,16 @@ public class ReorderTask extends Task {
     if (this.byKey) {
       reformatter.reorderByKey(fileMatcher,
                                attachCommentsTo,
-                               this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
+                               this.propertyFileEncoding);
     } else {
+      if (this.template == null) {
+        // this should never happen, as {@link #validateParameters()} already checks this
+        throw new RuntimeException("--byTemplate must be given if --byKey is not given");
+      }
       reformatter.reorderByTemplate(this.template,
                                     fileMatcher,
                                     this.attachCommentsTo,
-                                    this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8);
+                                    this.propertyFileEncoding);
     }
 
     this.log("...done");
@@ -125,7 +128,17 @@ public class ReorderTask extends Task {
 
 
   public void setPropertyFileEncoding(String propertyFileEncoding) {
-    this.propertyFileEncoding = propertyFileEncoding;
+    if (propertyFileEncoding == null) {
+      this.log("propertyFileEncoding may not be null. Using UTF-8 instead.");
+      this.propertyFileEncoding= UTF_8;
+    }
+    try {
+      final Charset charset= Charset.forName(propertyFileEncoding);
+      this.propertyFileEncoding= charset;
+    } catch (IllegalArgumentException ex) {
+      this.log("Invalid propertyFileEncoding: " + propertyFileEncoding + ".", Project.MSG_ERR);
+      throw ex;
+    }
   }
 
 
@@ -134,6 +147,7 @@ public class ReorderTask extends Task {
   }
 
 
+  @Initializer
   public void setTemplate(String template) {
     if (template != null && !template.isEmpty()) {
       this.template = new File(template);
@@ -176,7 +190,7 @@ public class ReorderTask extends Task {
     }
 
     if (!this.byKey && this.template == null) {
-      throw new RuntimeException("One of --byKey or--byTemplate must be given.");
+      throw new RuntimeException("One of --byKey or --byTemplate must be given.");
     }
   }
 }

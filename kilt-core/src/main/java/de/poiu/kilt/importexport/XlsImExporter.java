@@ -19,6 +19,7 @@ import de.poiu.apron.ApronOptions;
 import de.poiu.apron.MissingKeyAction;
 import de.poiu.apron.PropertyFile;
 import de.poiu.fez.Require;
+import de.poiu.fez.nullaway.Nullable;
 import de.poiu.kilt.bundlecontent.Language;
 import de.poiu.kilt.bundlecontent.RememberingPropertyFile;
 import de.poiu.kilt.bundlecontent.ResourceBundleContent;
@@ -26,6 +27,7 @@ import de.poiu.kilt.bundlecontent.ResourceBundleContentHelper;
 import de.poiu.kilt.bundlecontent.Translation;
 import de.poiu.kilt.importexport.xls.I18nBundleKey;
 import de.poiu.kilt.importexport.xls.XlsFile;
+import de.poiu.kilt.util.EnhancedMap;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -61,11 +63,12 @@ public class XlsImExporter {
                                final File xlsFile,
                                final Charset propertyFileEncoding,
                                final MissingKeyAction missingKeyAction) {
+    Require.nonNull(propertyFileEncoding);
     Require.nonNull(fileMatcher);
     Require.nonNull(xlsFile);
 
     final ApronOptions apronOptions= ApronOptions.create()
-      .with(propertyFileEncoding != null ? propertyFileEncoding : UTF_8)
+      .with(propertyFileEncoding)
       .with(missingKeyAction);
 
     // read XLS file
@@ -73,7 +76,8 @@ public class XlsImExporter {
     final Map<I18nBundleKey, Collection<Translation>> content= xlsFileObject.getContent();
 
     // stores the mapping of resource bundle basenames and languages to the corresponding property files
-    final Map<String, Map<Language, RememberingPropertyFile>> bundleFileMapping= new LinkedHashMap<>();
+    final EnhancedMap<String, Map<Language, RememberingPropertyFile>> bundleFileMapping=
+      new EnhancedMap<>(new LinkedHashMap<>());
 
     // FIXME: Sort by bundleBasename and language? In that case we only have to have 1 property file open at a time
     content.entrySet().forEach((entry) -> {
@@ -82,14 +86,15 @@ public class XlsImExporter {
       final String propertyKey= bundleKey.getKey();
       final Collection<Translation> translations= entry.getValue();
 
+      final Map<Language, RememberingPropertyFile> langToFileMapping=
+        bundleFileMapping.putIfAbsentAndGet(bundleBasename, new LinkedHashMap<>());
+
       // for each bundle…
       for (final Translation translation : translations) {
-        if (!bundleFileMapping.containsKey(bundleBasename)) {
-          bundleFileMapping.put(bundleBasename, new LinkedHashMap<>());
-        }
+        final Language lang = translation.getLang();
 
-        if (!bundleFileMapping.get(bundleBasename).containsKey(translation.getLang())) {
-          final File fileForBundle= getFileForBundle(fileMatcher.getRoot().toFile(), bundleBasename, translation.getLang());
+        if (!langToFileMapping.containsKey(lang)) {
+          final File fileForBundle= getFileForBundle(fileMatcher.getRoot().toFile(), bundleBasename, lang);
 
           if (!fileMatcher.matches(fileForBundle.toPath())) {
             LOGGER.log(Level.DEBUG, "Skipping import to file {} since it does not match inclusion pattern", fileForBundle);
@@ -97,10 +102,10 @@ public class XlsImExporter {
           }
 
           final PropertyFile propertyFile= new PropertyFile();
-          bundleFileMapping.get(bundleBasename).put(translation.getLang(), new RememberingPropertyFile(fileForBundle, propertyFile));
+          langToFileMapping.put(lang, new RememberingPropertyFile(fileForBundle, propertyFile));
         }
 
-        final RememberingPropertyFile rpf= bundleFileMapping.get(bundleBasename).get(translation.getLang());
+        final RememberingPropertyFile rpf= langToFileMapping.get(lang);
         // only write empty values if the key already exists in in the PropertyFile
         if ((translation.getValue() != null && !translation.getValue().isEmpty())
           || rpf.propertyFile.containsKey(propertyKey)) {
@@ -110,7 +115,7 @@ public class XlsImExporter {
     });
 
     //now write the property files back to disk
-    bundleFileMapping.values().forEach((Map<Language, RememberingPropertyFile> langPropMap) -> {
+    bundleFileMapping.innerMap().values().forEach((Map<Language, RememberingPropertyFile> langPropMap) -> {
       langPropMap.values().forEach((RememberingPropertyFile rpf) -> {
         // only write files if they have some content (avoid creating unwanted empty files for unsupported locales)
         if (rpf.propertyFile.propertiesSize()> 0) {
@@ -124,6 +129,10 @@ public class XlsImExporter {
   public static void exportXls(final FileMatcher fileMatcher,
                                final Charset propertyFileEncoding,
                                final File xlsFile) {
+    Require.nonNull(propertyFileEncoding);
+    Require.nonNull(fileMatcher);
+    Require.nonNull(xlsFile);
+
     final Set<File> propertyFiles= fileMatcher.findMatchingFiles();
     LOGGER.log(Level.INFO, "Exporting the following files to XLS(X): {}", propertyFiles);
 
@@ -137,7 +146,7 @@ public class XlsImExporter {
       final Map<Language, File> bundleTranslations= entry.getValue();
 
       final ResourceBundleContent resourceBundleContent= ResourceBundleContent.forName(bundleName)
-        .fromFiles(bundleTranslations, propertyFileEncoding !=null ? propertyFileEncoding : UTF_8);
+        .fromFiles(bundleTranslations, propertyFileEncoding);
 
       resourceBundleContent.getContent().asMap().entrySet().forEach((e) -> {
         final String propertyKey= e.getKey();

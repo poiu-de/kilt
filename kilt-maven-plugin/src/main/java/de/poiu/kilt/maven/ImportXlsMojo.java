@@ -27,6 +27,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 /**
  * Imports the translations from an XLS file back into the resource bundle
@@ -43,6 +45,7 @@ public class ImportXlsMojo extends AbstractKiltMojo {
    * The XLS(X) file to import from.
    */
   @Parameter(property = "xlsFile", required= true, defaultValue = "${project.build.directory}/i18n.xlsx")
+  @SuppressWarnings("NullAway.Init")
   private File xlsFile;
 
 
@@ -60,6 +63,7 @@ public class ImportXlsMojo extends AbstractKiltMojo {
    *
    */
   @Parameter(property = "missingKeyAction", defaultValue = "NOTHING")
+  @SuppressWarnings("NullAway.Init")
   private MissingKeyAction missingKeyAction;
 
 
@@ -88,7 +92,7 @@ public class ImportXlsMojo extends AbstractKiltMojo {
 
     XlsImExporter.importXls(fileMatcher,
                             this.xlsFile,
-                            this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : null,
+                            this.propertyFileEncoding != null ? Charset.forName(this.propertyFileEncoding) : UTF_8,
                             this.missingKeyAction);
 
     this.getLog().info("...done");

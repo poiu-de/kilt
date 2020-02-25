@@ -25,24 +25,22 @@ import de.poiu.kilt.bundlecontent.ResourceBundleContentHelper;
 import de.poiu.kilt.util.FileMatcher;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.FileSet;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Creates the I18n enum facades for type safe access to localized
@@ -65,7 +63,7 @@ public class CreateFacadeTask extends Task {
 
   private boolean verbose= false;
 
-  private String propertyFileEncoding;
+  private Charset propertyFileEncoding= UTF_8;
 
   private Path facadeGenerationDirectory = Paths.get("generated-sources");
 
@@ -119,7 +117,7 @@ public class CreateFacadeTask extends Task {
         final String bundleName = entry.getKey();
         final Map<Language, File> bundleTranslations = entry.getValue();
 
-        final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations);
+        final ResourceBundleContent resourceBundleContent = ResourceBundleContent.forName(bundleName).fromFiles(bundleTranslations, this.propertyFileEncoding);
         final TypeSpec resourceBundleEnumTypeSpec = facadeCreator.createFacadeEnumFor(resourceBundleContent);
         final JavaFile javaFile = JavaFile.builder(generatedPackage, resourceBundleEnumTypeSpec).build();
         javaFile.writeTo(facadeGenerationDirectory);
@@ -159,7 +157,17 @@ public class CreateFacadeTask extends Task {
 
 
   public void setPropertyFileEncoding(String propertyFileEncoding) {
-    this.propertyFileEncoding = propertyFileEncoding;
+    if (propertyFileEncoding == null) {
+      this.log("propertyFileEncoding may not be null. Using UTF-8 instead.");
+      this.propertyFileEncoding= UTF_8;
+    }
+    try {
+      final Charset charset= Charset.forName(propertyFileEncoding);
+      this.propertyFileEncoding= charset;
+    } catch (IllegalArgumentException ex) {
+      this.log("Invalid propertyFileEncoding: " + propertyFileEncoding + ".", Project.MSG_ERR);
+      throw ex;
+    }
   }
 
 
