@@ -15,7 +15,6 @@
  */
 package de.poiu.kilt.util;
 
-import com.google.common.collect.ImmutableList;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
@@ -32,6 +31,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.codehaus.plexus.util.MatchPattern;
+import org.eclipse.collections.api.factory.Lists;
+import org.eclipse.collections.api.list.ImmutableList;
 
 
 /**
@@ -58,13 +59,13 @@ public class FileMatcher {
   /** The path all to which all patterns are relative to. */
   private final Path         root;
   /** The user specified include patterns. */
-  private final List<String> i18nIncludes;
+  private final ImmutableList<String> i18nIncludes;
   /** The "compiled" include patterns. */
-  private final List<MatchPattern> i18nIncludePatterns;
+  private final ImmutableList<MatchPattern> i18nIncludePatterns;
   /** The user specified include patterns. */
-  private final List<String> i18nExcludes;
+  private final ImmutableList<String> i18nExcludes;
   /** The "compiled" include patterns. */
-  private final List<MatchPattern> i18nExcludePatterns;
+  private final ImmutableList<MatchPattern> i18nExcludePatterns;
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -116,9 +117,9 @@ public class FileMatcher {
    */
   public FileMatcher(final Path root, final List<String> i18nIncludes, final List<String> i18nExcludes) {
     this.root= root.toAbsolutePath().normalize();
-    this.i18nIncludes= ImmutableList.copyOf(i18nIncludes);
+    this.i18nIncludes= Lists.immutable.ofAll(i18nIncludes);
     this.i18nIncludePatterns= this.toMatchPatterns(i18nIncludes);
-    this.i18nExcludes= ImmutableList.copyOf(i18nExcludes);
+    this.i18nExcludes= Lists.immutable.ofAll(i18nExcludes);
     this.i18nExcludePatterns= this.toMatchPatterns(i18nExcludes);
   }
 
@@ -135,7 +136,7 @@ public class FileMatcher {
    * @param filePatterns the pattern strings to convert
    * @return the MatchPatterns corresponding to the given pattern strings
    */
-  private List<MatchPattern> toMatchPatterns(final List<String> filePatterns) {
+  private ImmutableList<MatchPattern> toMatchPatterns(final List<String> filePatterns) {
     final List<MatchPattern> matchPatterns= new ArrayList<>(filePatterns.size());
 
     for (final String filePattern : filePatterns) {
@@ -147,7 +148,7 @@ public class FileMatcher {
       matchPatterns.add(matchPattern);
     }
 
-    return matchPatterns;
+    return Lists.immutable.ofAll(matchPatterns);
   }
 
 
@@ -216,12 +217,12 @@ public class FileMatcher {
   }
 
 
-  public List<String> getI18nIncludes() {
+  public ImmutableList<String> getI18nIncludes() {
     return i18nIncludes;
   }
 
 
-  public List<String> getI18nExcludes() {
+  public ImmutableList<String> getI18nExcludes() {
     return i18nExcludes;
   }
 

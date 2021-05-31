@@ -40,6 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.eclipse.collections.api.RichIterable;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class XlsImExporterTest {
     // - verification
 
     final XlsFile readXlsFile= new XlsFile(xlsFile);
-    final Map<I18nBundleKey, Collection<Translation>> readContent= readXlsFile.getContent();
+    final Map<I18nBundleKey, RichIterable<Translation>> readContent= readXlsFile.getContent();
     final XlsFile expectedXlsFile= new XlsFile(new File(Resources.getResource("i18n_expected.xlsx").toURI()));
     final Map<I18nBundleKey, Collection<Translation>> expectedContent= expectedXlsFile.getContent();
 

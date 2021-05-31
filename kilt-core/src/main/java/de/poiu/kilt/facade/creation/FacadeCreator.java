@@ -119,11 +119,11 @@ public class FacadeCreator {
                     .build());
 
     // now add the actual enum constants
-    resourceContent.getContent().asMap().forEach((key, translations) -> {
+    resourceContent.getContent().toMap().forEach((key, translations) -> {
       if (key != null && !key.trim().isEmpty())  {
       bundleEnumBuilder.addEnumConstant(toEnumConstName(key),
                                         TypeSpec.anonymousClassBuilder("$S", key)
-                                                .addJavadoc(buildJavadoc(key, translations))
+                                                .addJavadoc(buildJavadoc(key, translations.toList()))
                                                 .build());
       } else {
         LOGGER.log(Level.WARN,

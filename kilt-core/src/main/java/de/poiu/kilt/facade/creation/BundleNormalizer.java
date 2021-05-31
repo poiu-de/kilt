@@ -15,11 +15,14 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import com.google.common.collect.ImmutableMap;
 import de.poiu.fez.Require;
 import java.text.Normalizer;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.*;
+import org.eclipse.collections.api.factory.Maps;
+import org.eclipse.collections.api.map.ImmutableMap;
+import org.eclipse.collections.api.tuple.Pair;
 
 /**
  * Normalizes key and bundle names to valid strings to be used as class
@@ -34,18 +37,17 @@ public class BundleNormalizer {
    * Certain characters will be replaced by multiple ascii characters, for example
    * ä is replaced by ae.
    */
-  private static final Map<String, String> UMLAUT_REPLACEMENTS= ImmutableMap.<String, String>builder()
-          .put("ä", "ae")
-          .put("Ä", "AE")
-          .put("ö", "oe")
-          .put("Ö", "OE")
-          .put("ü", "ue")
-          .put("Ü", "UE")
-          .put("ß", "ss")
-          .put("ẞ", "SS")
-          .put("Æ", "AE")
-          .put("Œ", "OE")
-          .build();
+  private static final ImmutableMap<String, String> UMLAUT_REPLACEMENTS= Maps.immutable
+    .ofMap(Map.of("ä", "ae",
+                  "Ä", "AE",
+                  "ö", "oe",
+                  "Ö", "OE",
+                  "ü", "ue",
+                  "Ü", "UE",
+                  "ß", "ss",
+                  "ẞ", "SS",
+                  "Æ", "AE",
+                  "Œ", "OE"));
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -89,7 +91,7 @@ public class BundleNormalizer {
       if (chars[i] == '_') {
         // if char is underscore, leave it out…
         if (chars.length > i+1) {
-          // … and uppercase next letter, if available
+          // … and uppercase entry letter, if available
           final char nextChar= chars[i+1];
           sb.append(Character.toUpperCase(nextChar));
           i++;
@@ -133,7 +135,7 @@ public class BundleNormalizer {
       if (chars[i] == '_') {
         // if char is underscore, leave it out…
         if (chars.length > i+1) {
-          // … and uppercase next letter, if available
+          // … and uppercase entry letter, if available
           final char nextChar= chars[i+1];
           sb.append(Character.toUpperCase(nextChar));
           i++;
@@ -242,9 +244,10 @@ public class BundleNormalizer {
    */
   protected static String replaceUmlauts(final String s) {
     String result= s;
-    for (final Map.Entry<String, String> entry : UMLAUT_REPLACEMENTS.entrySet()) {
-      final String character= entry.getKey();
-      final String replacement = entry.getValue();
+    for (final Iterator<Pair<String, String>> iterator = UMLAUT_REPLACEMENTS.keyValuesView().iterator(); iterator.hasNext();) {
+      final Pair<String, String> entry = iterator.next();
+      final String character= entry.getOne();
+      final String replacement= entry.getTwo();
       result= result.replaceAll(character, replacement);
     }
     return result;

@@ -15,16 +15,21 @@
  */
 package de.poiu.kilt.bundlecontent;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.common.collect.SetMultimap;
 import de.poiu.apron.PropertyFile;
 import de.poiu.kilt.facade.creation.InconsistentBundleBaseNameException;
 import de.poiu.kilt.facade.creation.TranslationComparator;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.Map;
+import org.eclipse.collections.api.multimap.ImmutableMultimap;
+import org.eclipse.collections.api.multimap.Multimap;
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.api.multimap.set.MutableSetMultimap;
+import org.eclipse.collections.impl.map.mutable.ConcurrentHashMap;
+import org.eclipse.collections.impl.multimap.list.ImmutableListMultimapImpl;
+import org.eclipse.collections.impl.multimap.set.UnifiedSetMultimap;
+import org.eclipse.collections.impl.multimap.set.sorted.TreeSortedSetMultimap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -60,11 +65,8 @@ public class ResourceBundleContent {
   private final String bundleBaseName;
 
   /** All keys of this bundle and their available translations. */
-  private final Multimap<String, Translation> content=
-    MultimapBuilder
-      .linkedHashKeys()
-      .treeSetValues(TranslationComparator.INSTANCE)
-      .build();
+  private final MutableMultimap<String, Translation> content=
+    TreeSortedSetMultimap.newMultimap(TranslationComparator.INSTANCE);
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -77,7 +79,7 @@ public class ResourceBundleContent {
    * @param bundleBaseName the bundleBasename
    * @param content all keys and their translations for this bundle
    */
-  private ResourceBundleContent(final String bundleBaseName, final Multimap<String, Translation> content) {
+  private ResourceBundleContent(final String bundleBaseName, final ImmutableMultimap<String, Translation> content) {
     this.bundleBaseName= bundleBaseName;
     this.content.putAll(content);
   }
@@ -124,7 +126,7 @@ public class ResourceBundleContent {
    * @return a new FacadeBundleContent for the the given bundle
    */
   public static ResourceBundleContent forName(final String bundleName) {
-    final ImmutableMultimap<String, Translation> emptyMap= ImmutableMultimap.of();
+    final ImmutableMultimap<String, Translation> emptyMap= new ImmutableListMultimapImpl(ConcurrentHashMap.newMap());
     return new ResourceBundleContent(bundleName, emptyMap);
   }
 
@@ -153,7 +155,7 @@ public class ResourceBundleContent {
    * @throws InconsistentBundleBaseNameException if the given files don't share a common basename
    */
   public ResourceBundleContent fromFiles(final Map<Language, File> bundleFiles, final Charset charset) {
-    final SetMultimap<String, Translation> translations= MultimapBuilder.linkedHashKeys().linkedHashSetValues().build();
+    final MutableSetMultimap<String, Translation> translations= UnifiedSetMultimap.newMultimap();
 
     for (final Map.Entry<Language, File> entry : bundleFiles.entrySet()) {
       final Language lang = entry.getKey();
@@ -165,7 +167,7 @@ public class ResourceBundleContent {
       });
     }
 
-    return new ResourceBundleContent(this.bundleBaseName, translations);
+    return new ResourceBundleContent(this.bundleBaseName, translations.toImmutable());
   }
 
 

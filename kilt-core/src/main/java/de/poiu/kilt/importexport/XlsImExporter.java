@@ -36,6 +36,8 @@ import java.util.Set;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.map.MutableMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -70,7 +72,7 @@ public class XlsImExporter {
 
     // read XLS file
     final XlsFile xlsFileObject= new XlsFile(xlsFile);
-    final Map<I18nBundleKey, Collection<Translation>> content= xlsFileObject.getContent();
+    final MutableMap<I18nBundleKey, RichIterable<Translation>> content= xlsFileObject.getContent();
 
     // stores the mapping of resource bundle basenames and languages to the corresponding property files
     final Map<String, Map<Language, RememberingPropertyFile>> bundleFileMapping= new LinkedHashMap<>();
@@ -80,7 +82,7 @@ public class XlsImExporter {
       final I18nBundleKey bundleKey= entry.getKey();
       final String bundleBasename= bundleKey.getBundleBaseName();
       final String propertyKey= bundleKey.getKey();
-      final Collection<Translation> translations= entry.getValue();
+      final RichIterable<Translation> translations= entry.getValue();
 
       // for each bundle…
       for (final Translation translation : translations) {
@@ -139,11 +141,11 @@ public class XlsImExporter {
       final ResourceBundleContent resourceBundleContent= ResourceBundleContent.forName(bundleName)
         .fromFiles(bundleTranslations, propertyFileEncoding !=null ? propertyFileEncoding : UTF_8);
 
-      resourceBundleContent.getContent().asMap().entrySet().forEach((e) -> {
+      resourceBundleContent.getContent().toMap().entrySet().forEach((e) -> {
         final String propertyKey= e.getKey();
-        final Collection<Translation> translations= e.getValue();
+        final RichIterable<Translation> translations= e.getValue();
 
-        xlsFileObject.setValue(new I18nBundleKey(bundleName, propertyKey), translations);
+        xlsFileObject.setValue(new I18nBundleKey(bundleName, propertyKey), translations.toList());
       });
     });
 

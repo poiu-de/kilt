@@ -16,10 +16,6 @@
 package de.poiu.kilt.importexport.xls;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import de.poiu.fez.Require;
 import de.poiu.kilt.bundlecontent.Language;
@@ -46,6 +42,12 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.eclipse.collections.api.RichIterable;
+import org.eclipse.collections.api.bimap.MutableBiMap;
+import org.eclipse.collections.api.map.MutableMap;
+import org.eclipse.collections.api.multimap.MutableMultimap;
+import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
+import org.eclipse.collections.impl.multimap.list.FastListMultimap;
 
 
 /**
@@ -71,8 +73,8 @@ public class XlsFile {
 
   private final File file;
 
-  private final BiMap<Language, Integer> languageColumnMap= HashBiMap.create();
-  private final BiMap<I18nBundleKey, Integer> i18nKeyRowMap= HashBiMap.create();
+  private final MutableBiMap<Language, Integer> languageColumnMap= HashBiMap.newMap();
+  private final MutableBiMap<I18nBundleKey, Integer> i18nKeyRowMap= HashBiMap.newMap();
 
 
   /////////////////////////////////////////////////////////////////////////////
@@ -349,8 +351,8 @@ public class XlsFile {
   }
 
 
-  public Map<I18nBundleKey, Collection<Translation>> getContent() {
-    final Multimap<I18nBundleKey, Translation> contentMap= LinkedHashMultimap.create();
+  public MutableMap<I18nBundleKey, RichIterable<Translation>> getContent() {
+    final MutableMultimap<I18nBundleKey, Translation> contentMap= FastListMultimap.newMultimap();
 
     for (int i= this.i18nSheet.getFirstRowNum() + 1; i < this.i18nSheet.getLastRowNum() + 1; i++) {
       final Row row= this.i18nSheet.getRow(i);
@@ -372,7 +374,7 @@ public class XlsFile {
       }
     }
 
-    return contentMap.asMap();
+    return contentMap.toMap();
   }
 
 
