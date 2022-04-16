@@ -13,6 +13,8 @@ jdk:
   - openjdk14
   - openjdk15
   - openjdk16
+  - openjdk17
+  - openjdk18
   - openjdk-ea
 
 jobs:
