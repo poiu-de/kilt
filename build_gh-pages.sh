@@ -1,13 +1,6 @@
 #!/bin/bash
 
-# Only generate gh-pages from master branch
-
-GIT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
-if [ "$TRAVIS_BRANCH" != "master" ] && [ "$GIT_BRANCH" != "master" ]
-then
-  echo "Not on master branch. Not attempting to generate gh-pages. TRAVIS_BRANCH is: $TRAVIS_BRANCH GIT_BRANCH is: $GIT_BRANCH"
-  exit 0
-fi
+sudo gem install asciidoctor --version 1.5.8
 
 # Don't create gh-pages from dirty working directory
 if [ "`git status -s`" ]
@@ -54,12 +47,12 @@ popd
 # Commit the new content
 pushd "$GH_PAGES"
 git add --all
-git config user.name "travis@travis-ci.org";
-git config user.email "Travis CI";
+git config user.name "github-actions@github.org";
+git config user.email "Github Actions";
 git commit -m "[build_gh-pages.sh] Update gh-pages from ""$GIT_COMMIT_HASH"
 
 # Push content
-git push https://${GITHUB_ACCESS_TOKEN}@github.com/hupfdule/kilt.git
+git push https://x-access-token:${GITHUB_ACCESS_TOKEN}@github.com/hupfdule/kilt.git
 
 # Remove git worktree
 popd
