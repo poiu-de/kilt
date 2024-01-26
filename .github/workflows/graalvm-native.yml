@@ -1,0 +1,30 @@
+name: GraalVM Native Image builds
+on: [push, pull_request]
+jobs:
+  build:
+    name: Kilt on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: graalvm/setup-graalvm@v1
+        with:
+          java-version: '21'
+          distribution: 'graalvm-community'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          native-image-job-reports: 'true'
+          cache: 'maven'
+          native-image-musl: 'false'
+
+      - name: Run GraalVM native image
+        run: |
+          mvn -Pnative -X -DskipTests=true package
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: kilt-cli-${{ matrix.os }}
+          path: kilt-cli*
