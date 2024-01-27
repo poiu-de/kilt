@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.poiu.kilt</groupId>
     <artifactId>kilt</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.2</version>
   </parent>
 
   <artifactId>kilt-example</artifactId>
