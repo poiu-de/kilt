@@ -61,9 +61,9 @@ public class FileMatcher {
   private final List<String> i18nIncludes;
   /** The "compiled" include patterns. */
   private final List<MatchPattern> i18nIncludePatterns;
-  /** The user specified include patterns. */
+  /** The user specified exclude patterns. */
   private final List<String> i18nExcludes;
-  /** The "compiled" include patterns. */
+  /** The "compiled" exclude patterns. */
   private final List<MatchPattern> i18nExcludePatterns;
 
 
