@@ -4,9 +4,9 @@ Marco Herrn <marco@mherrn.de>
 2018-05-03
 :compat-mode!:
 :toc:
-:homepage: https://github.com/hupfdule/kilt
-:download-page: https://github.com/hupfdule/kilt/releases
-:user_guide: https://hupfdule.github.io/kilt/user_guide.html
+:homepage: https://github.com/poiu-de/kilt
+:download-page: https://github.com/poiu-de/kilt/releases
+:user_guide: https://poiu-de.github.io/kilt/user_guide/
 :license-link: ./LICENSE.txt
 :kilt-version: 1.0.2
 
