@@ -4,8 +4,8 @@ Marco Herrn <marco@mherrn.de>
 2019-11-24
 :toc:
 :icons: font
-:kilt-homepage: https://github.com/hupfdule/kilt
-:download-page: https://github.com/hupfdule/kilt/releases
+:kilt-homepage: https://github.com/poiu-de/kilt
+:download-page: https://github.com/poiu-de/kilt/releases
 :license-link: ./LICENSE.txt
 :kilt-version: 1.0.2
 :source-highlighter: prettify

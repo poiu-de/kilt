@@ -8,7 +8,7 @@
   <packaging>pom</packaging>
   <name>kilt</name>
   <description>Converts a whole i18n properties folder into a xls file and merge it back to the properties file</description>
-  <url>https://github.com/hupfdule/kilt</url>
+  <url>https://github.com/poiu-de/kilt</url>
 
   <licenses>
     <license>
@@ -18,14 +18,14 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/hupfdule/kilt</url>
-    <connection>scm:git:git://github.com/hupfdule/kilt.git</connection>
-    <developerConnection>scm:git:git@github.com:hupfdule/kilt.git</developerConnection>
+    <url>https://github.com/poiu-de/kilt</url>
+    <connection>scm:git:git://github.com/poiu-de/kilt.git</connection>
+    <developerConnection>scm:git:git@github.com:poiu-de/kilt.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
   <issueManagement>
-    <url>https://github.com/hupfdule/kilt/issues</url>
+    <url>https://github.com/poiu-de/kilt/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
