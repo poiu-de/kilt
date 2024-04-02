@@ -6,27 +6,22 @@ Thanks for your interest in contributing to Kilt.
 
 If you intent to do larger changes it is advisable to open an
 https://github.com/poiu-de/kilt/issues[Issue] issue first, describing the
-problem and the intentions. This helps reducing wasted effort and
-duplicated work by allowing This helps avoiding duplicate work or your
-changes being refused for some reason.  to discuss the change first.
+problem and the intentions. This helps avoiding duplicate work or your
+changes being refused for some reason.
 
 Of course you are free to just fork the project, do the intented changes
 and create a pull request.
 
 == What to contribute
 
-=== Website
-
-What is currently missing is a useful website. Anyone with some skills in
-web design who is willing to contribute to such a website is highly
-welcome.
-
 === Finding bugs
 
-Of course Kilt has bugs. If you find them please file an
+Every software has bugs. If you find a bug in Kilt please file an
 https://github.com/poiu-de/kilt/issues[Issue] so they can be resolved.
 
-Preparing pull request to solve issues is also highly welcome, of course.
+Preparing pull requests to solve issues is also highly welcome, of course.
+In that case, please provide a commit with a unit test demonstrating the
+problem and another commit with the actual fix.
 
 === Writing code
 
@@ -40,10 +35,10 @@ formatting changes, please prepare a separate pull request.
 
 === Write unit tests
 
-Kilt is currently only partly covered by unit tests. Writing unit test is
+Kilt is currently only partly covered by unit tests. Writing unit tests is
 good way to get familiar with the code base and at the same time providing
 some value to it.
 
-Please still to the style of the currently existing unit tests.
+Please stick to the style of the currently existing unit tests.
 
 It is also advisable to provide unit tests for your own code contributions.
