@@ -15,8 +15,8 @@
  */
 package de.poiu.kilt.ant;
 
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.JavaFile;
+import com.palantir.javapoet.TypeSpec;
 import de.poiu.fez.Require;
 import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.bundlecontent.Language;

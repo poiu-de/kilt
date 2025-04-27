@@ -16,8 +16,8 @@
 package de.poiu.kilt.cli;
 
 import com.google.common.base.Joiner;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.JavaFile;
+import com.palantir.javapoet.TypeSpec;
 import de.poiu.kilt.facade.creation.FacadeCreator;
 import de.poiu.kilt.bundlecontent.Language;
 import de.poiu.kilt.bundlecontent.ResourceBundleContent;

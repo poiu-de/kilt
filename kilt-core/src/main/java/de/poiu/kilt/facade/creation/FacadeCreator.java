@@ -15,11 +15,11 @@
  */
 package de.poiu.kilt.facade.creation;
 
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import com.palantir.javapoet.ClassName;
+import com.palantir.javapoet.CodeBlock;
+import com.palantir.javapoet.FieldSpec;
+import com.palantir.javapoet.MethodSpec;
+import com.palantir.javapoet.TypeSpec;
 import de.poiu.fez.Require;
 import de.poiu.kilt.bundlecontent.ResourceBundleContent;
 import de.poiu.kilt.bundlecontent.Translation;
