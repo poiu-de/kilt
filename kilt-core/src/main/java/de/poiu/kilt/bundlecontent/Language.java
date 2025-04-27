@@ -19,7 +19,6 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import de.poiu.fez.Require;
 import java.util.Objects;
-import javax.annotation.concurrent.Immutable;
 
 /**
  * Container for a language.
@@ -29,7 +28,6 @@ import javax.annotation.concurrent.Immutable;
  * <p>
  * This is a thread-safe immutable class.
  */
-@Immutable
 public class Language implements Comparable<Language> {
   final String lang;
 

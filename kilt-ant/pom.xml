@@ -22,10 +22,11 @@
       <groupId>de.poiu.kilt</groupId>
       <artifactId>kilt-core</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>
-      <version>1.10.14</version>
+      <version>1.10.15</version>
       <type>jar</type>
       <scope>compile</scope>
     </dependency>
