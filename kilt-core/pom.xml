@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>kilt-core</artifactId>
+  <name>Kilt core classes</name>
   <description>Kilt core classes doing the actual work</description>
 
   <licenses>

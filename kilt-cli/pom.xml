@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>kilt-cli</artifactId>
+  <name>Kilt commandline interface</name>
   <description>Kilt commandline interface</description>
 
   <licenses>

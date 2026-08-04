@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>kilt-ant</artifactId>
+  <name>Kilt ant task</name>
   <description>Ant task for Kilt</description>
 
   <licenses>

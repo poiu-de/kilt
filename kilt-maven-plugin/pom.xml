@@ -9,6 +9,7 @@
 
   <artifactId>kilt-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
+  <name>Kilt maven plugin</name>
   <description>Kilt maven plugin</description>
 
   <licenses>

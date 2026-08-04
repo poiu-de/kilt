@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>kilt-runtime</artifactId>
+  <name>Kilt runtime module</name>
   <description>Runtime module of Kilt for inclusion into other projects to allow accessing the generated facades.</description>
 
   <licenses>

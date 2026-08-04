@@ -8,6 +8,7 @@
   </parent>
 
   <artifactId>kilt-example</artifactId>
+  <name>Kilt example applicaton</name>
   <description>Example application for using Kilt</description>
 
   <licenses>
