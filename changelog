@@ -1,6 +1,15 @@
 Kilt changelog
 ==============
 
+Version 1.0.3 - 2026-08-04
+--------------------------
+
+ - Update all 3rd-party dependencies (no functional changes)
+
+[cli]
+ - Fix quoting of shell script arguments in the provide shell script
+
+
 Version 1.0.2 - 2024-01-27
 --------------------------
 
